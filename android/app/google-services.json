@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1000331742478",
+    "project_id": "autocare-63060",
+    "storage_bucket": "autocare-63060.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000331742478:android:96cb788f495e7bfd79db5f",
+        "android_client_info": {
+          "package_name": "com.autocarecarowners.autocare_carowners"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEhLmgQAH2iqkY3GLd37IB62zCjB-TOVw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
