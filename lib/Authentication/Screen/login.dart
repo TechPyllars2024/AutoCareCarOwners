@@ -27,7 +27,7 @@ class _SignupScreenState extends State<LoginScreen> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
-     myController.dispose();
+    myController.dispose();
   }
 
 // email and passowrd auth part
@@ -159,7 +159,7 @@ class _SignupScreenState extends State<LoginScreen> {
                     ),
 
                     // Don't have an account? got to signup screen
-                    SizedBox(height: size.height * 0.03),
+                    const SizedBox(height: 50),
                     RichText(
                       text: TextSpan(
                         text: "Don't have an account? ",
@@ -169,7 +169,7 @@ class _SignupScreenState extends State<LoginScreen> {
                             text: 'Sign Up',
                             style: const TextStyle(
                               color: Colors.blue,
-                              decoration: TextDecoration.underline,
+                              fontWeight: FontWeight.bold,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {

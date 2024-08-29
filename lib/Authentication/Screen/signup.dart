@@ -1,3 +1,5 @@
+import 'package:autocare_carowners/Authentication/Widgets/googleButton.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import '../Widgets/button.dart';
@@ -19,6 +21,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController myController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -27,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
+    myController.dispose();
   }
 
   void signupUser() async {
@@ -96,52 +100,124 @@ class _SignupScreenState extends State<SignupScreen> {
   }
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: SizedBox(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFieldInput(
-                  icon: Icons.person,
-                  textEditingController: nameController,
-                  hintText: 'Enter your name',
-                  textInputType: TextInputType.text),
-              TextFieldInput(
-                  icon: Icons.email,
-                  textEditingController: emailController,
-                  hintText: 'Enter your email',
-                  textInputType: TextInputType.text),
-              TextFieldInput(
-                icon: Icons.lock,
-                textEditingController: passwordController,
-                hintText: 'Enter your password',
-                textInputType: TextInputType.text,
-                isPass: true,
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 20),
+                child: const Text(
+                  "Sign Up",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30,
+                    color:Colors.white,
+                  ),
+                ),
               ),
-              MyButtons(onTap: signupUser, text: "Sign Up"),
-              MyButtons(onTap: signUpWithGoogle, text: "Sign Up with Google"),
-              const SizedBox(height: 50),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already have an account?"),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: const Text(
-                      " Login",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+              SizedBox(height: size.height * 0.02),
+              // image to be updated
+              // Image.asset(
+              //   'lib/Authentication/assets/images/welcomecar.png', 
+              //   height: size.height * 0.2,
+              // ),
+              SizedBox(height: size.height * 0.03),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: <Widget>[               
+                    TextFieldInput(
+                        icon: Icons.person,
+                        textEditingController: nameController,
+                        hintText: 'Enter your Name',
+                        textInputType: TextInputType.text),
+                    TextFieldInput(
+                        icon: Icons.email,
+                        textEditingController: emailController,
+                        hintText: 'Enter your Email',
+                        textInputType: TextInputType.text),
+                    TextFieldInput(
+                      icon: Icons.lock,
+                      textEditingController: passwordController,
+                      hintText: 'Enter your Password',
+                      textInputType: TextInputType.text,
+                      isPass: true,
                     ),
-                  )
-                ],
-              )
+                    MyButtons(onTap: signupUser, text: "Sign Up"),
+                    
+                    SizedBox(height: size.height * 0.03),
+                    const Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black, // Color of the divider
+                            thickness: 1, // Thickness of the divider
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            'OR',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black, // Color of the divider
+                            thickness: 1, // Thickness of the divider
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: size.height * 0.03),
+                    GoogleButton(
+                      textEditingController: myController,
+                      isPass: false,
+                      hintText: 'Sign Up with Gmail',
+                    ),
+                    
+                    const SizedBox(height: 50),
+                    TextButton(
+                      onPressed: () {
+                        // Handle navigation to login screen
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Already have an account? ',
+                          style: const TextStyle(color: Colors.black),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Log In',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  // Navigate to LoginScreen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                  );
+                                },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
