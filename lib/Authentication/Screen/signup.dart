@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import '../Widgets/button.dart';
 import '../Widgets/snackBar.dart';
 import '../Widgets/text_field.dart';
 import 'homeScreen.dart';
 import 'login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -39,7 +39,7 @@ class _SignupScreenState extends State<SignupScreen> {
         email: emailController.text,
         password: passwordController.text,
         name: nameController.text);
-    // if string return is success, user has been creaded and navigate to next screen other witse show error.
+    // if string return is success, user has been created and navigate to next screen otherwise show error.
     if (res == "success") {
       setState(() {
         isLoading = false;
@@ -59,60 +59,93 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
+  // This method handles google sign in
+  Future<void> signUpWithGoogle() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+        final AuthCredential credential = GoogleAuthProvider.credential(
+          accessToken: googleAuth.accessToken,
+          idToken: googleAuth.idToken,
+        );
+
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+        User? user = userCredential.user;
+
+        if (user != null) {
+          // Navigate to home screen
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+  @override
   Widget build(BuildContext context) {
-    // double height = MediaQuery.of(context).size.height;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
-          child: SizedBox(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // SizedBox(
-            //   height: height / 2.8,
-            //   child: Image.asset('lib/utils/signup.jpg'),
-            // ),
-            TextFieldInput(
-                icon: Icons.person,
-                textEditingController: nameController,
-                hintText: 'Enter your name',
-                textInputType: TextInputType.text),
-            TextFieldInput(
-                icon: Icons.email,
-                textEditingController: emailController,
-                hintText: 'Enter your email',
-                textInputType: TextInputType.text),
-            TextFieldInput(
-              icon: Icons.lock,
-              textEditingController: passwordController,
-              hintText: 'Enter your passord',
-              textInputType: TextInputType.text,
-              isPass: true,
-            ),
-            MyButtons(onTap: signupUser, text: "Sign Up"),
-            const SizedBox(height: 50),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Already have an account?"),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
-                  },
-                  child: const Text(
-                    " Login",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                )
-              ],
-            )
-          ],
+        child: SizedBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              TextFieldInput(
+                  icon: Icons.person,
+                  textEditingController: nameController,
+                  hintText: 'Enter your name',
+                  textInputType: TextInputType.text),
+              TextFieldInput(
+                  icon: Icons.email,
+                  textEditingController: emailController,
+                  hintText: 'Enter your email',
+                  textInputType: TextInputType.text),
+              TextFieldInput(
+                icon: Icons.lock,
+                textEditingController: passwordController,
+                hintText: 'Enter your password',
+                textInputType: TextInputType.text,
+                isPass: true,
+              ),
+              MyButtons(onTap: signupUser, text: "Sign Up"),
+              MyButtons(onTap: signUpWithGoogle, text: "Sign Up with Google"),
+              const SizedBox(height: 50),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already have an account?"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
+                    },
+                    child: const Text(
+                      " Login",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 }
