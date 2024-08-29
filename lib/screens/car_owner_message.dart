@@ -11,7 +11,7 @@ class _CarOwnerMessageState extends State<CarOwnerMessage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('MESSAGES'),),
+      appBar: AppBar(title: Text('MESSAGES'), backgroundColor: Colors.grey.shade300, ),
       body: Container(
         color: Colors.grey.shade300,
       ),
