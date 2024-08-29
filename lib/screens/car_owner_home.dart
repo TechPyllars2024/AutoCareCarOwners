@@ -11,7 +11,7 @@ class _CarOwnerHomeState extends State<CarOwnerHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('HOME'),),
+      appBar: AppBar(title: Text('HOME'), backgroundColor: Colors.grey.shade300, ),
       body: Container(
         color: Colors.grey.shade300,
 
