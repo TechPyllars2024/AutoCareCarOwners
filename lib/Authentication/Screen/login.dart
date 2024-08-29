@@ -1,3 +1,5 @@
+import 'package:autocare_carowners/Authentication/Widgets/googleButton.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'package:autocare_carowners/Authentication/Screen/homeScreen.dart';
@@ -17,6 +19,7 @@ class LoginScreen extends StatefulWidget {
 class _SignupScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController myController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -24,6 +27,7 @@ class _SignupScreenState extends State<LoginScreen> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+     myController.dispose();
   }
 
 // email and passowrd auth part
@@ -56,68 +60,132 @@ class _SignupScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // double height = MediaQuery.of(context).size.height;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       // resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SafeArea(
           child: SizedBox(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // SizedBox(
-                //   height: height / 2.7,
-                //   child: Image.asset('lib/utils/login.jpg'),
-                // ),
-                TextFieldInput(
-                    icon: Icons.email,
-                    textEditingController: emailController,
-                    hintText: 'Enter your email',
-                    textInputType: TextInputType.text),
-                TextFieldInput(
-                  icon: Icons.lock,
-                  textEditingController: passwordController,
-                  hintText: 'Enter your password',
-                  textInputType: TextInputType.text,
-                  isPass: true,
+              children: <Widget>[
+              const Text(
+                "Log In",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30,
+                  color: Colors.white
                 ),
-
-                MyButtons(onTap: loginUser, text: "Log In"),
-
-                Row(
+              ),
+              SizedBox(height: size.height * 0.02),
+              // image to be updated
+              // Image.asset(
+              //   'assets/images/logincar.png', 
+              //   height: size.height * 0.2,
+              // ),
+              SizedBox(height: size.height * 0.03),
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
                   children: [
-                    Expanded(
-                      child: Container(height: 1, color: Colors.black26),
+                    TextFieldInput(
+                        icon: Icons.email,
+                        textEditingController: emailController,
+                        hintText: 'Email',
+                        textInputType: TextInputType.text),
+                    TextFieldInput(
+                      icon: Icons.lock,
+                      textEditingController: passwordController,
+                      hintText: 'Password',
+                      textInputType: TextInputType.text,
+                      isPass: true,
                     ),
-                    const Text("  or  "),
-                    Expanded(
-                      child: Container(height: 1, color: Colors.black26),
-                    )
+
+                    // Forgot password
+                    SizedBox(height: size.height * 0.001),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed: () {
+                            // Forgot password logic
+                          },
+                          child: const Text(
+                            "Forgot Password?",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    MyButtons(onTap: loginUser, text: "Log In"),
+
+                    SizedBox(height: size.height * 0.03),
+                    const Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black, // Color of the divider
+                            thickness: 1, // Thickness of the divider
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            'OR',
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            color: Colors.black,
+                            thickness: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Google Button
+                    SizedBox(height: size.height * 0.03),
+                    GoogleButton(
+                      textEditingController: myController,
+                      isPass: false,
+                      hintText: 'Log In with Gmail',
+                    ),
+
+                    // Don't have an account? got to signup screen
+                    SizedBox(height: size.height * 0.03),
+                    RichText(
+                      text: TextSpan(
+                        text: "Don't have an account? ",
+                        style: const TextStyle(color: Colors.black),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Sign Up',
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                // Navigate to SignupScreen
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const SignupScreen()),
+                                );
+                              },
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                // Don't have an account? got to signup screen
-                Padding(
-                  padding: const EdgeInsets.only(top: 10, left: 100),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Don't have an account? "),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const SignupScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "SignUp",
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+              ),
               ],
             ),
           )),
