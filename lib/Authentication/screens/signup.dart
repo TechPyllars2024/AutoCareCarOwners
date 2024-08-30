@@ -1,4 +1,6 @@
 import 'package:autocare_carowners/Authentication/Widgets/googleButton.dart';
+import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
+import 'package:autocare_carowners/Authentication/widgets/texfieldPassword.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
@@ -121,12 +123,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
               ),
               SizedBox(height: size.height * 0.02),
-              // image to be updated
-              // Image.asset(
-              //   'lib/Authentication/assets/images/welcomecar.png', 
-              //   height: size.height * 0.2,
-              // ),
-              SizedBox(height: size.height * 0.03),
+              const CarImageWidget(imagePath: 'lib/Authentication/assets/images/welcomecar.png'),
+              
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -145,7 +143,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         textEditingController: emailController,
                         hintText: 'Enter your Email',
                         textInputType: TextInputType.text),
-                    TextFieldInput(
+                    TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: passwordController,
                       hintText: 'Enter your Password',
@@ -154,7 +152,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     MyButtons(onTap: signupUser, text: "Sign Up"),
                     
-                    SizedBox(height: size.height * 0.03),
+                    SizedBox(height: size.height * 0.02),
                     const Row(
                       children: <Widget>[
                         Expanded(
@@ -199,7 +197,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             TextSpan(
                               text: 'Log In',
                               style: const TextStyle(
-                                color: Colors.blue,
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
                               ),
                               recognizer: TapGestureRecognizer()

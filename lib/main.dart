@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'Authentication/Screen/login.dart';
+// import 'Authentication/Screen/login.dart';
+import 'Authentication/screens/login.dart';
+// import 'Authentication/screens/signup.dart';
 
 Future<void> main() async {
   // Initialize Firebase

@@ -1,3 +1,7 @@
+import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
+import 'package:autocare_carowners/Authentication/widgets/googleButton.dart';
+import 'package:autocare_carowners/Authentication/widgets/texfieldPassword.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:autocare_carowners/Authentication/screens/homeScreen.dart';
 import 'package:autocare_carowners/Authentication/screens/signup.dart';
@@ -16,6 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController myController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -23,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
+    myController.dispose();
   }
 
   // Email and password auth part
@@ -53,89 +59,140 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
             : SizedBox(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Your logo or any other branding here
-              TextFieldInput(
-                  icon: Icons.email,
-                  textEditingController: emailController,
-                  hintText: 'Enter your email',
-                  textInputType: TextInputType.text),
-              TextFieldInput(
-                icon: Icons.lock,
-                textEditingController: passwordController,
-                hintText: 'Enter your password',
-                textInputType: TextInputType.text,
-                isPass: true,
-              ),
-              MyButtons(onTap: loginUser, text: "Log In"),
-              Row(
-                children: [
-                  Expanded(
-                    child: Container(height: 1, color: Colors.black26),
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: const EdgeInsets.symmetric(vertical: 20),
+                  child: const Text(
+                    "Log In",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30,
+                      color:Colors.white,
+                    ),
                   ),
-                  const Text("  or  "),
-                  Expanded(
-                    child: Container(height: 1, color: Colors.black26),
-                  )
-                ],
-              ),
-              // Don't have an account? Go to signup screen
-              Padding(
-                padding: const EdgeInsets.only(top: 10, left: 100),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account? "),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) =>
-                            const SignupScreen(),
-                          ),
-                        );
-                      },
-                      child: const Text(
-                        "SignUp",
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: size.height * 0.02),
+                const CarImageWidget(imagePath: 'lib/Authentication/assets/images/logincar.png'),
+                
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: <Widget>[
+                TextFieldInput(
+                    icon: Icons.email,
+                    textEditingController: emailController,
+                    hintText: 'Email',
+                    textInputType: TextInputType.text),
+                TextFieldPassword(
+                  icon: Icons.lock,
+                  textEditingController: passwordController,
+                  hintText: 'Password',
+                  textInputType: TextInputType.text,
+                  isPass: true,
+                ),
+                MyButtons(onTap: loginUser, text: "Log In"),
+                
+                SizedBox(height: size.height * 0.02),
+                  const Row(
+                    children: <Widget>[
+                    Expanded(
+                      child: Divider(
+                      color: Colors.black, // Color of the divider
+                      thickness: 1, // Thickness of the divider
                       ),
-                    )
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        'OR',
+                      style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(
+                      color: Colors.black, // Color of the divider
+                      thickness: 1, // Thickness of the divider
+                      ),
+                    ),
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Container socialIcon(image) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 32,
-        vertical: 15,
+                SizedBox(height: size.height * 0.03),
+                  GoogleButton(
+                  textEditingController: myController,
+                  isPass: false,
+                  hintText: 'Log In with Gmail',
+                ),
+                // Don't have an account? Go to signup screen
+                const SizedBox(height: 50),
+                  TextButton(
+                    onPressed: () {
+                    // Handle navigation to login screen
+                    },
+                    child: RichText(
+                      text: TextSpan(
+                      text: "Don't have an account? ",
+                      style: const TextStyle(color: Colors.black),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: 'Sign Up',
+                            style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            ),
+                            recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                            // Navigate to LoginScreen
+                            Navigator.push(
+                              context,
+                            MaterialPageRoute(builder: (context) => const SignupScreen()),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],     
       ),
-      decoration: BoxDecoration(
-        color: const Color(0xFFedf0f8),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.black45,
-          width: 2,
-        ),
-      ),
-      child: Image.network(
-        image,
-        height: 40,
-      ),
-    );
-  }
+    ),
+  ),
+);}
+
+//   Container socialIcon(image) {
+//     return Container(
+//       padding: const EdgeInsets.symmetric(
+//         horizontal: 32,
+//         vertical: 15,
+//       ),
+//       decoration: BoxDecoration(
+//         color: const Color(0xFFedf0f8),
+//         borderRadius: BorderRadius.circular(12),
+//         border: Border.all(
+//           color: Colors.black45,
+//           width: 2,
+//         ),
+//       ),
+//       child: Image.network(
+//         image,
+//         height: 40,
+//       ),
+//     );
+//   }
 }

@@ -31,13 +31,13 @@ class _GoogleButtonState extends State<GoogleButton> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // SizedBox(
-          //   width: 24, 
-          //   height: 24, 
-          //   child: Image.asset('assets/images/icons/google.png'),
-          // ),
+          SizedBox(
+            width: 24, 
+            height: 24, 
+            child: Image.asset('lib/Authentication/assets/images/icons/google.png'),
+          ),
           const SizedBox(width: 8), // Space between image and text
-          Text(widget.hintText, style: const TextStyle(color: Colors.black)),
+          Text(widget.hintText, style: const TextStyle(color: Colors.black, fontSize: 16)),
         ],
       ),
     );
