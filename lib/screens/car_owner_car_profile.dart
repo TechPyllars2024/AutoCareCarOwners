@@ -17,8 +17,45 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
       context: context,
       builder: (context) {
         return AlertDialog(
+
           title: Text('Edit ${cars[index]}'),
-          content: Text('You are editing ${cars[index]}.'),
+          content: SizedBox(
+            width: 400,
+
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('You are editing ${cars[index]}.'),
+
+
+                TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Brand'
+                  ),
+
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Model'
+                    ),
+
+                  ),
+                ),
+                TextField(
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Year'
+                  ),
+
+                ),
+              ],
+            ),
+          ),
+
           actions: [
             TextButton(
               onPressed: () {
