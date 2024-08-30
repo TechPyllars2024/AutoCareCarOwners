@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:autocare_carowners/Authentication/Screen/homeScreen.dart';
-import 'package:autocare_carowners/Authentication/Screen/signup.dart';
+import 'package:autocare_carowners/Authentication/screens/homeScreen.dart';
+import 'package:autocare_carowners/Authentication/screens/signup.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import 'package:autocare_carowners/Authentication/Widgets/snackBar.dart';
 import '../Widgets/button.dart';
