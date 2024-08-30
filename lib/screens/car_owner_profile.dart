@@ -2,7 +2,7 @@ import 'package:autocare_carowners/screens/car_owner_car_profile.dart';
 import 'package:autocare_carowners/screens/car_owner_edit_profile.dart';
 import 'package:autocare_carowners/screens/car_owner_setting.dart';
 import 'package:flutter/material.dart';
-// import 'package:autocare_carowners/widgets/navbar.dart';
+
 
 class CarOwnerProfile extends StatefulWidget {
   const CarOwnerProfile({super.key});
@@ -22,8 +22,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: Text(
-          'PROFILE',
-          style: TextStyle(),
+          'PROFILE', style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.grey.shade300,
         actions: [
@@ -100,12 +99,13 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 ),
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), minimumSize: Size(400, 50), backgroundColor: Colors.grey,),
                 onPressed: () {
                   Navigator.push(context,
                       //pushReplacement if you don't want to go back
                       MaterialPageRoute(builder: (context) => CarOwnerCarProfile()));
                 },
-                child: Text('CAR PROFILE'),
+                child: Text('CAR PROFILE', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
               ),
             ],
           ),
