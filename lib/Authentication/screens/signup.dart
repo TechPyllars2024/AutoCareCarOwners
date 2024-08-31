@@ -1,9 +1,11 @@
 import 'package:autocare_carowners/Authentication/Widgets/googleButton.dart';
 import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
+import 'package:autocare_carowners/Authentication/widgets/or.dart';
 import 'package:autocare_carowners/Authentication/widgets/texfieldPassword.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../Widgets/button.dart';
 import '../Widgets/snackBar.dart';
 import '../Widgets/text_field.dart';
@@ -120,11 +122,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     fontSize: 30,
                     color:Colors.white,
                   ),
-                ),
+                ).animate()
+                 .fadeIn(duration: const Duration(seconds: 1)),
               ),
+
+              // Sign Up Image
               SizedBox(height: size.height * 0.02),
               const CarImageWidget(imagePath: 'lib/Authentication/assets/images/welcomecar.png'),
               
+              // Sign Up Form
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -150,33 +156,15 @@ class _SignupScreenState extends State<SignupScreen> {
                       textInputType: TextInputType.text,
                       isPass: true,
                     ),
+
+                    // Sign Up Button
                     MyButtons(onTap: signupUser, text: "Sign Up"),
                     
+                    // Sign Up OR
                     SizedBox(height: size.height * 0.02),
-                    const Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Divider(
-                            color: Colors.black, // Color of the divider
-                            thickness: 1, // Thickness of the divider
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            'OR',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            color: Colors.black, // Color of the divider
-                            thickness: 1, // Thickness of the divider
-                          ),
-                        ),
-                      ],
-                    ),
+                    const Or(),
 
+                    // Sign Up with Google
                     SizedBox(height: size.height * 0.03),
                     GoogleButton(
                       textEditingController: myController,
@@ -184,6 +172,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       hintText: 'Sign Up with Gmail',
                     ),
                     
+                    // Already have an account? Log In
                     const SizedBox(height: 50),
                     TextButton(
                       onPressed: () {
@@ -215,7 +204,11 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                   ],
                 ),
-              ),
+              ).animate()
+               .slide(duration: const Duration(milliseconds: 500), 
+                      curve: Curves.easeInOut,
+                      begin: const Offset(0, 1), 
+                      end: const Offset(0, 0)),
             ],
           ),
         ),

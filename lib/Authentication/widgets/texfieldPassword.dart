@@ -34,13 +34,13 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
         keyboardType: widget.textInputType,
         decoration: InputDecoration(
           labelText: widget.hintText,
-          prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.black45, size: 18) : null,
+          prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.black, size: 18) : null,
           labelStyle: const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
           suffixIcon: widget.isPass
               ? IconButton(
                   icon: Icon(
                     _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: const Color.fromARGB(255, 77, 76, 76),
+                    color: Colors.black,
                   ),
                   onPressed: () {
                     setState(() {
