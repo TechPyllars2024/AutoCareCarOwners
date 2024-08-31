@@ -38,7 +38,7 @@ dependencies:
   firebase_core: ^3.4.0
   cloud_firestore: ^5.3.0
   firebase_auth: ^5.2.0
-  google_sign_in: ^5.4.0
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -62,10 +62,10 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - lib/Authentication/assets/images
-  #   - lib/Authentication/assets/images/icons
+   # To add assets to your application, add an assets section, like this:
+assets:
+  - assets/images/
+  - assets/images/icons/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
