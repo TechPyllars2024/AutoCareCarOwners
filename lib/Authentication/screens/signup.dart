@@ -1,5 +1,8 @@
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
+import 'package:autocare_carowners/Authentication/widgets/or.dart';
+import 'package:autocare_carowners/Authentication/widgets/texfieldPassword.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
@@ -162,6 +165,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       textInputType: TextInputType.text,
                       isPass: true,
                     ),
+
+                    // Sign Up Button
                     MyButtons(onTap: signupUser, text: "Sign Up"),
                     SizedBox(height: size.height * 0.03),
                     const Row(
