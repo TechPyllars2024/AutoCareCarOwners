@@ -1,4 +1,5 @@
-import 'package:autocare_carowners/Authentication/Widgets/googleButton.dart';
+import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
@@ -7,11 +8,14 @@ import '../Widgets/snackBar.dart';
 import '../Widgets/text_field.dart';
 import 'homeScreen.dart';
 import 'login.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  const SignupScreen({
+    super.key,
+    this.child
+  });
+
+  final Widget? child;
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -21,7 +25,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController myController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -30,25 +34,75 @@ class _SignupScreenState extends State<SignupScreen> {
     emailController.dispose();
     passwordController.dispose();
     nameController.dispose();
-    myController.dispose();
+    confirmPasswordController.dispose();
   }
 
   void signupUser() async {
-    // set is loading to true.
     setState(() {
       isLoading = true;
     });
-    // signup user using our authmethod
-    String res = await AuthenticationMethod().signupUser(
-        email: emailController.text,
-        password: passwordController.text,
-        name: nameController.text);
-    // if string return is success, user has been created and navigate to next screen otherwise show error.
-    if (res == "success") {
+
+    // Check if passwords match
+    if (passwordController.text != confirmPasswordController.text) {
       setState(() {
         isLoading = false;
       });
-      //navigate to the next screen
+      Utils.showSnackBar("Passwords do not match.");
+      return;
+    }
+
+    String res = await AuthenticationMethod().signupUser(
+      email: emailController.text,
+      password: passwordController.text,
+      name: nameController.text,
+    );
+
+    if (res == "success") {
+      try {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          await user.sendEmailVerification();
+          setState(() {
+            isLoading = false;
+          });
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const VerifyEmailScreen(),
+            ),
+          );
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+          Utils.showSnackBar("Failed to retrieve user.");
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+        Utils.showSnackBar(e.toString());
+      }
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+      Utils.showSnackBar(res);
+    }
+  }
+
+  Future<void> signInWithGoogle() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    String res = await AuthenticationMethod().signInWithGoogle();
+
+    if (res == "SUCCESS") {
+      setState(() {
+        isLoading = false;
+      });
+
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => const HomeScreen(),
@@ -58,46 +112,10 @@ class _SignupScreenState extends State<SignupScreen> {
       setState(() {
         isLoading = false;
       });
-      // show error
-      showSnackBar(context, res);
+      Utils.showSnackBar(res);
     }
   }
 
-  // This method handles google sign in
-  Future<void> signUpWithGoogle() async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn();
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-        final AuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
-        User? user = userCredential.user;
-
-        if (user != null) {
-          // Navigate to home screen
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -109,42 +127,27 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                margin: const EdgeInsets.symmetric(vertical: 20),
-                child: const Text(
-                  "Sign Up",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 30,
-                    color:Colors.white,
-                  ),
-                ),
-              ),
-              SizedBox(height: size.height * 0.02),
-              // image to be updated
-              // Image.asset(
-              //   'lib/Authentication/assets/images/welcomecar.png', 
-              //   height: size.height * 0.2,
-              // ),
               SizedBox(height: size.height * 0.03),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Column(
-                  children: <Widget>[               
+                  children: <Widget>[
                     TextFieldInput(
-                        icon: Icons.person,
-                        textEditingController: nameController,
-                        hintText: 'Enter your Name',
-                        textInputType: TextInputType.text),
+                      icon: Icons.person,
+                      textEditingController: nameController,
+                      hintText: 'Enter your Name',
+                      textInputType: TextInputType.text,
+                    ),
                     TextFieldInput(
-                        icon: Icons.email,
-                        textEditingController: emailController,
-                        hintText: 'Enter your Email',
-                        textInputType: TextInputType.text),
+                      icon: Icons.email,
+                      textEditingController: emailController,
+                      hintText: 'Enter your Email',
+                      textInputType: TextInputType.emailAddress,
+                    ),
                     TextFieldInput(
                       icon: Icons.lock,
                       textEditingController: passwordController,
@@ -152,15 +155,21 @@ class _SignupScreenState extends State<SignupScreen> {
                       textInputType: TextInputType.text,
                       isPass: true,
                     ),
+                    TextFieldInput(
+                      icon: Icons.lock,
+                      textEditingController: confirmPasswordController,
+                      hintText: 'Confirm your Password',
+                      textInputType: TextInputType.text,
+                      isPass: true,
+                    ),
                     MyButtons(onTap: signupUser, text: "Sign Up"),
-                    
                     SizedBox(height: size.height * 0.03),
                     const Row(
                       children: <Widget>[
                         Expanded(
                           child: Divider(
-                            color: Colors.black, // Color of the divider
-                            thickness: 1, // Thickness of the divider
+                            color: Colors.black,
+                            thickness: 1,
                           ),
                         ),
                         Padding(
@@ -172,24 +181,21 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                         Expanded(
                           child: Divider(
-                            color: Colors.black, // Color of the divider
-                            thickness: 1, // Thickness of the divider
+                            color: Colors.black,
+                            thickness: 1,
                           ),
                         ),
                       ],
                     ),
-
                     SizedBox(height: size.height * 0.03),
-                    GoogleButton(
-                      textEditingController: myController,
-                      isPass: false,
-                      hintText: 'Sign Up with Gmail',
-                    ),
-                    
+                    MyButtons(onTap: signInWithGoogle, text: "Sign Up with Google"),
                     const SizedBox(height: 50),
                     TextButton(
                       onPressed: () {
-                        // Handle navigation to login screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                        );
                       },
                       child: RichText(
                         text: TextSpan(
@@ -204,7 +210,6 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // Navigate to LoginScreen
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => const LoginScreen()),
