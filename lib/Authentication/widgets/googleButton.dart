@@ -34,7 +34,7 @@ class GoogleButton extends StatelessWidget {
             SizedBox(
               width: 24,
               height: 24,
-              child: Image.asset('lib/Authentication/assets/images/icons/google.png'),
+              child: Image.asset('assets/images/icons/google.png'),
             ),
             const SizedBox(width: 8), // Space between image and text
             Text(

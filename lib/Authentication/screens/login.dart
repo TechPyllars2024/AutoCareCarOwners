@@ -128,7 +128,7 @@ Widget build(BuildContext context) {
 
             // Sign Up Image
             SizedBox(height: size.height * 0.02),
-            const CarImageWidget(imagePath: 'lib/Authentication/assets/images/logincar.png'),
+            const CarImageWidget(imagePath: 'assets/images/login.png'),
               
             // Sign Up Form
             Container(
