@@ -2,6 +2,7 @@ import 'package:autocare_carowners/Authentication/screens/login.dart';
 import 'package:flutter/material.dart';
 
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import '../Widgets/button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -61,8 +62,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
     leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
+            Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
           },
@@ -79,7 +79,8 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
                 'lib/Authentication/assets/images/forgotpassword.png', 
                 width: 300,
                 height: 300,
-              ),
+              ).animate()
+               .fadeIn(duration: const Duration(seconds: 1)),
 
               const SizedBox(height: 80),
               const Text('Receive an email to reset your password',
