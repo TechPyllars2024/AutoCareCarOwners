@@ -3,11 +3,20 @@ import 'package:flutter/material.dart';
 class CarOwnerCarProfile extends StatefulWidget {
   const CarOwnerCarProfile({super.key});
 
+
+
+
   @override
   State<CarOwnerCarProfile> createState() => _CarOwnerCarProfileState();
 }
 
 class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
+
+
+  final carBrandController = TextEditingController();
+  final carModelController = TextEditingController();
+  final carYearController = TextEditingController();
+
   List<String> cars = List.generate(4, (index) => 'CAR ${index + 1}');
 
   void _editCar(int index) {
@@ -29,6 +38,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
 
 
                 TextField(
+                  controller: carBrandController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Brand'
@@ -36,8 +46,10 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
 
                 ),
                 Padding(
+
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
+                    controller: carModelController,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Model'
@@ -46,6 +58,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
                   ),
                 ),
                 TextField(
+                  controller: carYearController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Year'
@@ -59,6 +72,9 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
           actions: [
             TextButton(
               onPressed: () {
+                print(carBrandController.text);
+                print(carModelController.text);
+                print(carYearController.text);
                 Navigator.of(context).pop();
               },
               child: Text('Save'),
