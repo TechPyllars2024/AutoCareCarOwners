@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:autocare_carowners/Authentication/Widgets/button.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:lottie/lottie.dart';
 import 'login.dart';
 
@@ -27,17 +28,20 @@ class HomeScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              "Congratulations\nYou have successfully logged in",
+              "CONGRATULATIONS!\nYou have successfully logged in",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
+            ).animate()
+             .fade(duration: 300.ms)
+             .scale(delay: 300.ms),
 
+            const SizedBox(height: 50),
             Lottie.asset(
               'lib/Authentication/assets/images/Animation - 1724694642875.json',
               height: size.height * 0.25,
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 50),
             const Text(
               "Signed In as",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
