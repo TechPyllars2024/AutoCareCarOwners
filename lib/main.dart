@@ -1,4 +1,4 @@
-import 'package:autocare_carowners/widgets/navbar.dart';
+import 'package:autocare_carowners/ProfileManagement/widgets/navbar.dart';
 import 'package:flutter/material.dart';
 
 void main() {
