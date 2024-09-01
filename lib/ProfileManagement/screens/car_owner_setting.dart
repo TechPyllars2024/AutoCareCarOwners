@@ -1,4 +1,5 @@
-import 'package:autocare_carowners/screens/car_owner_change_password.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_change_password.dart';
+
 import 'package:flutter/material.dart';
 
 class CarOwnerSetting extends StatefulWidget {
