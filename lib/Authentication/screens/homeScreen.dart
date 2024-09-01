@@ -32,10 +32,10 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
-            // Lottie.asset(
-            //   'lib/Authentication/assets/images/Animation - 1724694642875.json',
-            //   height: size.height * 0.25,
-            // ),
+            Lottie.asset(
+              'lib/Authentication/assets/images/Animation - 1724694642875.json',
+              height: size.height * 0.25,
+            ),
 
             const SizedBox(height: 16),
             const Text(

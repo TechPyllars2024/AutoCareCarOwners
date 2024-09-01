@@ -128,7 +128,8 @@ Widget build(BuildContext context) {
 
             // Sign Up Image
             const SizedBox(height: 10),
-            const CarImageWidget(imagePath: 'lib/Authentication/assets/images/logincar.png'),
+            const CarImageWidget(imagePath: 'lib/Authentication/assets/images/logincar.png').animate()
+                                                                                            .fadeIn(duration: const Duration(seconds: 1)),
               
             // Sign Up Form
             Container(
