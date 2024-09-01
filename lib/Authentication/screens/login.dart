@@ -1,3 +1,5 @@
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_home.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -52,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
         // Navigate to the home screen if email is verified
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
+            builder: (context) => const CarOwnerProfile(),
           ),
         );
       } else {
@@ -85,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const CarOwnerHome(),
         ),
       );
     } else {

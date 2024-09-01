@@ -1,4 +1,5 @@
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
 import 'package:autocare_carowners/Authentication/widgets/or.dart';
@@ -108,7 +109,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const CarOwnerHome(),
         ),
       );
     } else {

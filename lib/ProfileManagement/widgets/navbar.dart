@@ -6,7 +6,7 @@ import 'package:autocare_carowners/ProfileManagement/screens/car_owner_message.d
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' show BuildContext, Colors, GlobalKey, Icon, Icons, Scaffold, State, StatefulWidget, Widget;
 
 
 class NavBar extends StatefulWidget {
@@ -22,13 +22,12 @@ class _NavBarState extends State<NavBar> {
   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   final List<Widget> _screens = [
-    CarOwnerHome(),
-    CarOwnerMessage(),
-    CarOwnerDirectory(),
-    CarOwnerProfile(),
-    CarOwnerEditProfile(),
-    CarOwnerCarProfile(),
-
+    const CarOwnerHome(),
+    const CarOwnerMessage(),
+    const CarOwnerDirectory(),
+    const CarOwnerProfile(),
+    const CarOwnerEditProfile(),
+    const CarOwnerCarProfile(),
 
   ];
 
@@ -44,9 +43,6 @@ class _NavBarState extends State<NavBar> {
             Icon(Icons.message, size: 30, color: _page == 1 ? Colors.orange : Colors.black),
             Icon(Icons.directions_car, size: 30, color: _page == 2 ? Colors.orange : Colors.black),
             Icon(Icons.person, size: 30, color: _page == 3 ? Colors.orange : Colors.black),
-
-
-
           ],
           onTap: (index) {
             setState(() {
