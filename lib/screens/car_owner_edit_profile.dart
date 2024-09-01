@@ -10,6 +10,10 @@ class CarOwnerEditProfile extends StatefulWidget {
 
 class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
 
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final addressController = TextEditingController();
+
   String profileName = 'Paul Vincent Lerado';
   String emailAddress = 'paulvincent.lerado@gmail.com';
   String location = 'Jaro, Iloilo City';
@@ -94,6 +98,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                   child: Column(
                     children: [
                       TextField(
+                        controller: nameController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                           hintText: 'Enter name'
@@ -103,6 +108,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: TextField(
+                          controller: emailController,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: 'Email'
@@ -111,12 +117,14 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                         ),
                       ),
                       TextField(
+                        controller: addressController,
                         decoration: InputDecoration(
                             border: OutlineInputBorder(),
                             hintText: 'Address'
                         ),
 
                       ),
+
                     ],
                   ),
                 ),
@@ -125,6 +133,9 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), minimumSize: Size(400, 50), backgroundColor: Colors.grey,),
                   onPressed: () {
+                    print(nameController.text);
+                    print(emailController.text);
+                    print(addressController.text);
                     Navigator.push(context,
                         //pushReplacement if you don't want to go back
                         MaterialPageRoute(builder: (context) => CarOwnerProfile()));
