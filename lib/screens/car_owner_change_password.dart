@@ -1,3 +1,4 @@
+import 'package:autocare_carowners/screens/car_owner_setting.dart';
 import 'package:flutter/material.dart';
 
 class CarOwnerChangePassword extends StatefulWidget {
@@ -8,6 +9,10 @@ class CarOwnerChangePassword extends StatefulWidget {
 }
 
 class _CarOwnerChangePasswordState extends State<CarOwnerChangePassword> {
+  final oldPasswordController = TextEditingController();
+  final newPasswordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,6 +24,7 @@ class _CarOwnerChangePasswordState extends State<CarOwnerChangePassword> {
           child: Column(
             children: [
               TextField(
+                controller: oldPasswordController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Old Password'
@@ -28,6 +34,7 @@ class _CarOwnerChangePasswordState extends State<CarOwnerChangePassword> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextField(
+                  controller: newPasswordController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'New Password'
@@ -36,12 +43,22 @@ class _CarOwnerChangePasswordState extends State<CarOwnerChangePassword> {
                 ),
               ),
               TextField(
+                controller: confirmPasswordController,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     hintText: 'Confirm Password'
                 ),
 
               ),
+
+              ElevatedButton(onPressed: () {
+                print(oldPasswordController.text);
+                print(newPasswordController.text);
+                print(confirmPasswordController.text);
+
+                Navigator.push(context, MaterialPageRoute(builder: (context) => CarOwnerSetting()));
+              },
+                  child: Text('Save'))
 
             ],
           ),
