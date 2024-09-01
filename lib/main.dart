@@ -1,7 +1,21 @@
-import 'package:flutter/cupertino.dart';
-
+import 'package:autocare_carowners/ProfileManagement/widgets/navbar.dart';
+import 'package:flutter/material.dart';
 
 void main() {
-  runApp(Text('AutoCare', textDirection: TextDirection.ltr,));
-  //sample connection to discord
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: NavBar()
+
+    );
+  }
 }
