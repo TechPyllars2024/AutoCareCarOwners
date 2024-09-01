@@ -23,12 +23,12 @@ class TextFieldInput extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: TextField(
-        style: const TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 15),
         controller: textEditingController,
         decoration: InputDecoration(
           labelText: hintText,
           prefixIcon: icon != null
-              ? Icon(icon, color: Colors.black45, size: 24)
+              ? Icon(icon, color: Colors.black, size: 24)
               : null,
           labelStyle: const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
           border: const OutlineInputBorder(

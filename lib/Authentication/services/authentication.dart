@@ -31,7 +31,7 @@ class AuthenticationMethod {
         'uid': credential.user!.uid,
         'email': email,
       });
-      return 'Success!';
+      return 'SUCCESS';
     } on FirebaseAuthException catch (e) {
       return e.message ?? "An error occurred";
     } catch (e) {
@@ -74,6 +74,7 @@ class AuthenticationMethod {
   }
 
   // RESET PASSWORD
+  // RESET PASSWORD
   Future<String> resetPassword({
     required String email,
   }) async {
@@ -82,14 +83,22 @@ class AuthenticationMethod {
     }
 
     try {
+      // Try sending the reset password email
       await auth.sendPasswordResetEmail(email: email);
       return "SUCCESS";
     } on FirebaseAuthException catch (e) {
-      return e.message ?? "An error occurred";
+      // Handle specific errors
+      if (e.code == 'user-not-found') {
+        return "No account found with that email";
+      } else {
+        return e.message ?? "An error occurred";
+      }
     } catch (e) {
       return "An unexpected error occurred";
     }
   }
+
+
 
   // SIGN IN/LOG IN WITH GOOGLE
   Future<String> signInWithGoogle() async {

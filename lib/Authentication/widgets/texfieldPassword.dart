@@ -28,13 +28,13 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: TextField(
-        style: const TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 15),
         controller: widget.textEditingController,
         obscureText: widget.isPass && !_isPasswordVisible, // Toggle password visibility
         keyboardType: widget.textInputType,
         decoration: InputDecoration(
           labelText: widget.hintText,
-          prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.black, size: 18) : null,
+          prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.black, size: 24) : null,
           labelStyle: const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
           suffixIcon: widget.isPass
               ? IconButton(
