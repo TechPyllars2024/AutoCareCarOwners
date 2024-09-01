@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:autocare_carowners/Authentication/screens/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
