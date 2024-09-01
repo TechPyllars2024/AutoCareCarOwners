@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 class CarOwnerCarProfile extends StatefulWidget {
   const CarOwnerCarProfile({super.key});
 
-
-
-
   @override
   State<CarOwnerCarProfile> createState() => _CarOwnerCarProfileState();
 }
@@ -39,7 +36,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
 
                 TextField(
                   controller: carBrandController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Brand'
                   ),
@@ -50,7 +47,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
                     controller: carModelController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Model'
                     ),
@@ -59,7 +56,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
                 ),
                 TextField(
                   controller: carYearController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Year'
                   ),
@@ -89,13 +86,13 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'CAR PROFILES',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 2,
             mainAxisSpacing: 2,
@@ -109,7 +106,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
                 child: Text(
                   cars[index],
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
               Padding(
@@ -121,13 +118,13 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: Size(150, 40),
+                      minimumSize: const Size(150, 40),
                       backgroundColor: Colors.grey,
                     ),
                     onPressed: () {
                       _editCar(index);
                     },
-                    child: Text(
+                    child: const Text(
                       'Edit',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
