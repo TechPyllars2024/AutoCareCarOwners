@@ -1,4 +1,3 @@
-import 'package:autocare_carowners/Authentication/screens/forgotPassword.dart';
 import 'package:autocare_carowners/Authentication/screens/homeScreen.dart';
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,7 +30,7 @@ class MyApp extends StatelessWidget {
       primarySwatch: Colors.green,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
-    home: const ForgotPasswordScreen(),
+    home: const VerifyEmailScreen(),
   );
 }
 
