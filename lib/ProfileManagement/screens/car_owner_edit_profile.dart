@@ -1,4 +1,5 @@
-import 'package:autocare_carowners/screens/car_owner_profile.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
+
 import 'package:flutter/material.dart';
 
 class CarOwnerEditProfile extends StatefulWidget {
