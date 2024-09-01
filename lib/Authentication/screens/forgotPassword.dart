@@ -1,3 +1,4 @@
+import 'package:autocare_carowners/Authentication/screens/login.dart';
 import 'package:flutter/material.dart';
 
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
@@ -57,25 +58,41 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
     backgroundColor: Colors.transparent,
     elevation: 0,
     title: const Text("Reset Password"),
+    leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+            );
+          },
+        ),
   ),
     body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Form(
           key: formKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text('Receive an email to \nreset your password',
+              Image.asset(
+                'lib/Authentication/assets/images/forgotpassword.png', 
+                width: 300,
+                height: 300,
+              ),
+
+              const SizedBox(height: 80),
+              const Text('Receive an email to reset your password',
               textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 25),
-              ), const SizedBox(height: 20),
-              TextFormField(
-                controller: emailController,
-                cursorColor: Colors.black,
-                textInputAction: TextInputAction.done,
-                decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder(),),
-                keyboardType: TextInputType.emailAddress
-              ),const SizedBox(height: 20),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ), const SizedBox(height: 40),
+                TextFormField(
+                  controller: emailController,
+                  cursorColor: Colors.black,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(labelText: 'Email', border: OutlineInputBorder(),),
+                  keyboardType: TextInputType.emailAddress
+                ),const SizedBox(height: 20),
               isLoading
                   ? const CircularProgressIndicator()
                   : MyButtons(
