@@ -1,6 +1,7 @@
-import 'package:autocare_carowners/screens/car_owner_car_profile.dart';
-import 'package:autocare_carowners/screens/car_owner_edit_profile.dart';
-import 'package:autocare_carowners/screens/car_owner_setting.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_profile.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_setting.dart';
+
 import 'package:flutter/material.dart';
 
 
