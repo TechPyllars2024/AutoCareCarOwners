@@ -41,6 +41,7 @@ dependencies:
   lottie: ^3.1.2
   flutter_animate: ^4.5.0
   google_sign_in: ^6.2.1
+  curved_navigation_bar: ^1.0.6
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,8 @@ flutter:
 assets:
   - assets/images/
   - assets/images/icons/
+  - assets/images/profilePhoto.jpg
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

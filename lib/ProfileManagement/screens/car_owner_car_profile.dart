@@ -1,0 +1,146 @@
+import 'package:flutter/material.dart';
+
+class CarOwnerCarProfile extends StatefulWidget {
+  const CarOwnerCarProfile({super.key});
+
+
+
+
+  @override
+  State<CarOwnerCarProfile> createState() => _CarOwnerCarProfileState();
+}
+
+class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
+
+
+  final carBrandController = TextEditingController();
+  final carModelController = TextEditingController();
+  final carYearController = TextEditingController();
+
+  List<String> cars = List.generate(4, (index) => 'CAR ${index + 1}');
+
+  void _editCar(int index) {
+    // This is where you'll handle the edit logic for the specific car.
+    // For now, let's just show a dialog as an example.
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+
+          title: Text('Edit ${cars[index]}'),
+          content: SizedBox(
+            width: 400,
+
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('You are editing ${cars[index]}.'),
+
+
+                TextField(
+                  controller: carBrandController,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Brand'
+                  ),
+
+                ),
+                Padding(
+
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: TextField(
+                    controller: carModelController,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Model'
+                    ),
+
+                  ),
+                ),
+                TextField(
+                  controller: carYearController,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      hintText: 'Year'
+                  ),
+
+                ),
+              ],
+            ),
+          ),
+
+          actions: [
+            TextButton(
+              onPressed: () {
+                print(carBrandController.text);
+                print(carModelController.text);
+                print(carYearController.text);
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'CAR PROFILES',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 2,
+            mainAxisSpacing: 2,
+            childAspectRatio: 1 / 1),
+        itemCount: cars.length,
+        itemBuilder: (context, index) => Card(
+          color: Colors.orange.shade200,
+          child: Stack(
+            children: [
+              Center(
+                child: Text(
+                  cars[index],
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      minimumSize: Size(150, 40),
+                      backgroundColor: Colors.grey,
+                    ),
+                    onPressed: () {
+                      _editCar(index);
+                    },
+                    child: Text(
+                      'Edit',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

@@ -13,6 +13,8 @@ Future<void> main() async {
 // Global keys
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 final GlobalKey<ScaffoldMessengerState> messengerKey = GlobalKey<ScaffoldMessengerState>();
+import 'package:autocare_carowners/ProfileManagement/widgets/navbar.dart';
+import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
