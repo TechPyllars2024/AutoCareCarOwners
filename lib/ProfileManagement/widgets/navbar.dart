@@ -1,11 +1,12 @@
-import 'package:autocare_carowners/screens/car_owner_car_profile.dart';
-import 'package:autocare_carowners/screens/car_owner_directory.dart';
-import 'package:autocare_carowners/screens/car_owner_edit_profile.dart';
-import 'package:autocare_carowners/screens/car_owner_message.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_profile.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_directory.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_home.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_message.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:autocare_carowners/screens/car_owner_profile.dart';
-import 'package:autocare_carowners/screens/car_owner_home.dart';
 
 
 class NavBar extends StatefulWidget {
