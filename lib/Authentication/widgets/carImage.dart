@@ -4,9 +4,9 @@ class CarImageWidget extends StatelessWidget {
   final String imagePath;
 
   const CarImageWidget({
-    Key? key,
+    super.key,
     required this.imagePath,
-  }) : super(key: key);
+  });
 
 @override
 Widget build(BuildContext context) {
