@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       primarySwatch: Colors.green,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
-    home: const HomeScreen(),
+    home: const LoginScreen(),
   );
 }
 

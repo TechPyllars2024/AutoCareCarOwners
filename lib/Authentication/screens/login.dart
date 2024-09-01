@@ -127,8 +127,8 @@ Widget build(BuildContext context) {
             ),
 
             // Sign Up Image
-            SizedBox(height: size.height * 0.02),
-            const CarImageWidget(imagePath: 'assets/images/login.png'),
+            const SizedBox(height: 10),
+            const CarImageWidget(imagePath: 'lib/Authentication/assets/images/logincar.png'),
               
             // Sign Up Form
             Container(
@@ -183,7 +183,7 @@ Widget build(BuildContext context) {
                   ),
                     
                   // Already have an account? Log In
-                  const SizedBox(height: 130),
+                  const SizedBox(height: 170),
                   TextButton(
                     onPressed: () {
                       // Handle navigation to login screen

@@ -146,8 +146,8 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
 
               // Sign Up Image
-              // SizedBox(height: size.height * 0.02),
-              // const CarImageWidget(imagePath: 'lib/Authentication/assets/images/welcomecar.png'),
+              const SizedBox(height: 10),
+              const CarImageWidget(imagePath: 'lib/Authentication/assets/images/welcomecar.png'),
               
               // Sign Up Form
               Container(
