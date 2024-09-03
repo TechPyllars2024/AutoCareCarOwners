@@ -20,32 +20,29 @@ class TextFieldInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
-      child: TextField(
-        style: const TextStyle(fontSize: 20),
-        controller: textEditingController,
-        decoration: InputDecoration(
-          labelText: hintText,
-          prefixIcon: icon != null
-              ? Icon(icon, color: Colors.black, size: 24)
-              : null,
-          labelStyle: const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
-          border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.black),
-          ),
-          focusedBorder:  OutlineInputBorder(
-            borderRadius: BorderRadius.circular(15),
-            borderSide: BorderSide(color: Colors.black),
-          ),
+    return TextField(
+      style: const TextStyle(fontSize: 20),
+      controller: textEditingController,
+      decoration: InputDecoration(
+        labelText: hintText,
+        prefixIcon: icon != null
+            ? Icon(icon, color: Colors.black, size: 24)
+            : null,
+        labelStyle: const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
         ),
-        keyboardType: textInputType,
-        obscureText: isPass,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.black),
+        ),
+        focusedBorder:  OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide(color: Colors.black),
+        ),
       ),
+      keyboardType: textInputType,
+      obscureText: isPass,
     );
   }
 }
