@@ -25,7 +25,7 @@ class GoogleButton extends StatelessWidget {
               offset: const Offset(0, 3),
             ),
           ],
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
         ),
         padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         child: Row(
