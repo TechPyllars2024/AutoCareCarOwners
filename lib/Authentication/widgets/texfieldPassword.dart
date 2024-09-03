@@ -26,9 +26,9 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 0.0),
       child: TextField(
-        style: const TextStyle(fontSize: 15),
+        style: const TextStyle(fontSize: 20),
         controller: widget.textEditingController,
         obscureText: widget.isPass && !_isPasswordVisible, // Toggle password visibility
         keyboardType: widget.textInputType,
@@ -52,10 +52,12 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
           border: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.black),
           ),
-          enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.black),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide:  BorderSide(color: Colors.black),
           ),
-          focusedBorder: const OutlineInputBorder(
+          focusedBorder:  OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
             borderSide: BorderSide(color: Colors.black),
           ),
         ),
