@@ -61,7 +61,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(180),
                 child: Image.asset(
-                  'assets/images/profilePhoto.jpg',
+                  'assets/images/icons/profilePhoto.jpg',
                   width: 360,
                   height: 360,
                 ),
