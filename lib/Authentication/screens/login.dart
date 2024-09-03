@@ -121,7 +121,7 @@ Widget build(BuildContext context) {
                     TextSpan(
                       text: "Auto",
                       style: TextStyle(
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.bold,
                         fontSize: 50,
                         color: Colors.white,
                       ),
