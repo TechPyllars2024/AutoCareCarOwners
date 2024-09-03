@@ -104,152 +104,193 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Auto",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50,
-                          color: Colors.white,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "Care",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50,
-                          color: Colors.orange, // Different color
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(duration: const Duration(seconds: 3)),
-              ),
-
-              // Sign Up Image
-              const CarImageWidget(
-                      imagePath: 'lib/Authentication/assets/images/car.png')
-                  .animate()
-                  .fadeIn(duration: const Duration(seconds: 2)),
-              // Sign Up Form
-              Container(
-                height: MediaQuery.of(context).size.height,
-                padding: const EdgeInsets.only(top: 50),
-
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
-                  ),
-
-
-                  color: Colors.white,
-                ),
-
-
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: SingleChildScrollView(
+              child: SizedBox(
                 child: Column(
-
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    TextFieldInput(
-                        icon: Icons.email,
-                        textEditingController: emailController,
-                        hintText: 'Enter your Email',
-                        textInputType: TextInputType.text),
-                    TextFieldPassword(
-                      icon: Icons.lock,
-                      textEditingController: passwordController,
-                      hintText: 'Enter your Password',
-                      textInputType: TextInputType.text,
-                      isPass: true,
-                    ),
-
-                    // Forgot Password
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          child: const Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                            ),
-                          ),
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const ForgotPasswordScreen(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Sign Up Button
-                    MyButtons(onTap: loginUser, text: "Log In"),
-
-                    // Sign Up OR
-                    SizedBox(height: size.height * 0.02),
-                    const Or(),
-
-                    // Sign Up with Google
-                    SizedBox(height: size.height * 0.03),
-                    GoogleButton(
-                      onTap: logInWithGoogle,
-                      hintText: 'Log In with Google',
-                    ),
-
-                    // Already have an account? Log In
-
-                    TextButton(
-                      onPressed: () {
-                        // Handle navigation to login screen
-                      },
+                    Container(
+                      margin: const EdgeInsets.only(top: 40),
                       child: RichText(
-                        text: TextSpan(
-                          text: "Don't have an account? ",
-                          style: const TextStyle(color: Colors.black),
-                          children: <TextSpan>[
+                        text: const TextSpan(
+                          children: [
                             TextSpan(
-                              text: 'Sign Up',
-                              style: const TextStyle(
-                                color: Colors.orange,
+                              text: "Auto",
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
+                                fontSize: 50,
+                                color: Colors.white,
                               ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  // Navigate to LoginScreen
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const SignupScreen()),
-                                  );
-                                },
+                            ),
+                            TextSpan(
+                              text: "Care",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 50,
+                                color: Colors.orange, // Different color
+                              ),
                             ),
                           ],
                         ),
-                      ),
+                      ).animate().fadeIn(duration: const Duration(seconds: 3)),
                     ),
+
+                    // Sign Up Image
+                    const CarImageWidget(
+                            imagePath: 'lib/Authentication/assets/images/car.png')
+                        .animate()
+                        .fadeIn(duration: const Duration(seconds: 2)),
+                    // Sign Up Form
+                    Stack(
+                      children: [
+                        Container(
+                        height: MediaQuery.of(context).size.height,
+                        padding: const EdgeInsets.only(top: 50),
+
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40),
+                          ),
+
+
+                          color: Colors.white,
+                        ),
+
+
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                width: double.infinity, // Adjust the width as needed
+                                child: TextFieldInput(
+
+                                  icon: Icons.email,
+                                  textEditingController: emailController,
+                                  hintText: 'Enter your Email',
+                                  textInputType: TextInputType.emailAddress,
+                                ),
+                              ),
+                             SizedBox(height: 20),
+                              Container(
+                                width: double.infinity, // Adjust the width as needed
+                                child: TextFieldPassword(
+                                  icon: Icons.lock,
+                                  textEditingController: passwordController,
+                                  hintText: 'Enter your Password',
+                                  textInputType: TextInputType.text,
+                                  isPass: true,
+                                ),
+                              ),
+                              SizedBox(height: 20),
+
+
+                              // Forgot Password
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  GestureDetector(
+                                    child: const Text(
+                                      'Forgot Password?',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 15,
+
+                                      ),
+                                    ),
+                                    onTap: () => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ForgotPasswordScreen(),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              // Sign Up Button
+                              SizedBox(height: 20,),
+                              MyButtons(onTap: loginUser, text: "Log In"),
+
+                              // Sign Up OR
+                              SizedBox(height: size.height * 0.02),
+                              const Or(),
+
+                              // Sign Up with Google
+                              SizedBox(height: size.height * 0.03),
+                              GoogleButton(
+                                onTap: logInWithGoogle,
+                                hintText: 'Log In with Google',
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: TextButton(
+
+                                  onPressed: () {
+                                    // Handle navigation to login screen
+                                  },
+                                  child: RichText(
+                                    text: TextSpan(
+                                      text: "Don't have an account? ",
+                                      style: const TextStyle(color: Colors.black),
+                                      children: <TextSpan>[
+                                        TextSpan(
+                                          text: 'Register now',
+                                          style: const TextStyle(
+                                            color: Colors.orange,
+                                            fontWeight: FontWeight.w900,
+                                          ),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              // Navigate to LoginScreen
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                    const SignupScreen()),
+                                              );
+                                            },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+
+
+                            ],
+                          ),
+                        ),
+                      ).animate().slide(
+                          duration: const Duration(milliseconds: 2000),
+                          curve: Curves.easeInOut,
+                          begin: const Offset(0, 1),
+                          end: const Offset(0, 0)),
+  ],
+                    )
                   ],
                 ),
-              ).animate().slide(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                  begin: const Offset(0, 1),
-                  end: const Offset(0, 0))
-            ],
+
+
+              ),
+
+
+
+
+            ),
+
           ),
-        ),
+          // Already have an account? Log In
+
+
+        ],
       ),
     );
   }
