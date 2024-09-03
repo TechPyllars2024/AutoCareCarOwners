@@ -16,10 +16,7 @@ import '../Widgets/button.dart';
 import '../Widgets/text_field.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({
-    super.key,
-    this.child
-  });
+  const LoginScreen({super.key, this.child});
 
   final Widget? child;
 
@@ -28,7 +25,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
@@ -102,128 +98,143 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
-  Size size = MediaQuery.of(context).size;
-  return Scaffold(
-    backgroundColor: Colors.black,
-    resizeToAvoidBottomInset: false,
-    body: SingleChildScrollView(
-      child: SizedBox(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              margin: const EdgeInsets.only(top: 40),
-              child: RichText(
-                text: const TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Auto",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 50,
-                        color: Colors.white,
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: SizedBox(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                margin: const EdgeInsets.only(top: 40),
+                child: RichText(
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "Auto",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: "Care",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 50,
-                        color: Colors.orange, // Different color
+                      TextSpan(
+                        text: "Care",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 50,
+                          color: Colors.orange, // Different color
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ).animate().fadeIn(duration: const Duration(seconds: 3)),
-            ),
-
-            // Sign Up Image
-            const CarImageWidget(imagePath: 'lib/Authentication/assets/images/car.png').animate()
-                                                                                            .fadeIn(duration: const Duration(seconds: 1)),
-            // Sign Up Form
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+                    ],
+                  ),
+                ).animate().fadeIn(duration: const Duration(seconds: 3)),
               ),
-              child: Column(
-                children: <Widget>[               
-                  TextFieldInput(
-                      icon: Icons.email,
-                      textEditingController: emailController,
-                      hintText: 'Enter your Email',
-                      textInputType: TextInputType.text),
-                  TextFieldPassword(
+
+              // Sign Up Image
+              const CarImageWidget(
+                      imagePath: 'lib/Authentication/assets/images/car.png')
+                  .animate()
+                  .fadeIn(duration: const Duration(seconds: 2)),
+              // Sign Up Form
+              Container(
+                height: MediaQuery.of(context).size.height,
+                padding: const EdgeInsets.only(top: 50),
+
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  ),
+
+
+                  color: Colors.white,
+                ),
+
+
+                child: Column(
+
+                  children: <Widget>[
+                    TextFieldInput(
+                        icon: Icons.email,
+                        textEditingController: emailController,
+                        hintText: 'Enter your Email',
+                        textInputType: TextInputType.text),
+                    TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: passwordController,
                       hintText: 'Enter your Password',
                       textInputType: TextInputType.text,
                       isPass: true,
-                  ),
+                    ),
 
-                  // Forgot Password
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        child: const Text(
-                          'Forgot Password?',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 15,
-                          ),
-                        ),
-                        onTap: () => Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const ForgotPasswordScreen(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  // Sign Up Button
-                  MyButtons(onTap: loginUser, text: "Log In"),
-                    
-                  // Sign Up OR
-                  SizedBox(height: size.height * 0.02),
-                  const Or(),
-
-                  // Sign Up with Google
-                  SizedBox(height: size.height * 0.03),
-                  GoogleButton(
-                    onTap: logInWithGoogle,
-                    hintText: 'Log In with Google',
-                  ),
-                    
-                  // Already have an account? Log In
-                  const SizedBox(height: 80),
-                  TextButton(
-                    onPressed: () {
-                      // Handle navigation to login screen
-                    },
-                    child: RichText(
-                      text: TextSpan(
-                        text: "Don't have an account? ",
-                        style: const TextStyle(color: Colors.black),
-                        children: <TextSpan>[
-                          TextSpan(
-                            text: 'Sign Up',
-                            style: const TextStyle(
-                              color: Colors.orange,
-                              fontWeight: FontWeight.bold,
+                    // Forgot Password
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        GestureDetector(
+                          child: const Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
                             ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                // Navigate to LoginScreen
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const SignupScreen()),
-                                );
-                              },
+                          ),
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const ForgotPasswordScreen(),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Sign Up Button
+                    MyButtons(onTap: loginUser, text: "Log In"),
+
+                    // Sign Up OR
+                    SizedBox(height: size.height * 0.02),
+                    const Or(),
+
+                    // Sign Up with Google
+                    SizedBox(height: size.height * 0.03),
+                    GoogleButton(
+                      onTap: logInWithGoogle,
+                      hintText: 'Log In with Google',
+                    ),
+
+                    // Already have an account? Log In
+
+                    TextButton(
+                      onPressed: () {
+                        // Handle navigation to login screen
+                      },
+                      child: RichText(
+                        text: TextSpan(
+                          text: "Don't have an account? ",
+                          style: const TextStyle(color: Colors.black),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: 'Sign Up',
+                              style: const TextStyle(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  // Navigate to LoginScreen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const SignupScreen()),
+                                  );
+                                },
                             ),
                           ],
                         ),
@@ -231,11 +242,11 @@ Widget build(BuildContext context) {
                     ),
                   ],
                 ),
-              ).animate()
-               .slide(duration: const Duration(milliseconds: 500), 
-                      curve: Curves.easeInOut,
-                      begin: const Offset(0, 1), 
-                      end: const Offset(0, 0))
+              ).animate().slide(
+                  duration: const Duration(milliseconds: 500),
+                  curve: Curves.easeInOut,
+                  begin: const Offset(0, 1),
+                  end: const Offset(0, 0))
             ],
           ),
         ),
