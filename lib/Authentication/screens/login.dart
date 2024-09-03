@@ -176,7 +176,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   textInputType: TextInputType.emailAddress,
                                 ),
                               ),
-                             SizedBox(height: 20),
+                             SizedBox(height: 10),
                               Container(
                                 width: double.infinity, // Adjust the width as needed
                                 child: TextFieldPassword(
