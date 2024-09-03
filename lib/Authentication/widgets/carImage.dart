@@ -12,7 +12,7 @@ class CarImageWidget extends StatelessWidget {
 Widget build(BuildContext context) {
     return Image.asset(
       imagePath,
-      height: 180,
+      height: 280,
     );
   }
 }
