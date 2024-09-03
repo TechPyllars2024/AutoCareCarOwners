@@ -241,7 +241,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
               ).animate()
-               .slide(duration: const Duration(milliseconds: 500), 
+               .slide(duration: const Duration(milliseconds: 2000),
                       curve: Curves.easeInOut,
                       begin: const Offset(0, 1), 
                       end: const Offset(0, 0)),
