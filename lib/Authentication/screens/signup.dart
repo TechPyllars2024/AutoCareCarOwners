@@ -166,90 +166,104 @@ class _SignupScreenState extends State<SignupScreen> {
                   const CarImageWidget(imagePath: 'lib/Authentication/assets/images/car.png').animate()
                                                                                                     .fadeIn(duration: const Duration(seconds: 1)),
                   // Sign Up Form
-                  Container(
-                    height: MediaQuery.of(context).size.height,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        TextFieldInput(
-                            icon: Icons.person,
-                            textEditingController: nameController,
-                            hintText: 'Enter your Name',
-                            textInputType: TextInputType.text),
-                        TextFieldInput(
-                            icon: Icons.email,
-                            textEditingController: emailController,
-                            hintText: 'Enter your Email',
-                            textInputType: TextInputType.text),
-                        TextFieldPassword(
-                          icon: Icons.lock,
-                          textEditingController: passwordController,
-                          hintText: 'Enter your Password',
-                          textInputType: TextInputType.text,
-                          isPass: true,
+                  Stack(
+                    children: [Container(
+                      height: MediaQuery.of(context).size.height,
+                      padding: const EdgeInsets.only(top: 50),
+
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
                         ),
-                        TextFieldPassword(
-                          icon: Icons.lock,
-                          textEditingController: confirmPasswordController,
-                          hintText: 'Confirm your Password',
-                          textInputType: TextInputType.text,
-                          isPass: true,
-                        ),
-              
-                        // Sign Up Button
-                        MyButtons(onTap: signupUser, text: "Sign Up"),
-              
-                        // Sign Up OR
-                        const Or(),
-              
-                        // Sign Up with Google
-                        SizedBox(height: size.height * 0.01),
-                        GoogleButton(
-                          onTap: signInWithGoogle,
-                          hintText: 'Sign Up with Google',
-                        ),
-              
-                        // Already have an account? Log In
-                        const SizedBox(height: 30),
-                        TextButton(
-                          onPressed: () {
-                            // Handle navigation to login screen
-                          },
-                          child: RichText(
-                            text: TextSpan(
-                              text: 'Already have an account? ',
-                              style: const TextStyle(color: Colors.black),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: 'Log In',
-                                  style: const TextStyle(
-                                    color: Colors.orange,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      // Navigate to LoginScreen
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context) => const LoginScreen()),
-                                      );
-                                    },
-                                ),
-                              ],
+                      color: Colors.white,
+
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                        child: Column(
+                          children: <Widget>[
+                            TextFieldInput(
+                                icon: Icons.person,
+                                textEditingController: nameController,
+                                hintText: 'Enter your Name',
+                                textInputType: TextInputType.text),
+                            SizedBox(height: 10),
+                            TextFieldInput(
+                                icon: Icons.email,
+                                textEditingController: emailController,
+                                hintText: 'Enter your Email',
+                                textInputType: TextInputType.text),
+                            SizedBox(height: 10),
+                            TextFieldPassword(
+                              icon: Icons.lock,
+                              textEditingController: passwordController,
+                              hintText: 'Enter your Password',
+                              textInputType: TextInputType.text,
+                              isPass: true,
                             ),
-                          ),
+                            SizedBox(height: 10),
+                            TextFieldPassword(
+                              icon: Icons.lock,
+                              textEditingController: confirmPasswordController,
+                              hintText: 'Confirm your Password',
+                              textInputType: TextInputType.text,
+                              isPass: true,
+                            ),
+
+                            // Sign Up Button
+                            MyButtons(onTap: signupUser, text: "Sign Up"),
+
+                            // Sign Up OR
+                            const Or(),
+
+                            // Sign Up with Google
+                            SizedBox(height: size.height * 0.01),
+                            GoogleButton(
+                              onTap: signInWithGoogle,
+                              hintText: 'Sign Up with Google',
+                            ),
+
+                            // Already have an account? Log In
+                            const SizedBox(height: 30),
+                            TextButton(
+                              onPressed: () {
+                                // Handle navigation to login screen
+                              },
+                              child: RichText(
+                                text: TextSpan(
+                                  text: 'Already have an account? ',
+                                  style: const TextStyle(color: Colors.black),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: 'Log In',
+                                      style: const TextStyle(
+                                        color: Colors.orange,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          // Navigate to LoginScreen
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                          );
+                                        },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ).animate()
-                   .slide(duration: const Duration(milliseconds: 2000),
-                          curve: Curves.easeInOut,
-                          begin: const Offset(0, 1),
-                          end: const Offset(0, 0)),
+                      ),
+                    ).animate()
+                     .slide(duration: const Duration(milliseconds: 2000),
+                            curve: Curves.easeInOut,
+                            begin: const Offset(0, 1),
+                            end: const Offset(0, 0)),
+            ],
+                  ),
                 ],
               ),
                       ),
