@@ -26,7 +26,7 @@ class TextFieldInput extends StatelessWidget {
       decoration: InputDecoration(
         labelText: hintText,
         prefixIcon: icon != null
-            ? Icon(icon, color: Colors.black, size: 24)
+            ? Icon(icon, color: Colors.black54, size: 24)
             : null,
         labelStyle: const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
         border: const OutlineInputBorder(
@@ -34,11 +34,11 @@ class TextFieldInput extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.black),
+          borderSide: BorderSide(color: Colors.black26, width: 3),
         ),
         focusedBorder:  OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(color: Colors.black),
+          borderSide: BorderSide(color: Colors.black26, width: 3),
         ),
       ),
       keyboardType: textInputType,
