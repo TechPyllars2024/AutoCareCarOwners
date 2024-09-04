@@ -113,31 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Container(
-                      margin: const EdgeInsets.only(top: 40),
-                      child: RichText(
-                        text: const TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Auto",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 50,
-                                color: Colors.white,
-                              ),
-                            ),
-                            TextSpan(
-                              text: "Care",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 50,
-                                color: Colors.orange, // Different color
-                              ),
-                            ),
-                          ],
-                        ),
-                      ).animate().fadeIn(duration: const Duration(seconds: 3)),
-                    ),
+
 
                     // Sign Up Image
                     const CarImageWidget(
@@ -149,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         Container(
                         height: MediaQuery.of(context).size.height,
-                        padding: const EdgeInsets.only(top: 50),
+                        padding: const EdgeInsets.only(top: 30),
 
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -163,16 +139,41 @@ class _LoginScreenState extends State<LoginScreen> {
 
 
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 35.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 25.0),
                           child: Column(
                             children: <Widget>[
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 20),
+                                child: RichText(
+                                  text: const TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "Auto",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 50,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: "Care",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 50,
+                                          color: Colors.orange, // Different color
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                               Container(
                                 width: double.infinity, // Adjust the width as needed
                                 child: TextFieldInput(
 
                                   icon: Icons.email,
                                   textEditingController: emailController,
-                                  hintText: 'Enter your Email',
+                                  hintText: 'Email',
                                   textInputType: TextInputType.emailAddress,
                                 ),
                               ),
@@ -182,7 +183,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: TextFieldPassword(
                                   icon: Icons.lock,
                                   textEditingController: passwordController,
-                                  hintText: 'Enter your Password',
+                                  hintText: 'Password',
+
                                   textInputType: TextInputType.text,
                                   isPass: true,
                                 ),
@@ -198,7 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     child: const Text(
                                       'Forgot Password?',
                                       style: TextStyle(
-                                        color: Colors.black,
+                                        color: Colors.black54,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 15,
 
@@ -269,7 +271,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ).animate().slide(
-                          duration: const Duration(milliseconds: 2000),
+                          duration: const Duration(milliseconds: 1500),
                           curve: Curves.easeInOut,
                           begin: const Offset(0, 1),
                           end: const Offset(0, 0)),
