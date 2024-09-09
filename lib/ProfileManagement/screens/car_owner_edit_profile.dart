@@ -1,4 +1,5 @@
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
+import 'package:autocare_carowners/ProfileManagement/widgets/edit_profile_image.dart';
 
 import 'package:flutter/material.dart';
 
@@ -30,7 +31,6 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
         ),
         backgroundColor: Colors.grey.shade300,
         actions: [
-
           IconButton(
               onPressed: () => {},
               icon: Icon(
@@ -39,61 +39,19 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
               )),
         ],
       ),
+
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
+            const Stack(
               children: [
-                Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(320),
-                      child: Icon(
-                        Icons.person,
-                        size: 260,
-                        color: Colors.black12,
-        
-                      ),
-        
-                    ),
-        
-                  ),
-                ),
-                Positioned(
-                  right: 100,
-                  top: 190,
-                  child: Container(
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      shape: BoxShape.circle,
-                    ),
-                    child: ClipRRect(
-                      //borderRadius: BorderRadius.circular(5),
-                      child: IconButton(
-                          onPressed: () => {
-
-                          },
-                          icon: Icon(
-                            Icons.camera_alt_outlined,
-                            size: 40,
-                          )),
-        
-                    ),
-        
-                  ),
-                )
+                // Profile Image
+                EditProfileImage(),
               ],
             ),
+            // Text Fields
             Column(
               children: [
-
-        
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: Column(

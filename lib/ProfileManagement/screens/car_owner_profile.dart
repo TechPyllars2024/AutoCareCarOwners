@@ -54,14 +54,14 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
           Center(
             child: Container(
               padding: const EdgeInsets.all(8.0),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 shape: BoxShape.circle,
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(180),
                 child: Image.asset(
-                  'assets/images/icons/profilePhoto.jpg',
+                  'assets/images/profilePhoto.jpg',
                   width: 360,
                   height: 360,
                 ),
@@ -99,6 +99,16 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                   ],
                 ),
               ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), minimumSize: Size(400, 50), backgroundColor: Colors.grey,),
+                onPressed: () {
+                  Navigator.push(context,
+                      //pushReplacement if you don't want to go back
+                      MaterialPageRoute(builder: (context) => CarOwnerCarProfile()));
+                },
+                child: Text('Address', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
+              ),
+              const SizedBox(height: 30),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), minimumSize: Size(400, 50), backgroundColor: Colors.grey,),
                 onPressed: () {
