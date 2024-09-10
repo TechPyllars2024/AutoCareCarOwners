@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class CarOwnerAddress extends StatefulWidget {
   const CarOwnerAddress({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   List<AddressModel> addresses = [
     AddressModel(
       fullName: 'Candace Yu',
-      phoneNumber: '09123456789',
+      phoneNumber: '0912-345-6789',
       street: 'St. Poblacion Ilawod',
       city: 'Iloilo City',
       country: 'Philippines',
@@ -47,6 +48,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
 
     final _formKey = GlobalKey<FormState>();
 
+    final phoneNumberFormatter = MaskTextInputFormatter(
+      mask: '####-###-####',
+      filter: { "#": RegExp(r'[0-9]') },
+    );
+    
     showDialog(
       context: context,
       builder: (context) {
@@ -70,14 +76,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   TextFormField(
                     controller: phoneNumberController,
                     decoration: const InputDecoration(labelText: 'Phone Number'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(11),
-                    ],
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [phoneNumberFormatter],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please fill this section';
+                      }
+                      if (!phoneNumberFormatter.isFill()) {
+                      return 'Please enter a valid phone number';
                       }
                       return null;
                     },
@@ -127,7 +133,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   setState(() {
-                    addresses.add(AddressModel(
+                    addresses[index] = (AddressModel(
                       fullName: fullNameController.text,
                       phoneNumber: phoneNumberController.text,
                       street: streetController.text,
@@ -138,7 +144,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   Navigator.of(context).pop();
                 }
               },
-              child: const Text('Add'),
+              child: const Text('Edit'),
             ),
           ],
         );
@@ -190,40 +196,80 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
     final cityController = TextEditingController();
     final countryController = TextEditingController();
 
+    final _formKey = GlobalKey<FormState>();
+
+    final phoneNumberFormatter = MaskTextInputFormatter(
+    mask: '####-###-####',
+    filter: { "#": RegExp(r'[0-9]') },
+    );
+
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: const Text('Add Address'),
           content: SingleChildScrollView(
-            child: Column(
-              children: [
-                TextField(
-                  controller: fullNameController,
-                  decoration: const InputDecoration(labelText: 'Full Name'),
-                ),
-                TextField(
-                  controller: phoneNumberController,
-                  decoration: const InputDecoration(labelText: 'Phone Number'),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(11),
-                  ],
-                ),
-                TextField(
-                  controller: streetController,
-                  decoration: const InputDecoration(labelText: 'Street'),
-                ),
-                TextField(
-                  controller: cityController,
-                  decoration: const InputDecoration(labelText: 'City'),
-                ),
-                TextField(
-                  controller: countryController,
-                  decoration: const InputDecoration(labelText: 'Country'),
-                ),
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: fullNameController,
+                    decoration: const InputDecoration(labelText: 'Full Name'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your full name';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: phoneNumberController,
+                    decoration: const InputDecoration(labelText: 'Phone Number'),
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [phoneNumberFormatter],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your phone number';
+                      }
+                      if (!phoneNumberFormatter.isFill()) {
+                      return 'Please enter a valid phone number';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: streetController,
+                    decoration: const InputDecoration(labelText: 'Street'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your street';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: cityController,
+                    decoration: const InputDecoration(labelText: 'City'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your city';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: countryController,
+                    decoration: const InputDecoration(labelText: 'Country'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your country';
+                      }
+                      return null;
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -235,16 +281,19 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
             ),
             TextButton(
               onPressed: () {
-                setState(() {
-                  addresses.add(AddressModel(
-                    fullName: fullNameController.text,
-                    phoneNumber: phoneNumberController.text,
-                    street: streetController.text,
-                    city: cityController.text,
-                    country: countryController.text,
-                  ));
-                });
-                Navigator.of(context).pop();
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    addresses.add(AddressModel(
+                      fullName: fullNameController.text,
+                      phoneNumber: phoneNumberController.text,
+                      street: streetController.text,
+                      city: cityController.text,
+                      country: countryController.text,
+                      isDefault: false,
+                    ));
+                  });
+                  Navigator.of(context).pop();
+                }
               },
               child: const Text('Add'),
             ),

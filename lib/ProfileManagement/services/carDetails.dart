@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:autocare_carowners/ProfileManagement/services/car_profile_color.dart';
+import 'package:autocare_carowners/ProfileManagement/services/car_profile_fuel_type.dart';
+import 'package:autocare_carowners/ProfileManagement/services/car_profile_transmission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -38,6 +43,25 @@ class _CarDetailsState extends State<CarDetails> {
     ),
   ];
 
+  List<dynamic> carData = [];
+  String brand = '';
+  String model = '';
+  List<String> models = [];
+
+   @override
+  void initState() {
+    super.initState();
+    loadCarData();
+  }
+
+  Future<void> loadCarData() async {
+    final String response = await rootBundle.loadString('lib/ProfileManagement/assets/car_models.json');
+    final data = await json.decode(response);
+    setState(() {
+      carData = data['brands'];
+    });
+  }
+
   void _editCarDetails(int index) {
     final car = carDetails[index];
     final brandController = TextEditingController(text: car.brand);
@@ -47,6 +71,14 @@ class _CarDetailsState extends State<CarDetails> {
     final transmissionTypeController = TextEditingController(text: car.transmissionType);
     final fuelTypeController = TextEditingController(text: car.fuelType);
 
+    brand = car.brand;
+    model = car.model;
+    models = carData.firstWhere((b) => b['name'] == brand)['models'].cast<String>();
+    String color = car.color;
+    String transmissionType = car.transmissionType;
+    String fuelType = car.fuelType; 
+
+    
     final _formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -59,7 +91,7 @@ class _CarDetailsState extends State<CarDetails> {
               key: _formKey,
               child: Column(
                 children: [
-                  TextFormField(
+                    TextFormField(
                     controller: brandController,
                     decoration: const InputDecoration(labelText: 'Brand'),
                     validator: (value) {
@@ -94,34 +126,24 @@ class _CarDetailsState extends State<CarDetails> {
                       return null;
                     },
                   ),
-                  TextFormField(
-                    controller: colorController,
-                    decoration: const InputDecoration(labelText: 'Color'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
+                  ColorDropdown(
+                    value: car.color,
+                    onChanged: (newValue) {
+                      color = newValue!;
+                    }
+                  ),
+                  TransmissionDropdown(
+                    value: transmissionType,
+                    onChanged: (newValue) {
+                      setState(() {
+                        transmissionType = newValue!;
+                      });
                     },
                   ),
-                  TextFormField(
-                    controller: transmissionTypeController,
-                    decoration: const InputDecoration(labelText: 'Transmission Type'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: fuelTypeController,
-                    decoration: const InputDecoration(labelText: 'Fuel Type'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
+                  FuelTypeDropdown(
+                    value: fuelType,
+                    onChanged: (newValue) {
+                      fuelType = newValue!;
                     },
                   ),
                 ],
@@ -196,6 +218,10 @@ class _CarDetailsState extends State<CarDetails> {
     final transmissionTypeController = TextEditingController();
     final fuelTypeController = TextEditingController();
 
+    String color = 'Red';
+    String transmissionType = 'Automatic';
+    String fuelType = 'Petrol';
+
     final _formKey = GlobalKey<FormState>();
 
     showDialog(
@@ -243,34 +269,24 @@ class _CarDetailsState extends State<CarDetails> {
                       return null;
                     },
                   ),
-                  TextFormField(
-                    controller: colorController,
-                    decoration: const InputDecoration(labelText: 'Color'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
+                  ColorDropdown(
+                    value: color,
+                    onChanged: (newValue) {
+                      color = newValue!;
+                    }
+                  ),
+                  TransmissionDropdown(
+                    value: transmissionType,
+                    onChanged: (newValue) {
+                      setState(() {
+                        transmissionType = newValue!;
+                      });
                     },
                   ),
-                  TextFormField(
-                    controller: transmissionTypeController,
-                    decoration: const InputDecoration(labelText: 'Transmission Type'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: fuelTypeController,
-                    decoration: const InputDecoration(labelText: 'Fuel Type'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
+                  FuelTypeDropdown(
+                    value: fuelType,
+                    onChanged: (newValue) {
+                      fuelType = newValue!;
                     },
                   ),
                 ],
