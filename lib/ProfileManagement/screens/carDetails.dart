@@ -43,24 +43,6 @@ class _CarDetailsState extends State<CarDetails> {
     ),
   ];
 
-  List<dynamic> carData = [];
-  String brand = '';
-  String model = '';
-  List<String> models = [];
-
-   @override
-  void initState() {
-    super.initState();
-    loadCarData();
-  }
-
-  Future<void> loadCarData() async {
-    final String response = await rootBundle.loadString('lib/ProfileManagement/assets/car_models.json');
-    final data = await json.decode(response);
-    setState(() {
-      carData = data['brands'];
-    });
-  }
 
   void _editCarDetails(int index) {
     final car = carDetails[index];
@@ -71,9 +53,6 @@ class _CarDetailsState extends State<CarDetails> {
     final transmissionTypeController = TextEditingController(text: car.transmissionType);
     final fuelTypeController = TextEditingController(text: car.fuelType);
 
-    brand = car.brand;
-    model = car.model;
-    models = carData.firstWhere((b) => b['name'] == brand)['models'].cast<String>();
     String color = car.color;
     String transmissionType = car.transmissionType;
     String fuelType = car.fuelType; 

@@ -52,6 +52,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       mask: '####-###-####',
       filter: { "#": RegExp(r'[0-9]') },
     );
+
+    phoneNumberController.text = phoneNumberFormatter.formatEditUpdate(
+      TextEditingValue.empty,
+      TextEditingValue(text: address.phoneNumber),
+    ).text;
     
     showDialog(
       context: context,
@@ -135,7 +140,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   setState(() {
                     addresses[index] = (AddressModel(
                       fullName: fullNameController.text,
-                      phoneNumber: phoneNumberController.text,
+                      phoneNumber: phoneNumberFormatter.getUnmaskedText(),
                       street: streetController.text,
                       city: cityController.text,
                       country: countryController.text,
