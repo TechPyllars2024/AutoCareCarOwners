@@ -1,33 +1,56 @@
 import 'package:flutter/material.dart';
 
-class FuelTypeDropdown extends StatelessWidget {
-  final String value;
-  final ValueChanged<String?> onChanged;
+class FuelModel {
+  final String type;
 
-  const FuelTypeDropdown({
+  FuelModel(this.type);
+}
+
+class FuelDropdown extends StatefulWidget {
+  final String initialValue;
+  final ValueChanged<String> onChanged;
+
+  const FuelDropdown({
     Key? key,
-    required this.value,
+    required this.initialValue,
     required this.onChanged,
   }) : super(key: key);
 
   @override
+  _FuelDropdownState createState() => _FuelDropdownState();
+}
+
+class _FuelDropdownState extends State<FuelDropdown> {
+  late String selectedFuel;
+  final List<FuelModel> fuels = [
+    FuelModel('Petrol'),
+    FuelModel('Diesel'),
+    FuelModel('Electric'),
+    FuelModel('Electric'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedFuel = widget.initialValue;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: value,
+      value: selectedFuel,
       decoration: const InputDecoration(labelText: 'Fuel Type'),
-      items: <String>['Petrol', 'Diesel', 'Electric', 'Hybrid']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: onChanged,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select a fuel type';
-        }
-        return null;
+      items: fuels
+          .map((fuel) => DropdownMenuItem(
+                value: fuel.type,
+                child: Text(fuel.type),
+              ))
+          .toList(),
+      onChanged: (newValue) {
+        setState(() {
+          selectedFuel = newValue!;
+        });
+        widget.onChanged(newValue!);
       },
     );
   }

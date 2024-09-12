@@ -1,4 +1,5 @@
 import 'package:autocare_carowners/Authentication/Widgets/snackBar.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -52,6 +53,16 @@ class HomeScreen extends StatelessWidget {
             Text(
               user != null ? user.email! : "No email available",
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+            ),
+
+            const SizedBox(height: 10),
+            MyButtons(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const CarOwnerProfile()),
+                );
+              },
+              text: "Profile",
             ),
 
             const SizedBox(height: 24),

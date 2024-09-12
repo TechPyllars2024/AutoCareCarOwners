@@ -31,7 +31,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   List<AddressModel> addresses = [
     AddressModel(
       fullName: 'Candace Yu',
-      phoneNumber: '0912-345-6789',
+      phoneNumber: '09123456789',
       street: 'St. Poblacion Ilawod',
       city: 'Iloilo City',
       country: 'Philippines',

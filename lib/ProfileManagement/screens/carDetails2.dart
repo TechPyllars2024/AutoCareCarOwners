@@ -1,8 +1,4 @@
 import 'dart:convert';
-
-import 'package:autocare_carowners/ProfileManagement/services/car_profile_color.dart';
-import 'package:autocare_carowners/ProfileManagement/services/car_profile_fuel_type.dart';
-import 'package:autocare_carowners/ProfileManagement/services/car_profile_transmission.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -25,178 +21,27 @@ class CarDetailsModel {
 }
 
 class CarDetails extends StatefulWidget {
-  const CarDetails({Key? key}) : super(key: key);
+  final List<CarDetailsModel> carDetails;
+
+  const CarDetails({Key? key, this.carDetails = const []}) : super(key: key);
 
   @override
   _CarDetailsState createState() => _CarDetailsState();
 }
 
 class _CarDetailsState extends State<CarDetails> {
-  final List<CarDetailsModel> carDetails = [
-    CarDetailsModel(
-      brand: 'Toyota',
-      model: 'Corolla',
-      year: 2020,
-      color: 'White',
-      transmissionType: 'Automatic',
-      fuelType: 'Petrol',
-    ),
-  ];
+  late List<CarDetailsModel> carDetails;
 
-
-  void _editCarDetails(int index) {
-    final car = carDetails[index];
-    final brandController = TextEditingController(text: car.brand);
-    final modelController = TextEditingController(text: car.model);
-    final yearController = TextEditingController(text: car.year.toString());
-    final colorController = TextEditingController(text: car.color);
-    final transmissionTypeController = TextEditingController(text: car.transmissionType);
-    final fuelTypeController = TextEditingController(text: car.fuelType);
-
-    String color = car.color;
-    String transmissionType = car.transmissionType;
-    String fuelType = car.fuelType; 
-
-    
-    final _formKey = GlobalKey<FormState>();
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Edit Car Details'),
-          content: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                    TextFormField(
-                    controller: brandController,
-                    decoration: const InputDecoration(labelText: 'Brand'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: modelController,
-                    decoration: const InputDecoration(labelText: 'Model'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: yearController,
-                    decoration: const InputDecoration(labelText: 'Year'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
-                    },
-                  ),
-                  ColorDropdown(
-                    value: car.color,
-                    onChanged: (newValue) {
-                      color = newValue!;
-                    }
-                  ),
-                  TransmissionDropdown(
-                    value: transmissionType,
-                    onChanged: (newValue) {
-                      setState(() {
-                        transmissionType = newValue!;
-                      });
-                    },
-                  ),
-                  FuelTypeDropdown(
-                    value: fuelType,
-                    onChanged: (newValue) {
-                      fuelType = newValue!;
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    carDetails[index] = CarDetailsModel(
-                      brand: brandController.text,
-                      model: modelController.text,
-                      year: int.parse(yearController.text),
-                      color: colorController.text,
-                      transmissionType: transmissionTypeController.text,
-                      fuelType: fuelTypeController.text,
-                    );
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _deleteCarDetails(int index) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Delete Car Details'),
-          content: const Text('Are you sure you want to delete these car details?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  carDetails.removeAt(index);
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
-    );
+  @override
+  void initState() {
+    super.initState();
+    carDetails = List.from(widget.carDetails);
   }
 
   void _addCarDetails() {
     final brandController = TextEditingController();
     final modelController = TextEditingController();
     final yearController = TextEditingController();
-    final colorController = TextEditingController();
-    final transmissionTypeController = TextEditingController();
-    final fuelTypeController = TextEditingController();
-
     String color = 'Red';
     String transmissionType = 'Automatic';
     String fuelType = 'Petrol';
@@ -248,24 +93,50 @@ class _CarDetailsState extends State<CarDetails> {
                       return null;
                     },
                   ),
-                  ColorDropdown(
+                  DropdownButtonFormField<String>(
                     value: color,
+                    decoration: const InputDecoration(labelText: 'Color'),
+                    items: ['Red', 'Black', 'White', 'Green', 'Silver', 'Yellow', 'Beige', 'Blue', 
+                            'Brown', 'Gold', 'Grey', 'Orange', 'Pink', 'Purple', 'Tan']
+                        .map((color) => DropdownMenuItem(
+                              value: color,
+                              child: Text(color),
+                            ))
+                        .toList(),
                     onChanged: (newValue) {
-                      color = newValue!;
-                    }
+                      setState(() {
+                        color = newValue!;
+                      });
+                    },
                   ),
-                  TransmissionDropdown(
+                  DropdownButtonFormField<String>(
                     value: transmissionType,
+                    decoration: const InputDecoration(labelText: 'Transmission Type'),
+                    items: ['Automatic', 'Manual']
+                        .map((transmission) => DropdownMenuItem(
+                              value: transmission,
+                              child: Text(transmission),
+                            ))
+                        .toList(),
                     onChanged: (newValue) {
                       setState(() {
                         transmissionType = newValue!;
                       });
                     },
                   ),
-                  FuelTypeDropdown(
+                  DropdownButtonFormField<String>(
                     value: fuelType,
+                    decoration: const InputDecoration(labelText: 'Fuel Type'),
+                    items: ['Petrol', 'Diesel', 'Gasoline', 'Electric']
+                        .map((fuel) => DropdownMenuItem(
+                              value: fuel,
+                              child: Text(fuel),
+                            ))
+                        .toList(),
                     onChanged: (newValue) {
-                      fuelType = newValue!;
+                      setState(() {
+                        fuelType = newValue!;
+                      });
                     },
                   ),
                 ],
@@ -283,19 +154,184 @@ class _CarDetailsState extends State<CarDetails> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   setState(() {
-                    carDetails.add(CarDetailsModel(
+                    final newCar = CarDetailsModel(
                       brand: brandController.text,
                       model: modelController.text,
                       year: int.parse(yearController.text),
-                      color: colorController.text,
-                      transmissionType: transmissionTypeController.text,
-                      fuelType: fuelTypeController.text,
-                    ));
+                      color: color,
+                      transmissionType: transmissionType,
+                      fuelType: fuelType,
+                    );
+                    carDetails.add(newCar);
                   });
                   Navigator.of(context).pop();
                 }
               },
               child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editCarDetails(int index) {
+    final car = carDetails[index];
+    final brandController = TextEditingController(text: car.brand);
+    final modelController = TextEditingController(text: car.model);
+    final yearController = TextEditingController(text: car.year.toString());
+    String color = car.color;
+    String transmissionType = car.transmissionType;
+    String fuelType = car.fuelType;
+
+    final _formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Car Details'),
+          content: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    controller: brandController,
+                    decoration: const InputDecoration(labelText: 'Brand'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: modelController,
+                    decoration: const InputDecoration(labelText: 'Model'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
+                    controller: yearController,
+                    decoration: const InputDecoration(labelText: 'Year'),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please fill this section';
+                      }
+                      return null;
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: color,
+                    decoration: const InputDecoration(labelText: 'Color'),
+                    items: ['Red', 'Black', 'White', 'Green', 'Silver', 'Yellow', 'Beige', 'Blue', 
+                            'Brown', 'Gold', 'Grey', 'Orange', 'Pink', 'Purple', 'Tan']
+                        .map((color) => DropdownMenuItem(
+                              value: color,
+                              child: Text(color),
+                            ))
+                        .toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        color = newValue!;
+                      });
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: transmissionType,
+                    decoration: const InputDecoration(labelText: 'Transmission Type'),
+                    items: ['Automatic', 'Manual']
+                        .map((transmission) => DropdownMenuItem(
+                              value: transmission,
+                              child: Text(transmission),
+                            ))
+                        .toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        transmissionType = newValue!;
+                      });
+                    },
+                  ),
+                  DropdownButtonFormField<String>(
+                    value: fuelType,
+                    decoration: const InputDecoration(labelText: 'Fuel Type'),
+                    items: ['Petrol', 'Diesel', 'Gasoline', 'Electric']
+                        .map((fuel) => DropdownMenuItem(
+                              value: fuel,
+                              child: Text(fuel),
+                            ))
+                        .toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        fuelType = newValue!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  setState(() {
+                    car.brand = brandController.text;
+                    car.model = modelController.text;
+                    car.year = int.parse(yearController.text);
+                    car.color = color;
+                    car.transmissionType = transmissionType;
+                    car.fuelType = fuelType;
+                  });
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _deleteCarDetails(int index) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Delete Car Details'),
+          content: const Text('Are you sure you want to delete these car details?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  carDetails.removeAt(index);
+                });
+                Navigator.of(context).pop();
+              },
+              child: const Text('Delete'),
             ),
           ],
         );
@@ -354,4 +390,10 @@ class _CarDetailsState extends State<CarDetails> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: CarDetails(),
+  ));
 }

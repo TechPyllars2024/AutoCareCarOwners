@@ -26,7 +26,6 @@ class _NavBarState extends State<NavBar> {
     CarOwnerMessage(),
     CarOwnerDirectory(),
     CarOwnerProfile(),
-    CarOwnerEditProfile(),
     CarOwnerCarProfile(),
 
 

@@ -1,4 +1,6 @@
+import 'package:autocare_carowners/Authentication/screens/homeScreen.dart';
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,7 +36,7 @@ class MyApp extends StatelessWidget {
       primarySwatch: Colors.green,
       visualDensity: VisualDensity.adaptivePlatformDensity,
     ),
-    home: const LoginScreen(),
+    home: const HomeScreen(),
   );
 }
 

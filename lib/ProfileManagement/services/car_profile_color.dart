@@ -1,47 +1,67 @@
 import 'package:flutter/material.dart';
 
-class ColorDropdown extends StatelessWidget {
-  final String value;
-  final ValueChanged<String?> onChanged;
+class ColorModel {
+  final String name;
+
+  ColorModel(this.name);
+}
+
+class ColorDropdown extends StatefulWidget {
+  final String initialValue;
+  final ValueChanged<String> onChanged;
 
   const ColorDropdown({
     Key? key,
-    required this.value,
+    required this.initialValue,
     required this.onChanged,
   }) : super(key: key);
 
   @override
+  _ColorDropdownState createState() => _ColorDropdownState();
+}
+
+class _ColorDropdownState extends State<ColorDropdown> {
+  late String selectedColor;
+  final List<ColorModel> colors = [
+    ColorModel('Red'),
+    ColorModel('Black'),
+    ColorModel('White'),
+    ColorModel('Green'),
+    ColorModel('Silver'),
+    ColorModel('Yellow'),
+    ColorModel('Beige'),
+    ColorModel('Blue'),
+    ColorModel('Brown'),
+    ColorModel('Gold'),
+    ColorModel('Grey'),
+    ColorModel('Orange'),
+    ColorModel('Pink'),
+    ColorModel('Purple'),
+    ColorModel('Tan'),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    selectedColor = widget.initialValue;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      value: value,
+      value: selectedColor,
       decoration: const InputDecoration(labelText: 'Color'),
-      items: <String>['Red', 
-                      'Black', 
-                      'White', 
-                      'Green', 
-                      'Silver', 
-                      'Yellow', 
-                      'Beige', 
-                      'Blue',
-                      'Brown',
-                      'Gold',
-                      'Grey',
-                      'Orange',
-                      'Pink',
-                      'Purple',
-                      'Tan']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-      onChanged: onChanged,
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please select a color';
-        }
-        return null;
+      items: colors
+          .map((color) => DropdownMenuItem(
+                value: color.name,
+                child: Text(color.name),
+              ))
+          .toList(),
+      onChanged: (newValue) {
+        setState(() {
+          selectedColor = newValue!;
+        });
+        widget.onChanged(newValue!);
       },
     );
   }
