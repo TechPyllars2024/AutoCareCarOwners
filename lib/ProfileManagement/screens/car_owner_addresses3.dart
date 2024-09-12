@@ -135,10 +135,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
 
     final _formKey = GlobalKey<FormState>();
 
-    final phoneNumberFormatter = MaskTextInputFormatter(
-      mask: '####-###-####',
-      filter: { "#": RegExp(r'[0-9]') },
-    );
+    // final phoneNumberFormatter = MaskTextInputFormatter(
+    //   mask: '###########',
+    //   filter: { "#": RegExp(r'[0-9]') },
+    // );
 
     showDialog(
       context: context,
@@ -164,12 +164,16 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     controller: phoneNumberController,
                     decoration: const InputDecoration(labelText: 'Phone Number'),
                     keyboardType: TextInputType.phone,
-                    inputFormatters: [phoneNumberFormatter],
+                    // inputFormatters: [phoneNumberFormatter],
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(11),
+                    ],
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your phone number';
                       }
-                      if (!phoneNumberFormatter.isFill()) {
+                      if (value.length != 11) {
                         return 'Please enter a valid phone number';
                       }
                       return null;
