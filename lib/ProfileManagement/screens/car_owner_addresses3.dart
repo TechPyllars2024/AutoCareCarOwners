@@ -1,4 +1,6 @@
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -10,20 +12,44 @@ class CarOwnerAddress extends StatefulWidget {
 
 class _CarOwnerAddressState extends State<CarOwnerAddress> {
   List<CarOwnerAddressModel> addresses = [];
+  late CollectionReference addressCollection;
 
-  void _addAddress(CarOwnerAddressModel address) {
+  @override
+  void initState() {
+    super.initState();
+    _initializeFirestore();
+    _fetchAddresses();
+  }
+
+  void _initializeFirestore() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      addressCollection = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('addresses');
+    }
+  }
+
+  Future<void> _fetchAddresses() async {
+    final snapshot = await addressCollection.get();
     setState(() {
-      addresses.add(address);
+      addresses = snapshot.docs.map((doc) => CarOwnerAddressModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
     });
   }
 
-  void _editAddress(int index, CarOwnerAddressModel address) {
-    setState(() {
-      addresses[index] = address;
-    });
+  Future<void> _addAddress(CarOwnerAddressModel address) async {
+    await addressCollection.add(address.toMap());
+    _fetchAddresses();
   }
 
-  void _deleteAddress(int index) {
+  Future<void> _editAddress(int index, CarOwnerAddressModel address) async {
+    final docId = (await addressCollection.get()).docs[index].id;
+    await addressCollection.doc(docId).update(address.toMap());
+    _fetchAddresses();
+  }
+
+  Future<void> _deleteAddress(int index) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -38,10 +64,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  addresses.removeAt(index);
-                });
+              onPressed: () async {
+                final docId = (await addressCollection.get()).docs[index].id;
+                await addressCollection.doc(docId).delete();
+                _fetchAddresses();
                 Navigator.of(context).pop();
               },
               child: const Text('Delete'),
@@ -52,14 +78,21 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
     );
   }
 
-  void _setDefaultAddress(int index) {
+  void _setDefaultAddress(int index) async {
     setState(() {
       for (int i = 0; i < addresses.length; i++) {
         addresses[i].isDefault = i == index;
       }
     });
+    
+    final snapshot = await addressCollection.get();
+    for (int i = 0; i < snapshot.docs.length; i++) {
+      final docId = snapshot.docs[i].id;
+      await addressCollection.doc(docId).update({
+        'isDefault': i == index,
+      });
+    }
   }
-
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
     final fullNameController = TextEditingController(text: address?.fullName ?? '');
     final phoneNumberController = TextEditingController(text: address?.phoneNumber ?? '');

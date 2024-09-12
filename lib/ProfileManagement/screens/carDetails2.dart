@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_car_details_model.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CarDetails extends StatefulWidget {
   final List<CarDetailsModel> carDetails;
@@ -14,26 +16,45 @@ class CarDetails extends StatefulWidget {
 
 class _CarDetailsState extends State<CarDetails> {
   late List<CarDetailsModel> carDetails;
+  late CollectionReference carDetailsCollection;
 
   @override
   void initState() {
     super.initState();
     carDetails = List.from(widget.carDetails);
+    _initializeFirestore();
+    _fetchCarDetails();
   }
 
-  void _addCarDetails(CarDetailsModel car) {
+  void _initializeFirestore() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      carDetailsCollection = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .collection('carDetails');
+    }
+  }
+
+  Future<void> _fetchCarDetails() async {
+    final snapshot = await carDetailsCollection.get();
     setState(() {
-      carDetails.add(car);
+      carDetails = snapshot.docs.map((doc) => CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
     });
   }
 
-  void _editCarDetails(int index, CarDetailsModel car) {
-    setState(() {
-      carDetails[index] = car;
-    });
+  Future<void> _addCarDetails(CarDetailsModel car) async {
+    await carDetailsCollection.add(car.toMap());
+    _fetchCarDetails();
   }
 
-  void _deleteCarDetails(int index) {
+  Future<void> _editCarDetails(int index, CarDetailsModel car) async {
+    final docId = (await carDetailsCollection.get()).docs[index].id;
+    await carDetailsCollection.doc(docId).update(car.toMap());
+    _fetchCarDetails();
+  }
+
+  Future<void> _deleteCarDetails(int index) async {
     showDialog(
       context: context,
       builder: (context) {
@@ -48,10 +69,10 @@ class _CarDetailsState extends State<CarDetails> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                setState(() {
-                  carDetails.removeAt(index);
-                });
+              onPressed: () async {
+                final docId = (await carDetailsCollection.get()).docs[index].id;
+                await carDetailsCollection.doc(docId).delete();
+                _fetchCarDetails();
                 Navigator.of(context).pop();
               },
               child: const Text('Delete'),
