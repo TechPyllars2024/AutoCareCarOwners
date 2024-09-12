@@ -122,6 +122,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 ),
               ),
 
+              // need to fix not appearing after editing profile details
               // Text(
               //   profile?.email ?? 'No available Email',
               //   style: const TextStyle(

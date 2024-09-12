@@ -277,7 +277,7 @@ class _CarDetailsState extends State<CarDetails> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: CarDetails(),
   ));
 }
