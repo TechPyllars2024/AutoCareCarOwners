@@ -1,3 +1,4 @@
+
 class CarDetailsModel {
   String brand;
   String model;

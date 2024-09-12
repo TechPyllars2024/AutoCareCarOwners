@@ -1,6 +1,6 @@
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/carDetails2.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_addresses2.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_addresses3.dart';
 // import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_profile.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_setting.dart';
@@ -122,13 +122,13 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 ),
               ),
 
-              Text(
-                profile?.email ?? 'No available Email',
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.black54,
-                ),
-              ),
+              // Text(
+              //   profile?.email ?? 'No available Email',
+              //   style: const TextStyle(
+              //     fontSize: 20,
+              //     color: Colors.black54,
+              //   ),
+              // ),
 
               const Padding(
                 padding: EdgeInsets.only(top: 40.0, left: 20, bottom: 50 ),
@@ -145,7 +145,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 onPressed: () {
                   Navigator.push(context,
                       //pushReplacement if you don't want to go back
-                      MaterialPageRoute(builder: (context) => const CarOwnerAddress()));
+                      MaterialPageRoute(builder: (context) => CarOwnerAddress()));
                 },
                 child: const Text('Address', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
               ),
