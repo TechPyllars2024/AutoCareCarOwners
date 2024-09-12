@@ -1,9 +1,10 @@
-import 'dart:convert';
+// import 'dart:convert';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_car_details_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:autocare_carowners/ProfileManagement/services/car_details_service.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CarDetails extends StatefulWidget {
   final List<CarDetailsModel> carDetails;
@@ -16,45 +17,82 @@ class CarDetails extends StatefulWidget {
 
 class _CarDetailsState extends State<CarDetails> {
   late List<CarDetailsModel> carDetails;
-  late CollectionReference carDetailsCollection;
+  late CarDetailsService carDetailsService;
+  // late CollectionReference carDetailsCollection;
 
   @override
   void initState() {
     super.initState();
     carDetails = List.from(widget.carDetails);
-    _initializeFirestore();
+    carDetailsService = CarDetailsService();
+    // _initializeFirestore();
     _fetchCarDetails();
   }
 
-  void _initializeFirestore() {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      carDetailsCollection = FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .collection('carDetails');
-    }
-  }
+  // void _initializeFirestore() {
+  //   final user = FirebaseAuth.instance.currentUser;
+  //   if (user != null) {
+  //     carDetailsCollection = FirebaseFirestore.instance
+  //         .collection('users')
+  //         .doc(user.uid)
+  //         .collection('carDetails');
+  //   }
+  // }
 
   Future<void> _fetchCarDetails() async {
-    final snapshot = await carDetailsCollection.get();
+    final fetchedCarDetails = await carDetailsService.fetchCarDetails();
     setState(() {
-      carDetails = snapshot.docs.map((doc) => CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+      carDetails = fetchedCarDetails;
     });
   }
+  // Future<void> _fetchCarDetails() async {
+  //   final snapshot = await carDetailsCollection.get();
+  //   setState(() {
+  //     carDetails = snapshot.docs.map((doc) => CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+  //   });
+  // }
 
-  Future<void> _addCarDetails(CarDetailsModel car) async {
-    await carDetailsCollection.add(car.toMap());
-    _fetchCarDetails();
-  }
+  // Future<void> _addCarDetails(CarDetailsModel car) async {
+  //   await carDetailsCollection.add(car.toMap());
+  //   _fetchCarDetails();
+  // }
 
-  Future<void> _editCarDetails(int index, CarDetailsModel car) async {
-    final docId = (await carDetailsCollection.get()).docs[index].id;
-    await carDetailsCollection.doc(docId).update(car.toMap());
-    _fetchCarDetails();
-  }
+  // Future<void> _editCarDetails(int index, CarDetailsModel car) async {
+  //   final docId = (await carDetailsCollection.get()).docs[index].id;
+  //   await carDetailsCollection.doc(docId).update(car.toMap());
+  //   _fetchCarDetails();
+  // }
 
-  Future<void> _deleteCarDetails(int index) async {
+  // Future<void> _deleteCarDetails(int index) async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return AlertDialog(
+  //         title: const Text('Delete Car Details'),
+  //         content: const Text('Are you sure you want to delete this car detail?'),
+  //         actions: [
+  //           TextButton(
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: const Text('Cancel'),
+  //           ),
+  //           TextButton(
+  //             onPressed: () async {
+  //               final docId = (await carDetailsCollection.get()).docs[index].id;
+  //               await carDetailsCollection.doc(docId).delete();
+  //               _fetchCarDetails();
+  //               Navigator.of(context).pop();
+  //             },
+  //             child: const Text('Delete'),
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
+
+  void _showDeleteConfirmationDialog(int index) {
     showDialog(
       context: context,
       builder: (context) {
@@ -70,10 +108,10 @@ class _CarDetailsState extends State<CarDetails> {
             ),
             TextButton(
               onPressed: () async {
-                final docId = (await carDetailsCollection.get()).docs[index].id;
-                await carDetailsCollection.doc(docId).delete();
-                _fetchCarDetails();
                 Navigator.of(context).pop();
+                final docId = (await carDetailsService.carDetailsCollection.get()).docs[index].id;
+                await carDetailsService.deleteCarDetails(docId);
+                _fetchCarDetails();
               },
               child: const Text('Delete'),
             ),
@@ -214,9 +252,9 @@ class _CarDetailsState extends State<CarDetails> {
               child: const Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_formKey.currentState!.validate()) {
-                  final newCar = CarDetailsModel(
+                  final newCarDetails = CarDetailsModel(
                     brand: brandController.text,
                     model: modelController.text,
                     year: int.parse(yearController.text),
@@ -225,11 +263,19 @@ class _CarDetailsState extends State<CarDetails> {
                     fuelType: fuelType,
                   );
 
-                  if (index == null) {
-                    _addCarDetails(newCar);
+                  // if (index == null) {
+                  //   _addCarDetails(newCar);
+                  // } else {
+                  //   _editCarDetails(index, newCar);
+                  // }
+                  if (car == null) {
+                    await carDetailsService.addCarDetails(newCarDetails);
                   } else {
-                    _editCarDetails(index, newCar);
+                    final docId = (await carDetailsService.carDetailsCollection.get()).docs[index!].id;
+                    await carDetailsService.editCarDetails(docId, newCarDetails);
                   }
+
+                  _fetchCarDetails();
 
                   Navigator.of(context).pop();
                 }
@@ -278,7 +324,7 @@ class _CarDetailsState extends State<CarDetails> {
                         IconButton(
                           icon: const Icon(Icons.delete),
                           onPressed: () {
-                            _deleteCarDetails(index);
+                            _showDeleteConfirmationDialog(index);
                           },
                         ),
                       ],
