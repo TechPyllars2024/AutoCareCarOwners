@@ -1,6 +1,5 @@
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_profile.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_directory.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_home.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_message.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
@@ -26,7 +25,6 @@ class _NavBarState extends State<NavBar> {
     CarOwnerMessage(),
     CarOwnerDirectory(),
     CarOwnerProfile(),
-    CarOwnerEditProfile(),
     CarOwnerCarProfile(),
 
 
