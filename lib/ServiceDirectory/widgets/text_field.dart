@@ -39,12 +39,12 @@ class TextFieldInput extends StatelessWidget {
             //     : null,
             labelStyle: const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
             border:  OutlineInputBorder(
-           //   borderSide: BorderSide(color: Colors.grey),
-           //   borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(15),
             ),
             enabledBorder:  OutlineInputBorder(
-            //  borderSide: BorderSide(color: Colors.grey),
-            //  borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(15),
             ),
             focusedBorder:  OutlineInputBorder(
               borderSide: BorderSide(color: Colors.grey),
