@@ -47,8 +47,8 @@ class TextFieldInput extends StatelessWidget {
             //  borderRadius: BorderRadius.circular(15),
             ),
             focusedBorder:  OutlineInputBorder(
-            //  borderSide: BorderSide(color: Colors.grey),
-            //  borderRadius: BorderRadius.circular(15),
+              borderSide: BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(15),
             ),
           ),
           keyboardType: textInputType,
