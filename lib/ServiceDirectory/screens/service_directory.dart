@@ -85,15 +85,15 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Text(
-                            //   services[index].name,
-                            //   style: TextStyle(
-                            //     fontSize: 25,
-                            //     fontWeight: FontWeight.bold,
-                            //     color: Colors.grey[800],
-                            //   ),
-                            // ),
-                            // SizedBox(height: 8.0),
+                            Text(
+                              services[index].name,
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                            SizedBox(height: 8.0),
 
                           ],
                         ),
