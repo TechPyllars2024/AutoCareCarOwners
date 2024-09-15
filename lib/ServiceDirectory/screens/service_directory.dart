@@ -77,28 +77,28 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
                         ),
                       ),
                     ),
-                   // Expanded(
-                    //  flex: 1,
-                      // child: Padding(
-                      //   padding: const EdgeInsets.all(8.0),
-                      //   child: Column(
-                      //     mainAxisAlignment: MainAxisAlignment.center,
-                      //     crossAxisAlignment: CrossAxisAlignment.start,
-                      //     children: [
-                      //       // Text(
-                      //       //   services[index].name,
-                      //       //   style: TextStyle(
-                      //       //     fontSize: 25,
-                      //       //     fontWeight: FontWeight.bold,
-                      //       //     color: Colors.grey[800],
-                      //       //   ),
-                      //       // ),
-                      //       // SizedBox(height: 8.0),
-                      //
-                      //     ],
-                      //   ),
-                      // ),
-                 //   ),
+                    Expanded(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Text(
+                            //   services[index].name,
+                            //   style: TextStyle(
+                            //     fontSize: 25,
+                            //     fontWeight: FontWeight.bold,
+                            //     color: Colors.grey[800],
+                            //   ),
+                            // ),
+                            // SizedBox(height: 8.0),
+
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
