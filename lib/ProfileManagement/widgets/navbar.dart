@@ -1,5 +1,5 @@
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_profile.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_directory.dart';
+import 'package:autocare_carowners/ServiceDirectory//screens/service_directory.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_home.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_message.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
@@ -23,7 +23,7 @@ class _NavBarState extends State<NavBar> {
   final List<Widget> _screens = [
     CarOwnerHome(),
     CarOwnerMessage(),
-    CarOwnerDirectory(),
+    ServiceDirectory(),
     CarOwnerProfile(),
     CarOwnerCarProfile(),
 
