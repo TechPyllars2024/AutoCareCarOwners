@@ -24,12 +24,18 @@ class _ShopProfileState extends State<ShopProfile> {
   bool isExpanded = false;
 
 
-  void editProfile() {
+  void bookingRoute() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Booking()),
+      MaterialPageRoute(
+        builder: (context) => Booking(
+          serviceName: widget.serviceName, // Pass serviceName to Booking
+          shopName: widget.shopName,       // Pass shopName to Booking
+        ),
+      ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,7 +78,7 @@ class _ShopProfileState extends State<ShopProfile> {
   }
 
   Widget bookingButton() => WideButtons(
-    onTap: editProfile,
+    onTap: bookingRoute,
     text: 'Book Now!',
   );
 
