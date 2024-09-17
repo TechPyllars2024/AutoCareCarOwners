@@ -63,15 +63,17 @@ class _ShopProfileState extends State<ShopProfile> {
 
                   ServicesCarousel(),
                   FeedbackSection(),
+                  bookingButton()
+
 
                 ],
               ),
         )));
   }
 
-  Widget buildButton() => WideButtons(
+  Widget bookingButton() => WideButtons(
     onTap: editProfile,
-    text: 'Edit Profile',
+    text: 'Book Now!',
   );
 
 
