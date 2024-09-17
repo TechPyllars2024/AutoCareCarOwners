@@ -22,6 +22,9 @@ class _ShopProfileState extends State<ShopProfile> {
   Widget build(BuildContext context) {
     final double top = coverHeight - profileHeight / 2;
 
+
+
+
     return Scaffold(
         appBar: AppBar(
           // Keep the AppBar title as the serviceName
@@ -138,6 +141,10 @@ class _ShopProfileState extends State<ShopProfile> {
 
 
   Widget ShopInformation() {
+
+    const String openTime = '7:00';
+    const String closeTime = '5:00';
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -171,6 +178,25 @@ class _ShopProfileState extends State<ShopProfile> {
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   'Call',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.access_time, color: Colors.orange, size: 40,),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  "${openTime} - ${closeTime}",
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
