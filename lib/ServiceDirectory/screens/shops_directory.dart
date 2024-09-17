@@ -85,9 +85,10 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // Shop name
                               Text(
                                 services[index].name,
                                 style: TextStyle(
@@ -97,6 +98,24 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                 ),
                               ),
                               SizedBox(height: 8.0),
+
+                              // Location row with icon and address
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.location_on,
+                                    color: Colors.grey[700],
+                                  ),
+                                  SizedBox(width: 4.0),
+                                  Text(
+                                    '123 Main St', // Example address
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           ),
                         ),
