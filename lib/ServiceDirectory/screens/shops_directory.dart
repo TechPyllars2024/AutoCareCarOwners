@@ -142,11 +142,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                               size: 20,
                             ),
                           )),
-                          onChanged: (value) {
-                            setState(() {
-                              rating = value;
-                            });
-                          },
+                          // Removed the onChanged callback to make it non-adjustable
                         ),
                       ),
                     ],
