@@ -11,7 +11,6 @@ class Shop {
 
 double rating = 4.0;
 
-
 class ShopsDirectory extends StatefulWidget {
   final String serviceName; // Accept serviceName as a parameter
 
@@ -68,79 +67,86 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),
-                  child: Row(
+                  child: Stack(
                     children: [
-                      Expanded(
-                        flex: 1,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.0),
-                            bottomLeft: Radius.circular(16.0),
-                          ),
-                          child: Image.network(
-                            services[index].imageUrl,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Shop name
-                              Text(
-                                services[index].name,
-                                style: TextStyle(
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
-                                ),
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(16.0),
+                                bottomLeft: Radius.circular(16.0),
                               ),
-
-                              PannableRatingBar(
-                                rate: rating,
-                                items: List.generate(5, (index) =>
-                                const RatingWidget(
-                                  selectedColor: Colors.orange,
-                                  unSelectedColor: Colors.grey,
-                                  child: Icon(
-                                    Icons.star,
-                                    size: 20,
-                                  ),
-                                )),
-                                onChanged: (value) { // the rating value is updated on tap or drag.
-                                  setState(() {
-                                    rating = value;
-                                  });
-                                },
+                              child: Image.network(
+                                services[index].imageUrl,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
                               ),
-
-                              SizedBox(height: 8.0),
-
-                              // Location row with icon and address
-                              Row(
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: Colors.grey[700],
-                                  ),
-                                  SizedBox(width: 4.0),
+                                  // Shop name
                                   Text(
-                                    '123 Main St', // Example address
+                                    services[index].name,
                                     style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[600],
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.grey[800],
                                     ),
+                                  ),
+                                  SizedBox(height: 8.0),
+
+                                  // Location row with icon and address
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.location_on,
+                                        color: Colors.orange,
+                                      ),
+                                      SizedBox(width: 4.0),
+                                      Text(
+                                        '123 Main St', // Example address
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey[600],
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
-                            ],
+                            ),
                           ),
+                        ],
+                      ),
+                      // Align the rating at the bottom right
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: PannableRatingBar(
+                          rate: rating,
+                          items: List.generate(5, (index) =>
+                          const RatingWidget(
+                            selectedColor: Colors.orange,
+                            unSelectedColor: Colors.grey,
+                            child: Icon(
+                              Icons.star,
+                              size: 20,
+                            ),
+                          )),
+                          onChanged: (value) {
+                            setState(() {
+                              rating = value;
+                            });
+                          },
                         ),
                       ),
                     ],
