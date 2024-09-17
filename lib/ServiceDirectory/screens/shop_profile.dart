@@ -35,6 +35,7 @@ class _ShopProfileState extends State<ShopProfile> {
                 children: [
                   buildTopSection(top),
                   buildShopName(),
+                  ShopInformation()
 
                 ],
               ),
@@ -127,21 +128,79 @@ class _ShopProfileState extends State<ShopProfile> {
             'Auto Repair',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 5),
-          Row(
-            children: [
-              Icon(Icons.location_on, color: Colors.orange),
-              SizedBox(width: 4),
-              Text(
-                'Location details',
-                style: TextStyle(fontSize: 15),
-              ),
-            ],
-          ),
         ],
       ),
     ),
   );
+
+
+
+
+
+  Widget ShopInformation() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.call, color: Colors.blue),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  'CALL',
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          // Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Icon(Icons.near_me, color: Colors.blue),
+          //     Padding(
+          //       padding: const EdgeInsets.only(top: 8.0),
+          //       child: Text(
+          //         'ROUTE',
+          //         style: TextStyle(
+          //           fontSize: 12,
+          //           fontWeight: FontWeight.w400,
+          //           color: Colors.blue,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+          // Column(
+          //   mainAxisSize: MainAxisSize.min,
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Icon(Icons.share, color: Colors.blue),
+          //     Padding(
+          //       padding: const EdgeInsets.only(top: 8.0),
+          //       child: Text(
+          //         'SHARE',
+          //         style: TextStyle(
+          //           fontSize: 12,
+          //           fontWeight: FontWeight.w400,
+          //           color: Colors.blue,
+          //         ),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        ],
+      ),
+    );
+  }
 
 
 }
