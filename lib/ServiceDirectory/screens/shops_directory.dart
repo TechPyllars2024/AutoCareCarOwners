@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'shop_profile.dart'; // Import ShopProfile page
 
 class Shop {
   final String name;
   final String imageUrl;
 
-  Shop(this.name, this.imageUrl); // Updated constructor
+  Shop(this.name, this.imageUrl);
 }
 
 class ShopsDirectory extends StatefulWidget {
@@ -15,14 +15,12 @@ class ShopsDirectory extends StatefulWidget {
 
   @override
   State<ShopsDirectory> createState() => _ShopsDirectoryState();
-
 }
 
 class _ShopsDirectoryState extends State<ShopsDirectory> {
-
   List<Shop> services = [
-    Shop('Electrical Works', 'https://i0.wp.com/www.profixautocare.com/wp-content/uploads/2020/05/image-27.png'),
-    Shop('Mechanical Works', 'https://static.wixstatic.com/media/24457cc02d954991b6aafb169233cc46.jpg/v1/fill/w_1480,h_986,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/24457cc02d954991b6aafb169233cc46.jpg'),
+    Shop('Auto Garage', 'https://s3-media0.fl.yelpcdn.com/bphoto/FIOY7YvGejZ5ewzfGkaVvw/348s.jpg'),
+    Shop('Car Care', 'https://static.vecteezy.com/system/resources/thumbnails/028/121/964/small_2x/car-logo-illustration-vector.jpg'),
   ];
 
   @override
@@ -33,9 +31,8 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
         backgroundColor: Colors.grey.shade300,
         title: Text(
           widget.serviceName,
-          style:
-              TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
-        ), // Use serviceName for the AppBar title
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -52,12 +49,14 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
               itemCount: services.length,
               itemBuilder: (context, index) => GestureDetector(
                 onTap: () {
-                  // Navigate to ShopsDirectory with service name as argument
+                  // Navigate to ShopProfile and pass the serviceName and shopName
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) =>
-                          ShopsDirectory(serviceName: services[index].name),
+                      builder: (context) => ShopProfile(
+                        serviceName: widget.serviceName,
+                        shopName: services[index].name,
+                      ),
                     ),
                   );
                 },
