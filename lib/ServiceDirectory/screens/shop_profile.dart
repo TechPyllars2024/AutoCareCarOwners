@@ -162,6 +162,25 @@ class _ShopProfileState extends State<ShopProfile> {
             ],
           ),
 
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.call, color: Colors.orange, size: 40,),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Text(
+                  'Call',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
         ],
       ),
     );
