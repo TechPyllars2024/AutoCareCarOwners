@@ -36,7 +36,7 @@ class _ShopProfileState extends State<ShopProfile> {
             child: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
               child: ListView(
-                padding: EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 8),
                 children: [
                   buildTopSection(top),
                   buildShopName(),
@@ -98,10 +98,10 @@ class _ShopProfileState extends State<ShopProfile> {
                 ),
 
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Text(
                 '$numberOfRating ratings',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
             ],
           ),
@@ -127,14 +127,14 @@ class _ShopProfileState extends State<ShopProfile> {
   Widget buildProfileImage() => CircleAvatar(
     radius: profileHeight / 2,
     backgroundColor: Colors.grey.shade800,
-    backgroundImage: NetworkImage(
+    backgroundImage: const NetworkImage(
       'https://cdn.vectorstock.com/i/500p/57/48/auto-repair-service-logo-badge-emblem-template-vector-49765748.jpg',
     ),
   );
 
 
-  Widget buildShopName() => Padding(
-    padding: const EdgeInsets.all(16.0),
+  Widget buildShopName() => const Padding(
+    padding: EdgeInsets.all(16.0),
     child: Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -169,8 +169,8 @@ class _ShopProfileState extends State<ShopProfile> {
     const String openTime = '7:00';
     const String closeTime = '5:00';
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
+    return const Padding(
+      padding: EdgeInsets.all(8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -180,7 +180,7 @@ class _ShopProfileState extends State<ShopProfile> {
             children: [
               Icon(Icons.message, color: Colors.orange, size: 40,),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   'Message',
                   style: TextStyle(
@@ -199,7 +199,7 @@ class _ShopProfileState extends State<ShopProfile> {
             children: [
               Icon(Icons.call, color: Colors.orange, size: 40,),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   'Call',
                   style: TextStyle(
@@ -218,7 +218,7 @@ class _ShopProfileState extends State<ShopProfile> {
             children: [
               Icon(Icons.access_time, color: Colors.orange, size: 40,),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   "${openTime} - ${closeTime}",
                   style: TextStyle(
@@ -238,7 +238,7 @@ class _ShopProfileState extends State<ShopProfile> {
             children: [
               Icon(Icons.location_on_outlined, color: Colors.orange, size: 40,),
               Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+                padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   "Direction",
                   style: TextStyle(
@@ -259,8 +259,8 @@ class _ShopProfileState extends State<ShopProfile> {
 
   Widget ServicesCarousel() => Column(
     children: [
-      Padding(
-        padding: const EdgeInsets.all(8.0),
+      const Padding(
+        padding: EdgeInsets.all(8.0),
         child: Row(
           children: [
             Text(
@@ -280,7 +280,7 @@ class _ShopProfileState extends State<ShopProfile> {
               builder: (context, constraints) {
                 // Create TextPainters for both texts to measure their widths
                 final TextPainter firstTextPainter = TextPainter(
-                  text: TextSpan(
+                  text: const TextSpan(
                     text: 'Car Wash', // This is the first text
                     style: TextStyle(
                       color: Colors.black,
@@ -293,7 +293,7 @@ class _ShopProfileState extends State<ShopProfile> {
                 )..layout();
 
                 final TextPainter secondTextPainter = TextPainter(
-                  text: TextSpan(
+                  text: const TextSpan(
                     text: 'Starts at XXXX', // This is the second text
                     style: TextStyle(
                       color: Colors.black,
@@ -314,9 +314,9 @@ class _ShopProfileState extends State<ShopProfile> {
                     children: [
                       // ClipRRect to add curved corners and crop the bottom
                       Container(
-                        margin: EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(8),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20), // Curve on the left
                             topRight: Radius.circular(20), // Curve on the right
                           ),
@@ -338,10 +338,10 @@ class _ShopProfileState extends State<ShopProfile> {
                         right: 0,
                         child: Container(
                           height: 50, // Allocating 25% space for text
-                          padding: EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(10),
                           child: Row(
                             children: [
-                              Text(
+                              const Text(
                                 'Car Wash',
                                 style: TextStyle(
                                   color: Colors.black,
@@ -349,9 +349,9 @@ class _ShopProfileState extends State<ShopProfile> {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               if (canFitBothTexts) // Show second text only if both can fit
-                                Text(
+                                const Text(
                                   'Starts at XXXX',
                                   style: TextStyle(
                                     color: Colors.black,
@@ -381,24 +381,24 @@ class _ShopProfileState extends State<ShopProfile> {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Text('Feedbacks', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         ),
         Container(
-          margin: EdgeInsets.all(8),
+          margin: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16), // Curved edges
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(18.0),
+          child: const Padding(
+            padding: EdgeInsets.all(18.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start, // Aligns the text to the left
               children: [
                 Text('Paul Vincent Lerado', style: TextStyle(fontWeight: FontWeight.bold),),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
                   child: Text('I was impressed with the professionalism and efficiency of your team during my recent oil change and brake inspection. '
                       'However, the service took longer than expected, so providing more accurate time estimates would be helpful.'),
                 ),
