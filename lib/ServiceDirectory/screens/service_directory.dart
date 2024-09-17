@@ -21,8 +21,8 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
     Service('Mechanical Works', 'https://static.wixstatic.com/media/24457cc02d954991b6aafb169233cc46.jpg/v1/fill/w_1480,h_986,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/24457cc02d954991b6aafb169233cc46.jpg'),
     Service('Air-conditioning Services', 'https://reddevilradiators.com.au/wp-content/uploads/2019/12/Screen-Shot-2019-12-14-at-1.28.18-pm.png'),
     Service('Paint and Body Works', 'https://www.supersybon.com/wp-content/uploads/2023/04/1681353422-Metallic-Black-Car-Paint-The-Ultimate-Guide-for-Car-Enthusiasts.jpg'),
- //   Service('Car Wash and Auto Detailing', 'https://www.sevensmartauto.com.au/wp-content/uploads/2023/08/AdobeStock_410154453.jpeg'),
- //   Service('Vulcanizing and New Tires', 'https://www.shutterstock.com/image-photo/four-new-car-wheel-tires-600nw-1708003570.jpg'),
+    Service('Car Wash and Auto Detailing', 'https://www.sevensmartauto.com.au/wp-content/uploads/2023/08/AdobeStock_410154453.jpeg'),
+    Service('Vulcanizing and New Tires', 'https://www.shutterstock.com/image-photo/four-new-car-wheel-tires-600nw-1708003570.jpg'),
   ];
 
   @override
