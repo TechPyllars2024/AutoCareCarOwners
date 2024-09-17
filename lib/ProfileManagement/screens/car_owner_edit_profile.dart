@@ -9,7 +9,9 @@ import 'package:image_picker/image_picker.dart';
 class CarOwnerEditProfile extends StatefulWidget {
   final CarOwnerProfileModel currentUser;
 
-  const CarOwnerEditProfile({Key? key, required this.currentUser}) : super(key: key);
+  final Widget? child;
+
+  const CarOwnerEditProfile({super.key, required this.currentUser, this.child});
 
   @override
   State<CarOwnerEditProfile> createState() => _CarOwnerEditProfileState();
@@ -17,7 +19,6 @@ class CarOwnerEditProfile extends StatefulWidget {
 
 class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
   late TextEditingController nameController;
-  // late TextEditingController emailController;
   late TextEditingController profileImageController;
   File? _image;
   bool _isLoading = false;
@@ -29,11 +30,13 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
     super.initState();
     currentUser = widget.currentUser;
     nameController = TextEditingController(text: currentUser?.name ?? '');
-    profileImageController = TextEditingController(text: currentUser?.profileImage ?? '');
+    profileImageController =
+        TextEditingController(text: currentUser?.profileImage ?? '');
   }
 
   Future<void> _pickImage(ImageSource gallery) async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -44,14 +47,17 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
 
   Future<void> _uploadImage() async {
     if (_image != null) {
-      final storageRef = FirebaseStorage.instance.ref().child('profile_images').child(currentUser!.uid);
+      final storageRef = FirebaseStorage.instance
+          .ref()
+          .child('profile_images')
+          .child(currentUser!.uid);
       await storageRef.putFile(_image!);
       final downloadUrl = await storageRef.getDownloadURL();
       profileImageController.text = downloadUrl;
     }
   }
 
-   Future<void> _saveProfile() async {
+  Future<void> _saveProfile() async {
     setState(() {
       _isLoading = true;
     });
@@ -59,16 +65,22 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       // print('Current user email before saving: ${widget.currentUser.email}'); // Debugging line
-      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
+      final doc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
       final existingEmail = doc.data()?['email'] ?? '';
-      
+
       final updatedUser = CarOwnerProfileModel(
         uid: user.uid,
         name: nameController.text,
         email: existingEmail,
         profileImage: profileImageController.text,
       );
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(updatedUser.toMap());
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set(updatedUser.toMap());
       Navigator.pop(context, updatedUser);
     }
     setState(() {
@@ -92,8 +104,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
               icon: const Icon(
                 Icons.settings,
                 size: 30,
-              )
-            ),
+              )),
         ],
       ),
       body: _isLoading
@@ -106,19 +117,22 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                       radius: 150,
                       backgroundColor: Colors.white,
                       backgroundImage: _image != null
-                        ? FileImage(_image!)
-                        : (profileImageController.text.isNotEmpty
-                            ? NetworkImage(profileImageController.text)
-                            : null),
-                      child: _image == null && profileImageController.text.isEmpty
-                          ? const Icon(Icons.person, size: 150, color: Colors.black)  
-                          : null,
+                          ? FileImage(_image!)
+                          : (profileImageController.text.isNotEmpty
+                              ? NetworkImage(profileImageController.text)
+                              : null),
+                      child:
+                          _image == null && profileImageController.text.isEmpty
+                              ? const Icon(Icons.person,
+                                  size: 150, color: Colors.black)
+                              : null,
                     ),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () => _pickImage(ImageSource.gallery),
-                    child: const Text('Change Photo', style: TextStyle(color: Colors.black)),
+                    child: const Text('Change Photo',
+                        style: TextStyle(color: Colors.black)),
                   ),
                   // Edit name
                   Padding(
@@ -137,7 +151,8 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
                       minimumSize: const Size(400, 50),
                       backgroundColor: Colors.grey,
                     ),

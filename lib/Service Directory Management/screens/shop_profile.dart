@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class ShopProfile extends StatefulWidget {
   final String serviceName; // Accept the serviceName
   final String shopName; // Accept the shopName
+  final Widget? child;
 
-  const ShopProfile({super.key, required this.serviceName, required this.shopName});
+  const ShopProfile({super.key, required this.serviceName, required this.shopName, this.child});
 
   @override
   State<ShopProfile> createState() => _ShopProfileState();

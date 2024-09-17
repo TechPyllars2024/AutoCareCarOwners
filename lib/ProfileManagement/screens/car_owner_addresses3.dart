@@ -4,11 +4,14 @@ import 'package:autocare_carowners/ProfileManagement/services/addresses_service.
 // import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 class CarOwnerAddress extends StatefulWidget {
+  const CarOwnerAddress({super.key, this.child});
+
+  final Widget? child;
+
   @override
-  _CarOwnerAddressState createState() => _CarOwnerAddressState();
+  State<CarOwnerAddress> createState() => _CarOwnerAddressState();
 }
 
 class _CarOwnerAddressState extends State<CarOwnerAddress> {
@@ -98,7 +101,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                final docId = (await addressService.addressCollection.get()).docs[index].id;
+                final docId = (await addressService.addressCollection.get())
+                    .docs[index]
+                    .id;
                 await addressService.deleteAddress(docId);
                 _fetchAddresses();
               },
@@ -116,7 +121,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   //       addresses[i].isDefault = i == index;
   //     }
   //   });
-    
+
   //   final snapshot = await addressCollection.get();
   //   for (int i = 0; i < snapshot.docs.length; i++) {
   //     final docId = snapshot.docs[i].id;
@@ -127,13 +132,16 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   // }
 
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
-    final fullNameController = TextEditingController(text: address?.fullName ?? '');
-    final phoneNumberController = TextEditingController(text: address?.phoneNumber ?? '');
+    final fullNameController =
+        TextEditingController(text: address?.fullName ?? '');
+    final phoneNumberController =
+        TextEditingController(text: address?.phoneNumber ?? '');
     final streetController = TextEditingController(text: address?.street ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
-    final countryController = TextEditingController(text: address?.country ?? '');
+    final countryController =
+        TextEditingController(text: address?.country ?? '');
 
-    final _formKey = GlobalKey<FormState>();
+    final formKey = GlobalKey<FormState>();
 
     // final phoneNumberFormatter = MaskTextInputFormatter(
     //   mask: '###########',
@@ -147,7 +155,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
           title: Text(address == null ? 'Add Address' : 'Edit Address'),
           content: SingleChildScrollView(
             child: Form(
-              key: _formKey,
+              key: formKey,
               child: Column(
                 children: [
                   TextFormField(
@@ -162,7 +170,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   ),
                   TextFormField(
                     controller: phoneNumberController,
-                    decoration: const InputDecoration(labelText: 'Phone Number'),
+                    decoration:
+                        const InputDecoration(labelText: 'Phone Number'),
                     keyboardType: TextInputType.phone,
                     // inputFormatters: [phoneNumberFormatter],
                     inputFormatters: [
@@ -222,7 +231,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
             ),
             TextButton(
               onPressed: () async {
-                if (_formKey.currentState!.validate()) {
+                if (formKey.currentState!.validate()) {
                   final newAddress = CarOwnerAddressModel(
                     fullName: fullNameController.text,
                     phoneNumber: phoneNumberController.text,
@@ -241,7 +250,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   if (address == null) {
                     await addressService.addAddress(newAddress);
                   } else {
-                    final docId = (await addressService.addressCollection.get()).docs[index!].id;
+                    final docId = (await addressService.addressCollection.get())
+                        .docs[index!]
+                        .id;
                     await addressService.editAddress(docId, newAddress);
                   }
 
@@ -280,7 +291,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         Text('Street: ${address.street}'),
                         Text('City: ${address.city}'),
                         Text('Country: ${address.country}'),
-                        if (address.isDefault) const Text('Default Address', style: TextStyle(color: Colors.green)),
+                        if (address.isDefault)
+                          const Text('Default Address',
+                              style: TextStyle(color: Colors.green)),
                       ],
                     ),
                     trailing: Row(
@@ -308,7 +321,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                                 addresses[i].isDefault = i == index;
                               }
                             });
-                            await addressService.setDefaultAddress(index, addresses);
+                            await addressService.setDefaultAddress(
+                                index, addresses);
                             _fetchAddresses();
                           },
                         ),
@@ -329,7 +343,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
 }
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: CarOwnerAddress(),
   ));
 }

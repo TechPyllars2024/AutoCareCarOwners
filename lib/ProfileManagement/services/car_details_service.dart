@@ -13,7 +13,7 @@ class CarDetailsService {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       carDetailsCollection = FirebaseFirestore.instance
-          .collection('users')
+          .collection('profile')
           .doc(user.uid)
           .collection('carDetails');
     }

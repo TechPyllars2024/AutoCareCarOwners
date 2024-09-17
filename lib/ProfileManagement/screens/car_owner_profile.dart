@@ -1,18 +1,16 @@
-import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_model.dart';
-import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/carDetails2.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_addresses3.dart';
-// import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_profile.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_setting.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import '../models/car_owner_address_model.dart';
+import '../models/car_owner_profile_model.dart';
+import '../services/profile_service.dart';
+import 'car_owner_edit_profile.dart';
+import 'car_owner_setting.dart';
+import 'carDetails2.dart';
+import 'car_owner_addresses3.dart';
 
 class CarOwnerProfile extends StatefulWidget {
-  const CarOwnerProfile({super.key});
+  const CarOwnerProfile({super.key, this.child});
+
+  final Widget? child;
 
   @override
   State<CarOwnerProfile> createState() => _CarOwnerProfileState();
@@ -20,9 +18,8 @@ class CarOwnerProfile extends StatefulWidget {
 
 class _CarOwnerProfileState extends State<CarOwnerProfile> {
   CarOwnerProfileModel? profile;
-  CarOwnerAddressModel? defaultAddress;
   String? userEmail;
-
+  final CarOwnerProfileService _profileService = CarOwnerProfileService();
 
   @override
   void initState() {
@@ -32,32 +29,19 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
   }
 
   Future<void> _fetchUserProfile() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      final data = doc.data();
-      if (data != null) {
-        setState(() {
-          profile = CarOwnerProfileModel.fromDocument(data, user.uid);
-        });
-      } else {
-        setState(() {
-          profile = CarOwnerProfileModel(
-            uid: user.uid,
-            name: user.displayName ?? '',
-            email: user.email ?? '',
-            profileImage: '',
-          );
-        });
-      }
+    final fetchedProfile = await _profileService.fetchUserProfile();
+    if (mounted) {
+      setState(() {
+        profile = fetchedProfile;
+      });
     }
   }
 
-  void _fetchUserEmail() {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+  Future<void> _fetchUserEmail() async {
+    final email = await _profileService.fetchUserEmail();
+    if (mounted) {
       setState(() {
-        userEmail = user.email;
+        userEmail = email;
       });
     }
   }
@@ -68,37 +52,40 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
       backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
         title: const Text(
-          'PROFILE', style: TextStyle(fontWeight: FontWeight.bold),
+          'PROFILE',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.grey.shade300,
         actions: [
           IconButton(
               onPressed: () async {
-              if (profile != null) {
-                final updatedProfile = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CarOwnerEditProfile(
-                      currentUser: profile!,
+                if (profile != null) {
+                  final updatedProfile = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CarOwnerEditProfile(
+                        currentUser: profile!,
+                      ),
                     ),
-                  ),
-                );
-                if (updatedProfile != null) {
-                  setState(() {
-                    profile = updatedProfile;
-                  });
+                  );
+                  if (updatedProfile != null) {
+                    setState(() {
+                      profile = updatedProfile;
+                    });
+                  }
                 }
-              }
-            },
+              },
               icon: const Icon(
                 Icons.edit,
                 size: 30,
               )),
-            IconButton(
+          IconButton(
               onPressed: () => {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const CarOwnerSetting())),
-              },
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CarOwnerSetting())),
+                  },
               icon: const Icon(
                 Icons.settings,
                 size: 30,
@@ -145,13 +132,8 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
 
               // fetching defualt address
               const SizedBox(height: 20),
-              StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .collection('addresses')
-                    .where('isDefault', isEqualTo: true)
-                    .snapshots(),
+              StreamBuilder<CarOwnerAddressModel?>(
+                stream: _profileService.getDefaultAddress(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
@@ -159,21 +141,28 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                   if (snapshot.hasError) {
                     return const Text('Error fetching default address.');
                   }
-                  if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-                    final defaultAddress = CarOwnerAddressModel.fromMap(snapshot.data!.docs.first.data() as Map<String, dynamic>);
+                  final defaultAddress = snapshot.data;
+                  if (defaultAddress != null) {
                     return Padding(
-                      padding: const EdgeInsets.only(top: 40.0, left: 20, bottom: 50),
+                      padding: const EdgeInsets.only(
+                          top: 40.0, left: 20, bottom: 50),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Icon(Icons.location_on_outlined, size: 30),
-                          const SizedBox(width: 8), 
+                          const SizedBox(width: 8),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('${defaultAddress.street}, ', style: const TextStyle(color: Colors.black54, fontSize: 20)),
-                              Text('${defaultAddress.city}, ', style: const TextStyle(color: Colors.black54, fontSize: 20)),
-                              Text('${defaultAddress.country}, ', style: const TextStyle(color: Colors.black54, fontSize: 20)),
+                              Text('${defaultAddress.street}, ',
+                                  style: const TextStyle(
+                                      color: Colors.black54, fontSize: 20)),
+                              Text('${defaultAddress.city}, ',
+                                  style: const TextStyle(
+                                      color: Colors.black54, fontSize: 20)),
+                              Text('${defaultAddress.country}, ',
+                                  style: const TextStyle(
+                                      color: Colors.black54, fontSize: 20)),
                             ],
                           ),
                         ],
@@ -188,29 +177,49 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
               ),
 
               ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), minimumSize: const Size(400, 50), backgroundColor: Colors.grey,),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  minimumSize: const Size(400, 50),
+                  backgroundColor: Colors.grey,
+                ),
                 onPressed: () {
-                  Navigator.push(context,
+                  Navigator.push(
+                      context,
                       //pushReplacement if you don't want to go back
-                      MaterialPageRoute(builder: (context) => CarOwnerAddress()));
+                      MaterialPageRoute(
+                          builder: (context) => const CarOwnerAddress()));
                 },
-                child: const Text('ADDRESS', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
+                child: const Text('ADDRESS',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20)),
               ),
 
               const SizedBox(height: 30),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)), minimumSize: const Size(400, 50), backgroundColor: Colors.grey,),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  minimumSize: const Size(400, 50),
+                  backgroundColor: Colors.grey,
+                ),
                 onPressed: () {
-                  Navigator.push(context,
-                    //pushReplacement if you don't want to go back
-                    MaterialPageRoute(builder: (context) => const CarDetails())
-                  );
+                  Navigator.push(
+                      context,
+                      //pushReplacement if you don't want to go back
+                      MaterialPageRoute(
+                          builder: (context) => const CarDetails()));
                 },
-                child: const Text('CAR PROFILE', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 20)),
+                child: const Text('CAR PROFILE',
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20)),
               ),
             ],
           ),
-
         ],
       ),
     );

@@ -1,4 +1,3 @@
-// import 'dart:convert';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_car_details_model.dart';
 import 'package:autocare_carowners/ProfileManagement/services/car_details_service.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -9,10 +8,12 @@ import 'package:flutter/services.dart';
 class CarDetails extends StatefulWidget {
   final List<CarDetailsModel> carDetails;
 
-  const CarDetails({Key? key, this.carDetails = const []}) : super(key: key);
+  final Widget? child;
+
+  const CarDetails({super.key, this.child, this.carDetails = const []});
 
   @override
-  _CarDetailsState createState() => _CarDetailsState();
+  State<CarDetails> createState() => _CarDetailsState();
 }
 
 class _CarDetailsState extends State<CarDetails> {
