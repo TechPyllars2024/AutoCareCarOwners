@@ -13,7 +13,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade300,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade300,
         title: Text(widget.serviceName,
             style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),), // Use serviceName for the AppBar title
       ),
