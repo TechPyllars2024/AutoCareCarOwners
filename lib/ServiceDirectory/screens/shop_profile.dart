@@ -38,7 +38,8 @@ class _ShopProfileState extends State<ShopProfile> {
                 children: [
                   buildTopSection(top),
                   buildShopName(),
-                  ShopInformation()
+                  ShopInformation(),
+                  ServicesCarousel()
 
                 ],
               ),
@@ -242,6 +243,84 @@ class _ShopProfileState extends State<ShopProfile> {
       ),
     );
   }
+
+
+
+  Widget ServicesCarousel() => Column(
+    children: [
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Text(
+
+              'Other Services',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Spacer(),
+
+          ],
+        ),
+      ),
+      SizedBox(
+        height: 220,
+        child: CarouselView(
+          itemExtent: 280,
+          children: List.generate(10, (int index) {
+            return Container(
+              child: Stack(
+                children: [
+                  // ClipRRect to add curved corners and crop the bottom
+                  Container(
+                    margin: EdgeInsets.all(8),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20), // Curve on the left
+                        topRight: Radius.circular(20), // Curve on the right
+                      ),
+                      child: FractionallySizedBox(
+                        heightFactor: 0.80,
+                        // Crop to 75% height of the container
+                        alignment: Alignment.topCenter,
+                        // Align top portion
+                        child: Image.network(
+                          'https://soaphandcarwash.com/wp-content/uploads/2019/08/Soap-Hand-Car-Wash-13.jpg',
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Overlay Text in the bottom 25% space
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 50, // Allocating 25% space for text
+
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        textAlign: TextAlign.center,
+                        'Car Wash',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              color: Colors.orangeAccent.shade100,
+            );
+          }),
+        ),
+      ),
+    ],
+  );
+
 
 
 }
