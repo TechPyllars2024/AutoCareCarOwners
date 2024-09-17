@@ -34,6 +34,7 @@ class _ShopProfileState extends State<ShopProfile> {
                 padding: EdgeInsets.only(bottom: 8),
                 children: [
                   buildTopSection(top),
+                  buildShopName(),
 
                 ],
               ),
@@ -111,6 +112,34 @@ class _ShopProfileState extends State<ShopProfile> {
     backgroundColor: Colors.grey.shade800,
     backgroundImage: NetworkImage(
       'https://cdn.vectorstock.com/i/500p/57/48/auto-repair-service-logo-badge-emblem-template-vector-49765748.jpg',
+    ),
+  );
+
+
+  Widget buildShopName() => Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Auto Repair',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          Row(
+            children: [
+              Icon(Icons.location_on, color: Colors.orange),
+              SizedBox(width: 4),
+              Text(
+                'Location details',
+                style: TextStyle(fontSize: 15),
+              ),
+            ],
+          ),
+        ],
+      ),
     ),
   );
 
