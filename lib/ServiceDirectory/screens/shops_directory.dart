@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'shop_profile.dart'; // Import ShopProfile page
+import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 
 class Shop {
   final String name;
@@ -7,6 +8,9 @@ class Shop {
 
   Shop(this.name, this.imageUrl);
 }
+
+double rating = 4.0;
+
 
 class ShopsDirectory extends StatefulWidget {
   final String serviceName; // Accept serviceName as a parameter
@@ -97,6 +101,25 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                   color: Colors.grey[800],
                                 ),
                               ),
+
+                              PannableRatingBar(
+                                rate: rating,
+                                items: List.generate(5, (index) =>
+                                const RatingWidget(
+                                  selectedColor: Colors.orange,
+                                  unSelectedColor: Colors.grey,
+                                  child: Icon(
+                                    Icons.star,
+                                    size: 20,
+                                  ),
+                                )),
+                                onChanged: (value) { // the rating value is updated on tap or drag.
+                                  setState(() {
+                                    rating = value;
+                                  });
+                                },
+                              ),
+
                               SizedBox(height: 8.0),
 
                               // Location row with icon and address
