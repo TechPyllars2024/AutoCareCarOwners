@@ -41,6 +41,15 @@ class _ShopProfileState extends State<ShopProfile> {
                   buildTopSection(top),
                   buildShopName(),
                   ShopInformation(),
+
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+                    child: Divider(
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+
                   ServicesCarousel()
 
                 ],
