@@ -31,8 +31,27 @@ class _ShopProfileState extends State<ShopProfile> {
                 padding: EdgeInsets.only(bottom: 8),
                 children: [
 
+                  buildCoverImage(),
                 ],
               ),
         )));
   }
+
+
+  Widget buildCoverImage() => Container(
+    color: Colors.grey,
+    child: Image.network(
+      'https://www.erieinsurance.com/-/media/images/blog/articlephotos/2018/rentalcarlg.ashx?h=529&w=1100&la=en&hash=B6312A1CFBB03D75789956B399BF6B91E7980061',
+      width: double.infinity,
+      height: coverHeight,
+      fit: BoxFit.cover,
+    ),
+  );
+
+
+
+
 }
+
+
+
