@@ -131,6 +131,17 @@ class _ShopProfileState extends State<ShopProfile> {
             'Auto Repair',
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
+          SizedBox(height: 5),
+          Row(
+            children: [
+              Icon(Icons.location_on, color: Colors.orange),
+              SizedBox(width: 4),
+              Text(
+                'Location details',
+                style: TextStyle(fontSize: 15),
+              ),
+            ],
+          ),
         ],
       ),
     ),
