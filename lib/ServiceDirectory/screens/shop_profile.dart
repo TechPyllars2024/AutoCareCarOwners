@@ -18,6 +18,8 @@ class _ShopProfileState extends State<ShopProfile> {
   final double coverHeight = 220;
   final double profileHeight = 130;
 
+  bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     final double top = coverHeight - profileHeight / 2;
@@ -245,7 +247,6 @@ class _ShopProfileState extends State<ShopProfile> {
   }
 
 
-
   Widget ServicesCarousel() => Column(
     children: [
       Padding(
@@ -253,12 +254,10 @@ class _ShopProfileState extends State<ShopProfile> {
         child: Row(
           children: [
             Text(
-
               'Other Services',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Spacer(),
-
           ],
         ),
       ),
@@ -267,59 +266,109 @@ class _ShopProfileState extends State<ShopProfile> {
         child: CarouselView(
           itemExtent: 280,
           children: List.generate(10, (int index) {
-            return Container(
-              child: Stack(
-                children: [
-                  // ClipRRect to add curved corners and crop the bottom
-                  Container(
-                    margin: EdgeInsets.all(8),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20), // Curve on the left
-                        topRight: Radius.circular(20), // Curve on the right
-                      ),
-                      child: FractionallySizedBox(
-                        heightFactor: 0.80,
-                        // Crop to 75% height of the container
-                        alignment: Alignment.topCenter,
-                        // Align top portion
-                        child: Image.network(
-                          'https://soaphandcarwash.com/wp-content/uploads/2019/08/Soap-Hand-Car-Wash-13.jpg',
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        ),
-                      ),
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                // Create TextPainters for both texts to measure their widths
+                final TextPainter firstTextPainter = TextPainter(
+                  text: TextSpan(
+                    text: 'Car Wash', // This is the first text
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  // Overlay Text in the bottom 25% space
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: Container(
-                      height: 50, // Allocating 25% space for text
+                  maxLines: 1,
+                  textDirection: TextDirection.ltr,
+                )..layout();
 
-                      padding: EdgeInsets.all(10),
-                      child: Text(
-                        textAlign: TextAlign.center,
-                        'Car Wash',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                final TextPainter secondTextPainter = TextPainter(
+                  text: TextSpan(
+                    text: 'Starts at XXXX', // This is the second text
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
-              color: Colors.orangeAccent.shade100,
+                  maxLines: 1,
+                  textDirection: TextDirection.ltr,
+                )..layout();
+
+                // Check if there's enough space for both texts
+                final bool canFitBothTexts = constraints.maxWidth >
+                    firstTextPainter.width + secondTextPainter.width + 20; // Adding some padding
+
+                return Container(
+                  child: Stack(
+                    children: [
+                      // ClipRRect to add curved corners and crop the bottom
+                      Container(
+                        margin: EdgeInsets.all(8),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20), // Curve on the left
+                            topRight: Radius.circular(20), // Curve on the right
+                          ),
+                          child: FractionallySizedBox(
+                            heightFactor: 0.80,
+                            alignment: Alignment.topCenter,
+                            child: Image.network(
+                              'https://soaphandcarwash.com/wp-content/uploads/2019/08/Soap-Hand-Car-Wash-13.jpg',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Overlay Text in the bottom 25% space
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 50, // Allocating 25% space for text
+                          padding: EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              Text(
+                                'Car Wash',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              if (canFitBothTexts) // Show second text only if both can fit
+                                Text(
+                                  'Starts at XXXX',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  color: Colors.orangeAccent.shade100,
+                );
+              },
             );
           }),
         ),
       ),
     ],
   );
+
+
+
+
+
 
 
 
