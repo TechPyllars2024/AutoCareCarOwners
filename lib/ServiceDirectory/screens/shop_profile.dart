@@ -1,6 +1,8 @@
 import 'package:autocare_carowners/ServiceDirectory/screens/booking.dart';
+import 'package:autocare_carowners/ServiceDirectory/widgets//button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
+
 
 class ShopProfile extends StatefulWidget {
   final String serviceName; // Accept the serviceName
@@ -67,7 +69,10 @@ class _ShopProfileState extends State<ShopProfile> {
         )));
   }
 
-
+  Widget buildButton() => WideButtons(
+    onTap: editProfile,
+    text: 'Edit Profile',
+  );
 
 
   Widget buildTopSection(double top) {
