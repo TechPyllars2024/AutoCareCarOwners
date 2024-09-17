@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets/text_field.dart';
+import 'shops_directory.dart';
 
 class Service {
   final String name;
@@ -17,17 +17,13 @@ class ServiceDirectory extends StatefulWidget {
 
 class _AutomotiveServicesState extends State<ServiceDirectory> {
   List<Service> services = [
-    Service('Car Wash', 'https://cardetailexpress.net/cdn/shop/articles/Man_Cleaning_a_Car.jpg'),
-    Service('Oil Change', 'https://parkers-images.bauersecure.com/wp-images/177357/gettyimages-adding-engine-oil.jpg'),
-    Service('Tire Service', 'https://tyretreaders.co.uk/wp-content/uploads/2022/02/tyre-fitting.jpg'),
-    Service('Battery Check', 'https://tontio.com/wp-content/uploads/2019/03/car-battery-testing-multimeter_M.jpg'),
+    Service('Electrical Works', 'https://i0.wp.com/www.profixautocare.com/wp-content/uploads/2020/05/image-27.png'),
+    Service('Mechanical Works', 'https://static.wixstatic.com/media/24457cc02d954991b6aafb169233cc46.jpg/v1/fill/w_1480,h_986,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/24457cc02d954991b6aafb169233cc46.jpg'),
+    Service('Air-conditioning Services', 'https://reddevilradiators.com.au/wp-content/uploads/2019/12/Screen-Shot-2019-12-14-at-1.28.18-pm.png'),
+    Service('Paint and Body Works', 'https://www.supersybon.com/wp-content/uploads/2023/04/1681353422-Metallic-Black-Car-Paint-The-Ultimate-Guide-for-Car-Enthusiasts.jpg'),
+ //   Service('Car Wash and Auto Detailing', 'https://www.sevensmartauto.com.au/wp-content/uploads/2023/08/AdobeStock_410154453.jpeg'),
+ //   Service('Vulcanizing and New Tires', 'https://www.shutterstock.com/image-photo/four-new-car-wheel-tires-600nw-1708003570.jpg'),
   ];
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,66 +36,74 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
         ),
         backgroundColor: Colors.grey.shade300,
         elevation: 0,
-        actions: [
-
-        ],
+        actions: [],
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
-          child: GridView.builder(
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-              childAspectRatio: 2 / 1, // 2:1 aspect ratio
-            ),
-            itemCount: services.length,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () => MaterialPageRoute,
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16.0),
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 1,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(16.0),
-                          bottomLeft: Radius.circular(16.0),
-                        ),
-                        child: Image.network(
-                          services[index].imageUrl,
-                          height: double.infinity,
-                          fit: BoxFit.cover,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 8,
+                childAspectRatio: 2 / 1, // 2:1 aspect ratio
+              ),
+              itemCount: services.length,
+              itemBuilder: (context, index) => GestureDetector(
+                onTap: () {
+                  // Navigate to ShopsDirectory with service name as argument
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ShopsDirectory(serviceName: services[index].name),
+                    ),
+                  );
+                },
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16.0),
+                            bottomLeft: Radius.circular(16.0),
+                          ),
+                          child: Image.network(
+                            services[index].imageUrl,
+                            height: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              services[index].name,
-                              style: TextStyle(
-                                fontSize: 25,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[800],
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                services[index].name,
+                                style: TextStyle(
+                                  fontSize: 25,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.grey[800],
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 8.0),
-
-                          ],
+                              SizedBox(height: 8.0),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
