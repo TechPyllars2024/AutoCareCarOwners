@@ -147,56 +147,21 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.call, color: Colors.blue),
+              Icon(Icons.message, color: Colors.orange, size: 40,),
               Padding(
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
-                  'CALL',
+                  'Message',
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 15,
                     fontWeight: FontWeight.w400,
-                    color: Colors.blue,
+                    color: Colors.black,
                   ),
                 ),
               ),
             ],
           ),
-          // Column(
-          //   mainAxisSize: MainAxisSize.min,
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Icon(Icons.near_me, color: Colors.blue),
-          //     Padding(
-          //       padding: const EdgeInsets.only(top: 8.0),
-          //       child: Text(
-          //         'ROUTE',
-          //         style: TextStyle(
-          //           fontSize: 12,
-          //           fontWeight: FontWeight.w400,
-          //           color: Colors.blue,
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-          // Column(
-          //   mainAxisSize: MainAxisSize.min,
-          //   mainAxisAlignment: MainAxisAlignment.center,
-          //   children: [
-          //     Icon(Icons.share, color: Colors.blue),
-          //     Padding(
-          //       padding: const EdgeInsets.only(top: 8.0),
-          //       child: Text(
-          //         'SHARE',
-          //         style: TextStyle(
-          //           fontSize: 12,
-          //           fontWeight: FontWeight.w400,
-          //           color: Colors.blue,
-          //         ),
-          //       ),
-          //     ),
-          //   ],
-          // ),
+
         ],
       ),
     );
