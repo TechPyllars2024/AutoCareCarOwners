@@ -13,7 +13,7 @@ class AddressService {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       addressCollection = FirebaseFirestore.instance
-          .collection('users')
+          .collection('carowners_profile')
           .doc(user.uid)
           .collection('addresses');
     }
