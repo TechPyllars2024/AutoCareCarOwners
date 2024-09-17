@@ -50,7 +50,8 @@ class _ShopProfileState extends State<ShopProfile> {
                     ),
                   ),
 
-                  ServicesCarousel()
+                  ServicesCarousel(),
+                  FeedbackSection(),
 
                 ],
               ),
@@ -375,7 +376,39 @@ class _ShopProfileState extends State<ShopProfile> {
   );
 
 
-
+  Widget FeedbackSection() => Padding(
+    padding: const EdgeInsets.only(top: 20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text('Feedbacks', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+        ),
+        Container(
+          margin: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16), // Curved edges
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start, // Aligns the text to the left
+              children: [
+                Text('Paul Vincent Lerado', style: TextStyle(fontWeight: FontWeight.bold),),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                  child: Text('I was impressed with the professionalism and efficiency of your team during my recent oil change and brake inspection. '
+                      'However, the service took longer than expected, so providing more accurate time estimates would be helpful.'),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 
 
 
