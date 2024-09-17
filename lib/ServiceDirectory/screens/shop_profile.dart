@@ -1,3 +1,4 @@
+import 'package:autocare_carowners/ServiceDirectory/screens/booking.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 
@@ -19,6 +20,14 @@ class _ShopProfileState extends State<ShopProfile> {
   final double profileHeight = 130;
 
   bool isExpanded = false;
+
+
+  void editProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Booking()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
