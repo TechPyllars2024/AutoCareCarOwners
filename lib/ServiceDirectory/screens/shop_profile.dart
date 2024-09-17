@@ -78,11 +78,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     ),
                   ),
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    rating = value;
-                  });
-                },
+
               ),
               SizedBox(width: 5),
               Text(
