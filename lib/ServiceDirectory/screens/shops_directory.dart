@@ -47,7 +47,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                 crossAxisCount: 1,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 8,
-                childAspectRatio: 2 / 1, // 2:1 aspect ratio
+                childAspectRatio: 2 / .8, // 2:1 aspect ratio
               ),
               itemCount: services.length,
               itemBuilder: (context, index) => GestureDetector(
