@@ -65,26 +65,26 @@ class _ShopProfileState extends State<ShopProfile> {
           top: coverHeight + 10,
           child: Row(
             children: [
-              // PannableRatingBar(
-              //   rate: rating,
-              //   items: List.generate(
-              //     5,
-              //         (index) => const RatingWidget(
-              //       selectedColor: Colors.orange,
-              //       unSelectedColor: Colors.grey,
-              //       child: Icon(
-              //         Icons.star,
-              //         size: 20,
-              //       ),
-              //     ),
-              //   ),
-              //   onChanged: (value) {
-              //     setState(() {
-              //       rating = value;
-              //     });
-              //   },
-              // ),
-              // SizedBox(width: 5),
+              PannableRatingBar(
+                rate: rating,
+                items: List.generate(
+                  5,
+                      (index) => const RatingWidget(
+                    selectedColor: Colors.orange,
+                    unSelectedColor: Colors.grey,
+                    child: Icon(
+                      Icons.star,
+                      size: 20,
+                    ),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    rating = value;
+                  });
+                },
+              ),
+              SizedBox(width: 5),
               Text(
                 '$numberOfRating ratings',
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
