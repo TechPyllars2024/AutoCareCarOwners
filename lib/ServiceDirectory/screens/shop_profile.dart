@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 
 class ShopProfile extends StatefulWidget {
   final String serviceName; // Accept the serviceName
@@ -32,10 +33,69 @@ class _ShopProfileState extends State<ShopProfile> {
                 children: [
 
                   buildCoverImage(),
+               //   buildProfileImage(),
                 ],
               ),
         )));
   }
+
+
+
+
+  Widget buildTopSection(double top) {
+    double rating = 3;
+    int numberOfRating = 33;
+
+    return Stack(
+      clipBehavior: Clip.none,
+      alignment: Alignment.center,
+      children: [
+        Container(
+          margin: EdgeInsets.only(bottom: profileHeight / 2),
+          child: buildCoverImage(),
+        ),
+        // Positioned(
+        //   left: 20,
+        //   top: top,
+        //   child: buildProfileImage(),
+        // ),
+        Positioned(
+          right: 20,
+          top: coverHeight + 10,
+          child: Row(
+            children: [
+              PannableRatingBar(
+                rate: rating,
+                items: List.generate(
+                  5,
+                      (index) => const RatingWidget(
+                    selectedColor: Colors.orange,
+                    unSelectedColor: Colors.grey,
+                    child: Icon(
+                      Icons.star,
+                      size: 20,
+                    ),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    rating = value;
+                  });
+                },
+              ),
+              SizedBox(width: 5),
+              Text(
+                '$numberOfRating ratings',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+
 
 
   Widget buildCoverImage() => Container(
@@ -48,10 +108,20 @@ class _ShopProfileState extends State<ShopProfile> {
     ),
   );
 
-
+  //
+  // Widget buildProfileImage() => CircleAvatar(
+  //   radius: profileHeight / 2,
+  //   backgroundColor: Colors.grey.shade800,
+  //   backgroundImage: NetworkImage(
+  //     'https://cdn.vectorstock.com/i/500p/57/48/auto-repair-service-logo-badge-emblem-template-vector-49765748.jpg',
+  //   ),
+  // );
 
 
 }
+
+
+
 
 
 
