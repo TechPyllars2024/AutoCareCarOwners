@@ -1,6 +1,4 @@
 class CarDetailsModel {
-  String carDetailId;
-  String profileId;
   String brand;
   String model;
   int year;
@@ -9,8 +7,6 @@ class CarDetailsModel {
   String fuelType;
 
   CarDetailsModel({
-    required this.carDetailId,
-    required this.profileId,
     required this.brand,
     required this.model,
     required this.year,
@@ -21,8 +17,6 @@ class CarDetailsModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'carDetailId': carDetailId,
-      'profileId': profileId,
       'brand': brand,
       'model': model,
       'year': year,
@@ -32,10 +26,8 @@ class CarDetailsModel {
     };
   }
 
-  factory CarDetailsModel.fromMap(Map<String, dynamic> map, String profileId) {
+  factory CarDetailsModel.fromMap(Map<String, dynamic> map) {
     return CarDetailsModel(
-      carDetailId: map['carDetailId'],
-      profileId: profileId,
       brand: map['brand'],
       model: map['model'],
       year: map['year'],
