@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets//dropdown.dart';
+import 'package:autocare_carowners/ServiceDirectory/widgets//checklist.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//timeSelection.dart';
+import 'package:autocare_carowners/ServiceDirectory/widgets//dropdown.dart';
 import 'package:get/get.dart';
 
 class Booking extends StatefulWidget {
@@ -16,6 +17,7 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   final DropdownController dropdownController = Get.put(DropdownController());
+  final brandController = DropdownController();
 
 
   // Define constants used in buildTopSection
@@ -54,6 +56,7 @@ class _BookingState extends State<Booking> {
               pickService(),
 
               timeSelection(),
+              pickBrand(),
 
               // Fetch the same shop information
               // Add other relevant content if needed
@@ -268,7 +271,7 @@ class _BookingState extends State<Booking> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        CustomDropdown(
+        Checklist(
           options: const [
             'Electrical Works',
             'Mechanical Works',
@@ -331,6 +334,50 @@ class _BookingState extends State<Booking> {
       ],
     ),
   );
+
+
+
+  Widget pickBrand() => Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Car Details',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Column(
+          children: [
+            Text('Brand', style: TextStyle(fontSize: 14),),
+            CustomDropdown<String>(
+              items: const [
+                'Toyota',
+                'Mitsubishi',
+                'Honda',
+                'Ford',
+                'Nissan',
+                'Kia',
+                'Suzuki',
+                'Isuzu',
+              ],
+              initialValue: 'Toyota',
+              onChanged: (selectedOption) {
+                print('Selected Option: $selectedOption');
+              },
+              dropdownColor: Colors.grey.shade500, // Optional customization
+              underlineColor: Colors.grey.shade800, // Optional customization
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+
+
 
 
 
