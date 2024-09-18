@@ -21,7 +21,7 @@ class _NavBarState extends State<NavBar> {
   final GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
 
   final List<Widget> _screens = [
-    const HomePageScreen(),
+    const CarOwnerHomeScreen(),
     const CarOwnerMessagesScreen(),
     const ServiceDirectoryScreen(),
     const CarOwnerProfile()
