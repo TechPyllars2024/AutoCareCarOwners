@@ -4,6 +4,7 @@ import 'package:autocare_carowners/ServiceDirectory/widgets//checklist.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//timeSelection.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//dropdown.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//button.dart';
+import 'package:autocare_carowners/ServiceDirectory/widgets//dateSelection.dart';
 import 'package:get/get.dart';
 
 class Booking extends StatefulWidget {
@@ -311,25 +312,48 @@ class _BookingState extends State<Booking> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-              child: Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  
 
-                  const SizedBox(height: 5),
-                  // Add some space between the text and container
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 15.0, horizontal: 40),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(15),
-                      border:
-                      Border.all(color: Colors.grey), // Border color
+                  Expanded(
+                    child: Container(
+                      width: 200, // Set the same fixed width for this container
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey), // Border color
+                      ),
+                      child: DatePickerDisplay(
+                        initialDate: DateTime.now(),
+                        textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                      ),
                     ),
-                    child: TimePickerDisplay(initialTime: TimeOfDay.now()),
                   ),
+                  const SizedBox(width: 10),
+                  // Add some space between the text and container
+                  Expanded(
+                    child: Container(
+                      width: 200, // Set a fixed width for the container
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey), // Border color
+                      ),
+                      child: TimePickerDisplay(initialTime: TimeOfDay.now()),
+                    ),
+                  ),
+
+                   // Add some space between the date picker and the time picker
+
+
                 ],
-              ),
+              )
+
+
             ),
           ],
         ),
