@@ -17,8 +17,6 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
   List<String> cars = List.generate(4, (index) => 'CAR ${index + 1}');
 
   void _editCar(int index) {
-    // This is where you'll handle the edit logic for the specific car.
-    // For now, let's just show a dialog as an example.
     showDialog(
       context: context,
       builder: (context) {
