@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//dropdown.dart';
+import 'package:autocare_carowners/ServiceDirectory/widgets//timeSelection.dart';
 import 'package:get/get.dart';
 
 class Booking extends StatefulWidget {
@@ -42,7 +43,7 @@ class _BookingState extends State<Booking> {
 
 
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
                 child: Divider(
                   thickness: 1,
                   color: Colors.grey,
@@ -50,7 +51,9 @@ class _BookingState extends State<Booking> {
               ),
 
 
-              pickService()
+              pickService(),
+
+              timeSelection(),
 
               // Fetch the same shop information
               // Add other relevant content if needed
@@ -258,7 +261,7 @@ class _BookingState extends State<Booking> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Select Service Specialization',
+          'Select Service',
           style: TextStyle(
             color: Colors.black,
             fontSize: 20,
@@ -282,6 +285,54 @@ class _BookingState extends State<Booking> {
       ],
     ),
   );
+
+
+
+  Widget timeSelection() => Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select Date and Time',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+
+                  const SizedBox(height: 5),
+                  // Add some space between the text and container
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 15.0, horizontal: 40),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15),
+                      border:
+                      Border.all(color: Colors.grey), // Border color
+                    ),
+                    child: TimePickerDisplay(initialTime: TimeOfDay.now()),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+
+
 
 
 }
