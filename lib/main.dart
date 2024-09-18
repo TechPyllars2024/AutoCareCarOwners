@@ -1,5 +1,5 @@
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
-import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
+//import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,7 +11,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   FirebaseFirestore.instance.settings = const Settings(
-    persistenceEnabled: true
+      persistenceEnabled: true
   );
   runApp(const MyApp());
 }
