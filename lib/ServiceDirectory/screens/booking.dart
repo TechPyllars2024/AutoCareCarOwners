@@ -3,6 +3,7 @@ import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//checklist.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//timeSelection.dart';
 import 'package:autocare_carowners/ServiceDirectory/widgets//dropdown.dart';
+import 'package:autocare_carowners/ServiceDirectory/widgets//button.dart';
 import 'package:get/get.dart';
 
 class Booking extends StatefulWidget {
@@ -57,6 +58,7 @@ class _BookingState extends State<Booking> {
 
               timeSelection(),
               carDetails(),
+              SubmitButton()
 
               // Fetch the same shop information
               // Add other relevant content if needed
@@ -357,7 +359,7 @@ class _BookingState extends State<Booking> {
             Expanded(
               child: Column(
                 children: [
-                  Text('Brand', style: TextStyle(fontSize: 14)),
+                  Text('Brand', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   CustomDropdown<String>(
                     items: const [
                       'Toyota',
@@ -383,7 +385,7 @@ class _BookingState extends State<Booking> {
             Expanded(
               child: Column(
                 children: [
-                  Text('Model', style: TextStyle(fontSize: 14)),
+                  Text('Model', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   CustomDropdown<String>(
                     items: const [
                       'aaa',
@@ -407,7 +409,7 @@ class _BookingState extends State<Booking> {
             Expanded(
               child: Column(
                 children: [
-                  Text('Year', style: TextStyle(fontSize: 14)),
+                  Text('Year', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   CustomDropdown<String>(
                     items: const [
                       '1111',
@@ -431,6 +433,15 @@ class _BookingState extends State<Booking> {
         ),
       ],
     ),
+  );
+
+
+  Widget SubmitButton() => Center(
+    child: WideButtons(onTap: () {
+      // Define what happens when the button is tapped
+    },
+      text: 'Submit',
+      color: Colors.orange,),
   );
 
 
