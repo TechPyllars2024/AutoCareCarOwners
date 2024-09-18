@@ -44,13 +44,16 @@ class _TextFieldInputState extends State<TextFieldInput> {
                   : null,
               labelStyle:
                   const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
-              border: const OutlineInputBorder(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(color: Colors.grey),
               ),
-              enabledBorder: const OutlineInputBorder(
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(color: Colors.grey),
               ),
-              focusedBorder: const OutlineInputBorder(
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(color: Colors.grey),
               ),
               // Remove errorText from InputDecoration
