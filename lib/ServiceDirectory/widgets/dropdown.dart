@@ -42,7 +42,7 @@ class _CustomDropdownState extends State<CustomDropdown> {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(15),
-                  color: Colors.grey[100], // Light grey background
+                  color: Colors.white, // White background
                 ),
                 child: Obx(() => widget.controller.selectedOptionList.isEmpty
                     ? Text(
@@ -118,15 +118,15 @@ class _CustomDropdownState extends State<CustomDropdown> {
             ),
           ),
           actions: <Widget>[
-            TextButton(
-              child: Text(
-                'Save',
-                style: TextStyle(color: Colors.grey[800]), // Dark grey text
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+            // TextButton(
+            //   child: Text(
+            //     'Save',
+            //     style: TextStyle(color: Colors.grey[800]), // Dark grey text
+            //   ),
+            //   onPressed: () {
+            //     Navigator.of(context).pop();
+            //   },
+            // ),
           ],
         );
       },
