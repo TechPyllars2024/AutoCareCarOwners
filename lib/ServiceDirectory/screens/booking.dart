@@ -350,26 +350,73 @@ class _BookingState extends State<Booking> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        Column(
+        Row(
           children: [
-            Text('Brand', style: TextStyle(fontSize: 14),),
-            CustomDropdown<String>(
-              items: const [
-                'Toyota',
-                'Mitsubishi',
-                'Honda',
-                'Ford',
-                'Nissan',
-                'Kia',
-                'Suzuki',
-                'Isuzu',
+            Column(
+              children: [
+                Text('Brand', style: TextStyle(fontSize: 14),),
+                CustomDropdown<String>(
+                  items: const [
+                    'Toyota',
+                    'Mitsubishi',
+                    'Honda',
+                    'Ford',
+                    'Nissan',
+                    'Kia',
+                    'Suzuki',
+                    'Isuzu',
+                  ],
+                  initialValue: 'Toyota',
+                  onChanged: (selectedOption) {
+                    print('Selected Option: $selectedOption');
+                  },
+                  dropdownColor: Colors.grey.shade500, // Optional customization
+                  underlineColor: Colors.grey.shade800, // Optional customization
+                ),
               ],
-              initialValue: 'Toyota',
-              onChanged: (selectedOption) {
-                print('Selected Option: $selectedOption');
-              },
-              dropdownColor: Colors.grey.shade500, // Optional customization
-              underlineColor: Colors.grey.shade800, // Optional customization
+            ),
+
+            Column(
+              children: [
+                Text('Model', style: TextStyle(fontSize: 14),),
+                CustomDropdown<String>(
+                  items: const [
+                    'aaa',
+                    'bbb',
+                    'ccc',
+                    'ddd',
+                    'eee',
+                    'Kia',
+                  ],
+                  initialValue: 'Toyota',
+                  onChanged: (selectedOption) {
+                    print('Selected Option: $selectedOption');
+                  },
+                  dropdownColor: Colors.grey.shade500, // Optional customization
+                  underlineColor: Colors.grey.shade800, // Optional customization
+                ),
+              ],
+            ),
+            Column(
+              children: [
+                Text('Year', style: TextStyle(fontSize: 14),),
+                CustomDropdown<String>(
+                  items: const [
+                    '1111',
+                    '2222',
+                    '3333',
+                    '4444',
+                    '5555',
+                    '6666',
+                  ],
+                  initialValue: 'Toyota',
+                  onChanged: (selectedOption) {
+                    print('Selected Option: $selectedOption');
+                  },
+                  dropdownColor: Colors.grey.shade500, // Optional customization
+                  underlineColor: Colors.grey.shade800, // Optional customization
+                ),
+              ],
             ),
           ],
         ),
