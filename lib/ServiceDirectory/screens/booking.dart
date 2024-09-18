@@ -12,6 +12,14 @@ class Booking extends StatefulWidget {
 }
 
 class _BookingState extends State<Booking> {
+
+
+  // Define constants used in buildTopSection
+  final double coverHeight = 220;
+  final double profileHeight = 130;
+  final double top = 220 - 130 / 2; // Example calculation
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +34,15 @@ class _BookingState extends State<Booking> {
             children: [
               buildTopSection(), // Use the same top section
               buildShopName(),  // Use the same shop name
-              ShopInformation(), // Fetch the same shop information
+              ShopInformation(),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
+                child: Divider(
+                  thickness: 1,
+                  color: Colors.grey,
+                ),
+              ),// Fetch the same shop information
               // Add other relevant content if needed
             ],
           ),
@@ -216,9 +232,132 @@ class _BookingState extends State<Booking> {
     ),
   );
 
-  // Define constants used in buildTopSection
-  final double coverHeight = 220;
-  final double profileHeight = 130;
-  final double top = 220 - 130 / 2; // Example calculation
+
+
+
+
+
+
+  Widget ServicesCarousel() => Column(
+    children: [
+      const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Text(
+              'Other Services',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            Spacer(),
+          ],
+        ),
+      ),
+      SizedBox(
+        height: 220,
+        child: CarouselView(
+          itemExtent: 280,
+          children: List.generate(10, (int index) {
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                // Create TextPainters for both texts to measure their widths
+                final TextPainter firstTextPainter = TextPainter(
+                  text: const TextSpan(
+                    text: 'Car Wash', // This is the first text
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  maxLines: 1,
+                  textDirection: TextDirection.ltr,
+                )..layout();
+
+                final TextPainter secondTextPainter = TextPainter(
+                  text: const TextSpan(
+                    text: 'Starts at XXXX', // This is the second text
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  maxLines: 1,
+                  textDirection: TextDirection.ltr,
+                )..layout();
+
+                // Check if there's enough space for both texts
+                final bool canFitBothTexts = constraints.maxWidth >
+                    firstTextPainter.width + secondTextPainter.width + 20; // Adding some padding
+
+                return Container(
+                  child: Stack(
+                    children: [
+                      // ClipRRect to add curved corners and crop the bottom
+                      Container(
+                        margin: const EdgeInsets.all(8),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(20), // Curve on the left
+                            topRight: Radius.circular(20), // Curve on the right
+                          ),
+                          child: FractionallySizedBox(
+                            heightFactor: 0.80,
+                            alignment: Alignment.topCenter,
+                            child: Image.network(
+                              'https://soaphandcarwash.com/wp-content/uploads/2019/08/Soap-Hand-Car-Wash-13.jpg',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Overlay Text in the bottom 25% space
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 50, // Allocating 25% space for text
+                          padding: const EdgeInsets.all(10),
+                          child: Row(
+                            children: [
+                              const Text(
+                                'Car Wash',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const Spacer(),
+                              if (canFitBothTexts) // Show second text only if both can fit
+                                const Text(
+                                  'Starts at XXXX',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 15,
+
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  color: Colors.orangeAccent.shade100,
+                );
+              },
+            );
+          }),
+        ),
+      ),
+    ],
+  );
+
+
+
+
 }
 
