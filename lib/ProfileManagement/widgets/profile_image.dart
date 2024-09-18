@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({Key? key}) : super(key: key);
+
+  const ProfileImage({super.key, this.child});
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {

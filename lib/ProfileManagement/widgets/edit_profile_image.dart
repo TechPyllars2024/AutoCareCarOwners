@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfileImage extends StatefulWidget {
-  const EditProfileImage({Key? key}) : super(key: key);
+  const EditProfileImage({super.key, this.child});
+
+  final Widget? child;
 
   @override
-  _EditProfileImageState createState() => _EditProfileImageState();
+  State<EditProfileImage> createState() => _EditProfileImageState();
 }
 
 class _EditProfileImageState extends State<EditProfileImage> {

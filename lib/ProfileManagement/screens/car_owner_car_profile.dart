@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 
 class CarOwnerCarProfile extends StatefulWidget {
-  const CarOwnerCarProfile({super.key});
+  const CarOwnerCarProfile({super.key, this.child});
 
-
-
+  final Widget? child;
 
   @override
   State<CarOwnerCarProfile> createState() => _CarOwnerCarProfileState();
 }
 
 class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
-
-
   final carBrandController = TextEditingController();
   final carModelController = TextEditingController();
   final carYearController = TextEditingController();
@@ -20,64 +17,44 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
   List<String> cars = List.generate(4, (index) => 'CAR ${index + 1}');
 
   void _editCar(int index) {
-    // This is where you'll handle the edit logic for the specific car.
-    // For now, let's just show a dialog as an example.
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-
           title: Text('Edit ${cars[index]}'),
           content: SizedBox(
             width: 400,
-
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('You are editing ${cars[index]}.'),
-
-
                 TextField(
                   controller: carBrandController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Brand'
-                  ),
-
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: 'Brand'),
                 ),
                 Padding(
-
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
                     controller: carModelController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Model'
-                    ),
-
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), hintText: 'Model'),
                   ),
                 ),
                 TextField(
                   controller: carYearController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Year'
-                  ),
-
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), hintText: 'Year'),
                 ),
               ],
             ),
           ),
-
           actions: [
             TextButton(
               onPressed: () {
-                print(carBrandController.text);
-                print(carModelController.text);
-                print(carYearController.text);
                 Navigator.of(context).pop();
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
@@ -89,13 +66,13 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'CAR PROFILES',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
       body: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 2,
             mainAxisSpacing: 2,
@@ -109,7 +86,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
                 child: Text(
                   cars[index],
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
               Padding(
@@ -121,13 +98,13 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      minimumSize: Size(150, 40),
+                      minimumSize: const Size(150, 40),
                       backgroundColor: Colors.grey,
                     ),
                     onPressed: () {
                       _editCar(index);
                     },
-                    child: Text(
+                    child: const Text(
                       'Edit',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,

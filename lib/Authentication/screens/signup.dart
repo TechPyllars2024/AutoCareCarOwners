@@ -1,3 +1,4 @@
+import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
+          builder: (context) => const NavBar(),
         ),
       );
     } else {

@@ -13,8 +13,9 @@ double rating = 4.0;
 
 class ShopsDirectory extends StatefulWidget {
   final String serviceName; // Accept serviceName as a parameter
+  final Widget? child;
 
-  const ShopsDirectory({super.key, required this.serviceName});
+  const ShopsDirectory({super.key, required this.serviceName, this.child});
 
   @override
   State<ShopsDirectory> createState() => _ShopsDirectoryState();
@@ -43,7 +44,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 8,
@@ -74,7 +75,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                           Expanded(
                             flex: 1,
                             child: ClipRRect(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(16.0),
                                 bottomLeft: Radius.circular(16.0),
                               ),
@@ -102,16 +103,16 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                       color: Colors.grey[800],
                                     ),
                                   ),
-                                  SizedBox(height: 8.0),
+                                  const SizedBox(height: 8.0),
 
                                   // Location row with icon and address
                                   Row(
                                     children: [
-                                      Icon(
+                                      const Icon(
                                         Icons.location_on,
                                         color: Colors.orange,
                                       ),
-                                      SizedBox(width: 4.0),
+                                      const SizedBox(width: 4.0),
                                       Text(
                                         '123 Main St', // Example address
                                         style: TextStyle(

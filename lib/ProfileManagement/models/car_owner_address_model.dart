@@ -1,18 +1,19 @@
-
 class CarOwnerAddressModel {
   String fullName;
   String phoneNumber;
   String street;
+  String baranggay;
   String city;
-  String country;
+  String province;
   bool isDefault;
 
   CarOwnerAddressModel({
     required this.fullName,
     required this.phoneNumber,
     required this.street,
+    required this.baranggay,
     required this.city,
-    required this.country,
+    required this.province,
     this.isDefault = false,
   });
 
@@ -21,8 +22,9 @@ class CarOwnerAddressModel {
       'fullName': fullName,
       'phoneNumber': phoneNumber,
       'street': street,
+      'baranggay': baranggay,
       'city': city,
-      'country': country,
+      'province': province,
       'isDefault': isDefault,
     };
   }
@@ -32,8 +34,9 @@ class CarOwnerAddressModel {
       fullName: map['fullName'],
       phoneNumber: map['phoneNumber'],
       street: map['street'],
+      baranggay: map['baranggay'],
       city: map['city'],
-      country: map['country'],
+      province: map['province'],
       isDefault: map['isDefault'] ?? false,
     );
   }

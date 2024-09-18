@@ -1,5 +1,5 @@
-import 'package:autocare_carowners/ServiceDirectory/screens/booking.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets//button.dart';
+import 'package:autocare_carowners/Service Directory Management//screens/booking.dart';
+import 'package:autocare_carowners/Service Directory Management//widgets//button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 

@@ -49,6 +49,8 @@ dependencies:
   flutter_pannable_rating_bar: ^2.7.2+1
   get: ^4.6.5
   dropdown_plus: ^0.0.9
+  logger: ^1.1.0
+
 
 
 dev_dependencies:

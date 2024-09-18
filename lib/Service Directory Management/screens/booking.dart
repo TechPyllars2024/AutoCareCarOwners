@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets//checklist.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets//timeSelection.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets//dropdown.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets//button.dart';
-import 'package:autocare_carowners/ServiceDirectory/widgets//dateSelection.dart';
+import 'package:autocare_carowners/Service Directory Management//widgets//checklist.dart';
+import 'package:autocare_carowners/Service Directory Management/widgets//timeSelection.dart';
+import 'package:autocare_carowners/Service Directory Management/widgets//dropdown.dart';
+import 'package:autocare_carowners/Service Directory Management/widgets//button.dart';
+import 'package:autocare_carowners/Service Directory Management/widgets//dateSelection.dart';
 import 'package:get/get.dart';
 
 class Booking extends StatefulWidget {

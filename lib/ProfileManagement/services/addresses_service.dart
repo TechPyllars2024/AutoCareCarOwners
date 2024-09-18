@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AddressService {
   late CollectionReference addressCollection;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   AddressService() {
     _initializeFirestore();
@@ -13,7 +14,7 @@ class AddressService {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       addressCollection = FirebaseFirestore.instance
-          .collection('users')
+          .collection('car_owner_profile')
           .doc(user.uid)
           .collection('addresses');
     }
@@ -22,8 +23,9 @@ class AddressService {
   Future<List<CarOwnerAddressModel>> fetchAddresses() async {
     final snapshot = await addressCollection.get();
     return snapshot.docs
-      .map((doc) => CarOwnerAddressModel.fromMap(doc.data() as Map<String, dynamic>))
-      .toList();
+        .map((doc) =>
+            CarOwnerAddressModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> addAddress(CarOwnerAddressModel address) async {
@@ -38,7 +40,8 @@ class AddressService {
     await addressCollection.doc(docId).delete();
   }
 
-  Future<void> setDefaultAddress(int index, List<CarOwnerAddressModel> addresses) async {
+  Future<void> setDefaultAddress(
+      int index, List<CarOwnerAddressModel> addresses) async {
     // Update local state immediately
     for (int i = 0; i < addresses.length; i++) {
       addresses[i].isDefault = i == index;
