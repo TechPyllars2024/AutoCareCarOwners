@@ -11,7 +11,6 @@ import 'package:autocare_carowners/Authentication/widgets/googleButton.dart';
 import 'package:autocare_carowners/Authentication/widgets/or.dart';
 import 'package:autocare_carowners/Authentication/widgets/textfieldPassword.dart';
 import 'package:autocare_carowners/Authentication/screens/forgotPassword.dart';
-import 'package:autocare_carowners/Authentication/screens/homeScreen.dart';
 import 'package:autocare_carowners/Authentication/screens/signup.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import 'package:autocare_carowners/Authentication/Widgets/snackBar.dart';
@@ -102,51 +101,50 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Auto",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50,
-                          color: Colors.white,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "Care",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(duration: const Duration(seconds: 3)),
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          const CarImageWidget(
+              imagePath: 'lib/Authentication/assets/images/car.png')
+              .animate()
+              .fadeIn(duration: const Duration(seconds: 2)),
 
-              // Sign Up Image
-              const CarImageWidget(
-                      imagePath: 'lib/Authentication/assets/images/car.png')
-                  .animate()
-                  .fadeIn(duration: const Duration(seconds: 1)),
-              // Sign Up Form
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
+          // Expanded container that stretches to the bottom of the screen
+          Expanded(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(top: 10),
+                      child: RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Auto",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 50,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Care",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 50,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).animate().fadeIn(duration: const Duration(seconds: 3)),
+                    ),
                     TextFieldInput(
                       icon: Icons.email,
                       textEditingController: emailController,
@@ -191,7 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onTap: () => Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) =>
-                                  const ForgotPasswordScreen(),
+                              const ForgotPasswordScreen(),
                             ),
                           ),
                         ),
@@ -236,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
-                                            const SignupScreen()),
+                                        const SignupScreen()),
                                   );
                                 },
                             ),
@@ -246,14 +244,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-              ).animate().slide(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                  begin: const Offset(0, 1),
-                  end: const Offset(0, 0))
-            ],
+              ),
+            ).animate().slide(
+                duration: const Duration(milliseconds: 1000),
+                curve: Curves.easeInOut,
+                begin: const Offset(0, 1),
+                end: const Offset(0, 0)),
           ),
-        ),
+        ],
       ),
     );
   }
