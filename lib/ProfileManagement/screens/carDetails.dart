@@ -1,3 +1,4 @@
+// import 'dart:convert';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_car_details_model.dart';
 import 'package:autocare_carowners/ProfileManagement/services/car_details_service.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
@@ -8,12 +9,10 @@ import 'package:flutter/services.dart';
 class CarDetails extends StatefulWidget {
   final List<CarDetailsModel> carDetails;
 
-  final Widget? child;
-
-  const CarDetails({super.key, this.child, this.carDetails = const []});
+  const CarDetails({Key? key, this.carDetails = const []}) : super(key: key);
 
   @override
-  State<CarDetails> createState() => _CarDetailsState();
+  _CarDetailsState createState() => _CarDetailsState();
 }
 
 class _CarDetailsState extends State<CarDetails> {
@@ -99,7 +98,8 @@ class _CarDetailsState extends State<CarDetails> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Delete Car Details'),
-          content: const Text('Are you sure you want to delete this car detail?'),
+          content:
+              const Text('Are you sure you want to delete this car detail?'),
           actions: [
             TextButton(
               onPressed: () {
@@ -110,7 +110,10 @@ class _CarDetailsState extends State<CarDetails> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop();
-                final docId = (await carDetailsService.carDetailsCollection.get()).docs[index].id;
+                final docId =
+                    (await carDetailsService.carDetailsCollection.get())
+                        .docs[index]
+                        .id;
                 await carDetailsService.deleteCarDetails(docId);
                 _fetchCarDetails();
               },
@@ -125,7 +128,8 @@ class _CarDetailsState extends State<CarDetails> {
   void _showCarDetailsDialog({CarDetailsModel? car, int? index}) {
     final brandController = TextEditingController(text: car?.brand ?? '');
     final modelController = TextEditingController(text: car?.model ?? '');
-    final yearController = TextEditingController(text: car?.year.toString() ?? '');
+    final yearController =
+        TextEditingController(text: car?.year.toString() ?? '');
     String color = car?.color ?? 'Red';
     String transmissionType = car?.transmissionType ?? 'Automatic';
     String fuelType = car?.fuelType ?? 'Petrol';
@@ -180,8 +184,23 @@ class _CarDetailsState extends State<CarDetails> {
                   DropdownButtonFormField<String>(
                     value: color,
                     decoration: const InputDecoration(labelText: 'Color'),
-                    items: ['Red', 'Black', 'White', 'Green', 'Silver', 'Yellow', 'Beige', 'Blue', 
-                            'Brown', 'Gold', 'Grey', 'Orange', 'Pink', 'Purple', 'Tan']
+                    items: [
+                      'Red',
+                      'Black',
+                      'White',
+                      'Green',
+                      'Silver',
+                      'Yellow',
+                      'Beige',
+                      'Blue',
+                      'Brown',
+                      'Gold',
+                      'Grey',
+                      'Orange',
+                      'Pink',
+                      'Purple',
+                      'Tan'
+                    ]
                         .map((color) => DropdownMenuItem(
                               value: color,
                               child: Text(color),
@@ -201,7 +220,8 @@ class _CarDetailsState extends State<CarDetails> {
                   ),
                   DropdownButtonFormField<String>(
                     value: transmissionType,
-                    decoration: const InputDecoration(labelText: 'Transmission Type'),
+                    decoration:
+                        const InputDecoration(labelText: 'Transmission Type'),
                     items: ['Automatic', 'Manual']
                         .map((transmission) => DropdownMenuItem(
                               value: transmission,
@@ -264,16 +284,15 @@ class _CarDetailsState extends State<CarDetails> {
                     fuelType: fuelType,
                   );
 
-                  // if (index == null) {
-                  //   _addCarDetails(newCar);
-                  // } else {
-                  //   _editCarDetails(index, newCar);
-                  // }
                   if (car == null) {
                     await carDetailsService.addCarDetails(newCarDetails);
                   } else {
-                    final docId = (await carDetailsService.carDetailsCollection.get()).docs[index!].id;
-                    await carDetailsService.editCarDetails(docId, newCarDetails);
+                    final docId =
+                        (await carDetailsService.carDetailsCollection.get())
+                            .docs[index!]
+                            .id;
+                    await carDetailsService.editCarDetails(
+                        docId, newCarDetails);
                   }
 
                   _fetchCarDetails();
@@ -342,10 +361,4 @@ class _CarDetailsState extends State<CarDetails> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: CarDetails(),
-  ));
 }
