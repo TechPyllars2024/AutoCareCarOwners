@@ -57,7 +57,7 @@ class _ShopProfileState extends State<ShopProfile> {
                 children: [
                   buildTopSection(top),
                   buildShopName(),
-                  ShopInformation(),
+                  shopInformation(),
 
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
@@ -67,8 +67,8 @@ class _ShopProfileState extends State<ShopProfile> {
                     ),
                   ),
 
-                  ServicesCarousel(),
-                  FeedbackSection(),
+                  servicesCarousel(),
+                  feedbackSection(),
                   bookingButton()
 
 
@@ -186,7 +186,7 @@ class _ShopProfileState extends State<ShopProfile> {
 
 
 
-  Widget ShopInformation() {
+  Widget shopInformation() {
 
     const String openTime = '7:00';
     const String closeTime = '5:00';
@@ -242,7 +242,7 @@ class _ShopProfileState extends State<ShopProfile> {
               Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
-                  "${openTime} - ${closeTime}",
+                  "$openTime - $closeTime",
                   style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
@@ -279,7 +279,7 @@ class _ShopProfileState extends State<ShopProfile> {
   }
 
 
-  Widget ServicesCarousel() => Column(
+  Widget servicesCarousel() => Column(
     children: [
       const Padding(
         padding: EdgeInsets.all(8.0),
@@ -332,6 +332,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     firstTextPainter.width + secondTextPainter.width + 20; // Adding some padding
 
                 return Container(
+                  color: Colors.orangeAccent.shade100,
                   child: Stack(
                     children: [
                       // ClipRRect to add curved corners and crop the bottom
@@ -387,7 +388,6 @@ class _ShopProfileState extends State<ShopProfile> {
                       ),
                     ],
                   ),
-                  color: Colors.orangeAccent.shade100,
                 );
               },
             );
@@ -398,7 +398,7 @@ class _ShopProfileState extends State<ShopProfile> {
   );
 
 
-  Widget FeedbackSection() => Padding(
+  Widget feedbackSection() => Padding(
     padding: const EdgeInsets.only(top: 20.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
