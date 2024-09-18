@@ -40,18 +40,18 @@ class _TextFieldInputState extends State<TextFieldInput> {
             decoration: InputDecoration(
               labelText: widget.hintText,
               prefixIcon: widget.icon != null
-                  ? Icon(widget.icon, color: Colors.black, size: 24)
+                  ? Icon(widget.icon, color: Colors.grey.shade800, size: 24)
                   : null,
               labelStyle:
                   const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
               border: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.grey),
               ),
               enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.grey),
               ),
               focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+                borderSide: BorderSide(color: Colors.grey),
               ),
               // Remove errorText from InputDecoration
             ),
