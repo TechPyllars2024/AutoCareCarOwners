@@ -1,17 +1,15 @@
 import 'dart:io';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../services/profile_service.dart';
 
 class CarOwnerEditProfile extends StatefulWidget {
   final CarOwnerProfileModel currentUser;
 
-  final Widget? child;
-
-  const CarOwnerEditProfile({super.key, required this.currentUser, this.child});
+  const CarOwnerEditProfile({Key? key, required this.currentUser})
+      : super(key: key);
 
   @override
   State<CarOwnerEditProfile> createState() => _CarOwnerEditProfileState();
@@ -22,21 +20,18 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
   late TextEditingController profileImageController;
   File? _image;
   bool _isLoading = false;
-
-  CarOwnerProfileModel? currentUser;
+  final CarOwnerProfileService _profileService = CarOwnerProfileService();
 
   @override
   void initState() {
     super.initState();
-    currentUser = widget.currentUser;
-    nameController = TextEditingController(text: currentUser?.name ?? '');
+    nameController = TextEditingController(text: widget.currentUser.name);
     profileImageController =
-        TextEditingController(text: currentUser?.profileImage ?? '');
+        TextEditingController(text: widget.currentUser.profileImage);
   }
 
-  Future<void> _pickImage(ImageSource gallery) async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
@@ -45,44 +40,31 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
     }
   }
 
-  Future<void> _uploadImage() async {
-    if (_image != null) {
-      final storageRef = FirebaseStorage.instance
-          .ref()
-          .child('profile_images')
-          .child(currentUser!.uid);
-      await storageRef.putFile(_image!);
-      final downloadUrl = await storageRef.getDownloadURL();
-      profileImageController.text = downloadUrl;
-    }
-  }
-
   Future<void> _saveProfile() async {
     setState(() {
       _isLoading = true;
     });
-    await _uploadImage();
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      // print('Current user email before saving: ${widget.currentUser.email}'); // Debugging line
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      final existingEmail = doc.data()?['email'] ?? '';
 
-      final updatedUser = CarOwnerProfileModel(
-        uid: user.uid,
-        name: nameController.text,
-        email: existingEmail,
-        profileImage: profileImageController.text,
-      );
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .set(updatedUser.toMap());
-      Navigator.pop(context, updatedUser);
+    // Upload the image if selected
+    if (_image != null) {
+      final downloadUrl = await _profileService.uploadProfileImage(
+          _image!, widget.currentUser.uid);
+      profileImageController.text = downloadUrl;
     }
+
+    // Create updated profile
+    final updatedProfile = CarOwnerProfileModel(
+      profileId: widget.currentUser.profileId,
+      uid: widget.currentUser.uid,
+      name: nameController.text,
+      email: widget.currentUser.email,
+      profileImage: profileImageController.text,
+    );
+
+    // Save profile using the service
+    await _profileService.saveUserProfile(updatedProfile);
+    Navigator.pop(context, updatedProfile);
+
     setState(() {
       _isLoading = false;
     });
@@ -134,19 +116,14 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                     child: const Text('Change Photo',
                         style: TextStyle(color: Colors.black)),
                   ),
-                  // Edit name
                   Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: nameController,
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            hintText: 'Edit name',
-                          ),
-                        ),
-                      ],
+                    child: TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Edit name',
+                      ),
                     ),
                   ),
                   ElevatedButton(
