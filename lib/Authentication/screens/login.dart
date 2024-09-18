@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           const CarImageWidget(
-              imagePath: 'lib/Authentication/assets/images/car.png')
+              imagePath: 'lib/Authentication/assets/images/authCar.png')
               .animate()
               .fadeIn(duration: const Duration(seconds: 2)),
 
@@ -121,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      margin: const EdgeInsets.only(top: 10),
+                      margin: const EdgeInsets.only(bottom: 10),
                       child: RichText(
                         text: const TextSpan(
                           children: [
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     // Already have an account? Log In
-                    const SizedBox(height: 80),
+                    const SizedBox(height: 50),
                     TextButton(
                       onPressed: () {
                         // Handle navigation to login screen
