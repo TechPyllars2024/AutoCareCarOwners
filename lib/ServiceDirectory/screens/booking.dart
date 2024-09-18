@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
+import 'package:autocare_carowners/ServiceDirectory/widgets//dropdown.dart';
+import 'package:get/get.dart';
 
 class Booking extends StatefulWidget {
   final String serviceName; // This will be used directly
@@ -12,6 +14,7 @@ class Booking extends StatefulWidget {
 }
 
 class _BookingState extends State<Booking> {
+  final DropdownController dropdownController = Get.put(DropdownController());
 
 
   // Define constants used in buildTopSection
@@ -36,13 +39,20 @@ class _BookingState extends State<Booking> {
               buildShopName(),  // Use the same shop name
               ShopInformation(),
 
+
+
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 15),
                 child: Divider(
                   thickness: 1,
                   color: Colors.grey,
                 ),
-              ),// Fetch the same shop information
+              ),
+
+              ServiceSelection(),
+              pickService()
+
+              // Fetch the same shop information
               // Add other relevant content if needed
             ],
           ),
@@ -238,7 +248,7 @@ class _BookingState extends State<Booking> {
 
 
 
-  Widget ServicesCarousel() => Column(
+  Widget ServiceSelection() => Column(
     children: [
       const Padding(
         padding: EdgeInsets.all(8.0),
@@ -357,6 +367,38 @@ class _BookingState extends State<Booking> {
   );
 
 
+
+
+  Widget pickService() => Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select Service Specialization',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        CustomDropdown(
+          options: const [
+            'Electrical Works',
+            'Mechanical Works',
+            'Air-conditioning',
+            'Paint and Body Works',
+            'Car Wash and Auto-Detailing'
+          ],
+          hintText: 'Service Specialization',
+          controller: dropdownController,
+          onSelectionChanged: (selectedOptions) {
+            print('Selected Options: $selectedOptions');
+          },
+        ),
+      ],
+    ),
+  );
 
 
 }
