@@ -29,7 +29,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,7 +42,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
             decoration: InputDecoration(
               labelText: widget.hintText,
               prefixIcon: widget.icon != null
-                  ? Icon(widget.icon, color: Colors.black, size: 24)
+                  ? Icon(widget.icon, color: Colors.grey.shade800, size: 24)
                   : null,
               labelStyle:
                   const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
@@ -52,7 +52,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
                         _isPasswordVisible
                             ? Icons.visibility
                             : Icons.visibility_off,
-                        color: Colors.black,
+                        color: Colors.grey.shade800,
                       ),
                       onPressed: () {
                         setState(() {
@@ -61,14 +61,17 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
                       },
                     )
                   : null,
-              border: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(color: Colors.grey),
               ),
-              enabledBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+              enabledBorder:  OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(color: Colors.grey),
               ),
-              focusedBorder: const OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
+              focusedBorder:  OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                borderSide: BorderSide(color: Colors.grey),
               ),
               // Remove errorText from InputDecoration
             ),
