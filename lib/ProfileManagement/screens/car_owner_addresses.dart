@@ -1,7 +1,5 @@
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_model.dart';
 import 'package:autocare_carowners/ProfileManagement/services/addresses_service.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -17,25 +15,13 @@ class CarOwnerAddress extends StatefulWidget {
 class _CarOwnerAddressState extends State<CarOwnerAddress> {
   List<CarOwnerAddressModel> addresses = [];
   late AddressService addressService;
-  // late CollectionReference addressCollection;
 
   @override
   void initState() {
     super.initState();
-    // _initializeFirestore();
     addressService = AddressService();
     _fetchAddresses();
   }
-
-  // void _initializeFirestore() {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   if (user != null) {
-  //     addressCollection = FirebaseFirestore.instance
-  //         .collection('users')
-  //         .doc(user.uid)
-  //         .collection('addresses');
-  //   }
-  // }
 
   Future<void> _fetchAddresses() async {
     final fetchedAddresses = await addressService.fetchAddresses();
@@ -43,46 +29,6 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       addresses = fetchedAddresses;
     });
   }
-
-  // Future<void> _addAddress(CarOwnerAddressModel address) async {
-  //   await addressCollection.add(address.toMap());
-  //   _fetchAddresses();
-  // }
-
-  // Future<void> _editAddress(int index, CarOwnerAddressModel address) async {
-  //   final docId = (await addressCollection.get()).docs[index].id;
-  //   await addressCollection.doc(docId).update(address.toMap());
-  //   _fetchAddresses();
-  // }
-
-  // Future<void> _deleteAddress(int index) async {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return AlertDialog(
-  //         title: const Text('Delete Address'),
-  //         content: const Text('Are you sure you want to delete this address?'),
-  //         actions: [
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: const Text('Cancel'),
-  //           ),
-  //           TextButton(
-  //             onPressed: () async {
-  //               final docId = (await addressCollection.get()).docs[index].id;
-  //               await addressCollection.doc(docId).delete();
-  //               _fetchAddresses();
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: const Text('Delete'),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showDeleteConfirmationDialog(int index) {
     showDialog(
@@ -115,38 +61,19 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
     );
   }
 
-  // void _setDefaultAddress(int index) async {
-  //   setState(() {
-  //     for (int i = 0; i < addresses.length; i++) {
-  //       addresses[i].isDefault = i == index;
-  //     }
-  //   });
-
-  //   final snapshot = await addressCollection.get();
-  //   for (int i = 0; i < snapshot.docs.length; i++) {
-  //     final docId = snapshot.docs[i].id;
-  //     await addressCollection.doc(docId).update({
-  //       'isDefault': i == index,
-  //     });
-  //   }
-  // }
-
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
     final fullNameController =
         TextEditingController(text: address?.fullName ?? '');
     final phoneNumberController =
         TextEditingController(text: address?.phoneNumber ?? '');
     final streetController = TextEditingController(text: address?.street ?? '');
+    final baranggayController =
+        TextEditingController(text: address?.baranggay ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
-    final countryController =
-        TextEditingController(text: address?.country ?? '');
+    final provinceController =
+        TextEditingController(text: address?.province ?? '');
 
     final formKey = GlobalKey<FormState>();
-
-    // final phoneNumberFormatter = MaskTextInputFormatter(
-    //   mask: '###########',
-    //   filter: { "#": RegExp(r'[0-9]') },
-    // );
 
     showDialog(
       context: context,
@@ -199,8 +126,18 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     },
                   ),
                   TextFormField(
+                    controller: baranggayController,
+                    decoration: const InputDecoration(labelText: 'Baranggay'),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a street';
+                      }
+                      return null;
+                    },
+                  ),
+                  TextFormField(
                     controller: cityController,
-                    decoration: const InputDecoration(labelText: 'City'),
+                    decoration: const InputDecoration(labelText: 'City/Municipality'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a city';
@@ -209,8 +146,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     },
                   ),
                   TextFormField(
-                    controller: countryController,
-                    decoration: const InputDecoration(labelText: 'Country'),
+                    controller: provinceController,
+                    decoration: const InputDecoration(labelText: 'Province'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a country';
@@ -236,16 +173,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     fullName: fullNameController.text,
                     phoneNumber: phoneNumberController.text,
                     street: streetController.text,
+                    baranggay: baranggayController.text,
                     city: cityController.text,
-                    country: countryController.text,
+                    province: provinceController.text,
                     isDefault: address?.isDefault ?? false,
                   );
-
-                  // if (index == null) {
-                  //   _addAddress(newAddress);
-                  // } else {
-                  //   _editAddress(index, newAddress);
-                  // }
 
                   if (address == null) {
                     await addressService.addAddress(newAddress);
@@ -255,9 +187,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         .id;
                     await addressService.editAddress(docId, newAddress);
                   }
-
                   _fetchAddresses();
-
                   Navigator.of(context).pop();
                 }
               },
@@ -289,8 +219,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       children: [
                         Text('Phone: ${address.phoneNumber}'),
                         Text('Street: ${address.street}'),
-                        Text('City: ${address.city}'),
-                        Text('Country: ${address.country}'),
+                        Text('City/Municipality: ${address.city}'),
+                        Text('Province: ${address.province}'),
                         if (address.isDefault)
                           const Text('Default Address',
                               style: TextStyle(color: Colors.green)),
@@ -340,10 +270,4 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: CarOwnerAddress(),
-  ));
 }
