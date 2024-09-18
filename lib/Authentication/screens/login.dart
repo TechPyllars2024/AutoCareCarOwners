@@ -15,6 +15,7 @@ import 'package:autocare_carowners/Authentication/screens/signup.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import 'package:autocare_carowners/Authentication/Widgets/snackBar.dart';
 
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.child});
 
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           const CarImageWidget(
-              imagePath: 'lib/Authentication/assets/images/authCar.png')
+              imagePath: 'lib/Authentication/assets/images/carBlack.png')
               .animate()
               .fadeIn(duration: const Duration(seconds: 2)),
 
@@ -121,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      margin: const EdgeInsets.only(bottom: 10),
+                      margin: const EdgeInsets.only(bottom: 12),
                       child: RichText(
                         text: const TextSpan(
                           children: [
