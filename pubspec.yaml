@@ -47,6 +47,8 @@ dependencies:
   firebase_storage: ^12.2.0
   mask_text_input_formatter: ^2.9.0
   flutter_pannable_rating_bar: ^2.7.2+1
+  get: ^4.6.5
+  dropdown_plus: ^0.0.9
 
 
 dev_dependencies:
