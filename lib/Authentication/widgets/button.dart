@@ -15,15 +15,15 @@ class MyButtons extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.only(top: 25.0),
         child: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          width: 300,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          width: double.infinity,
           decoration: const ShapeDecoration(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(
-                  Radius.circular(30),
+                  Radius.circular(15),
                 ),
               ),
               color: Colors.orange),
