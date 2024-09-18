@@ -1,4 +1,3 @@
-
 class CarDetailsModel {
   String brand;
   String model;
@@ -38,4 +37,3 @@ class CarDetailsModel {
     );
   }
 }
-

@@ -8,14 +8,16 @@ class Service {
   Service(this.name, this.imageUrl); // Updated constructor
 }
 
-class ServiceDirectory extends StatefulWidget {
-  const ServiceDirectory({super.key});
+class ServiceDirectoryScreen extends StatefulWidget {
+  const ServiceDirectoryScreen({super.key, this.child});
+
+  final Widget? child;
 
   @override
-  State<ServiceDirectory> createState() => _AutomotiveServicesState();
+  State<ServiceDirectoryScreen> createState() => _AutomotiveServicesState();
 }
 
-class _AutomotiveServicesState extends State<ServiceDirectory> {
+class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
   List<Service> services = [
     Service('Electrical Works', 'https://i0.wp.com/www.profixautocare.com/wp-content/uploads/2020/05/image-27.png'),
     Service('Mechanical Works', 'https://static.wixstatic.com/media/24457cc02d954991b6aafb169233cc46.jpg/v1/fill/w_1480,h_986,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/24457cc02d954991b6aafb169233cc46.jpg'),
@@ -36,7 +38,7 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
         ),
         backgroundColor: Colors.grey.shade300,
         elevation: 0,
-        actions: [],
+        actions: const [],
       ),
       body: SafeArea(
         child: Padding(
@@ -44,7 +46,7 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 8,
@@ -70,7 +72,7 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
                       Expanded(
                         flex: 1,
                         child: ClipRRect(
-                          borderRadius: BorderRadius.only(
+                          borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(16.0),
                             bottomLeft: Radius.circular(16.0),
                           ),
@@ -97,7 +99,7 @@ class _AutomotiveServicesState extends State<ServiceDirectory> {
                                   color: Colors.grey[800],
                                 ),
                               ),
-                              SizedBox(height: 8.0),
+                              const SizedBox(height: 8.0),
                             ],
                           ),
                         ),

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class CarDetailsService {
   late CollectionReference carDetailsCollection;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   CarDetailsService() {
     _initializeFirestore();
@@ -13,7 +14,7 @@ class CarDetailsService {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       carDetailsCollection = FirebaseFirestore.instance
-          .collection('users')
+          .collection('car_owner_profile')
           .doc(user.uid)
           .collection('carDetails');
     }
@@ -21,7 +22,10 @@ class CarDetailsService {
 
   Future<List<CarDetailsModel>> fetchCarDetails() async {
     final snapshot = await carDetailsCollection.get();
-    return snapshot.docs.map((doc) => CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    return snapshot.docs
+        .map((doc) =>
+            CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>))
+        .toList();
   }
 
   Future<void> addCarDetails(CarDetailsModel carDetails) async {
