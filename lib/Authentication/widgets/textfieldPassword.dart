@@ -61,13 +61,16 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
                       },
                     )
                   : null,
-              border: const OutlineInputBorder(
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(color: Colors.grey),
               ),
-              enabledBorder: const OutlineInputBorder(
+              enabledBorder:  OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(color: Colors.grey),
               ),
-              focusedBorder: const OutlineInputBorder(
+              focusedBorder:  OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15.0),
                 borderSide: BorderSide(color: Colors.grey),
               ),
               // Remove errorText from InputDecoration
