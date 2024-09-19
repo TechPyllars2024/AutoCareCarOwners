@@ -145,7 +145,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: Column(
                   children: <Widget>[
@@ -228,10 +228,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
                     // Sign Up Button
-                    MyButtons(onTap: signupUser, text: "Sign Up"),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: MyButtons(onTap: signupUser, text: "Sign Up"),
+                    ),
 
                     // Sign Up OR
-                    const Or(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: const Or(),
+                    ),
 
                     // Sign Up with Google
                     SizedBox(height: size.height * 0.01),
@@ -241,7 +247,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
                     // Already have an account? Log In
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 5),
                     TextButton(
                       onPressed: () {
                         // Handle navigation to login screen
