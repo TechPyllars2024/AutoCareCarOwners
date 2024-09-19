@@ -181,7 +181,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFieldInput(
                       icon: Icons.person,
                       textEditingController: nameController,
-                      hintText: 'Enter your Name',
+                      hintText: 'Name',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -193,7 +193,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFieldInput(
                       icon: Icons.email,
                       textEditingController: emailController,
-                      hintText: 'Enter your Email',
+                      hintText: 'Email',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -208,7 +208,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: passwordController,
-                      hintText: 'Enter your Password',
+                      hintText: 'Password',
                       textInputType: TextInputType.text,
                       validator: passwordValidator,
                       isPass: true,
@@ -216,7 +216,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: confirmPasswordController,
-                      hintText: 'Confirm your Password',
+                      hintText: 'Confirm Password',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
