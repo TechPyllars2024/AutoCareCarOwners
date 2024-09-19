@@ -15,7 +15,7 @@ class MyButtons extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.only(top: 25.0),
+        padding: const EdgeInsets.only(top: 0.0),
         child: Container(
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 10),
