@@ -145,7 +145,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
                 ),
                 child: Column(
                   children: <Widget>[
@@ -278,6 +278,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ).animate().slide(
