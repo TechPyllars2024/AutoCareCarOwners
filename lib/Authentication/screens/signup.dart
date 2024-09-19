@@ -139,7 +139,7 @@ class _SignupScreenState extends State<SignupScreen> {
               const CarImageWidget(
                       imagePath: 'lib/Authentication/assets/images/carBlack.png')
                   .animate()
-                  .fadeIn(duration: const Duration(seconds: 1)),
+                  .fadeIn(duration: const Duration(seconds: 2)),
               // Sign Up Form
               Container(
                 padding: const EdgeInsets.all(16),
@@ -281,7 +281,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
               ).animate().slide(
-                  duration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 1000),
                   curve: Curves.easeInOut,
                   begin: const Offset(0, 1),
                   end: const Offset(0, 0)),
