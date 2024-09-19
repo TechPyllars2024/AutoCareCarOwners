@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../Widgets/button.dart';
-import '../Widgets/text_field.dart';
+import '../widgets/button.dart';
+import '../widgets/text_field.dart';
 import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
 import 'package:autocare_carowners/Authentication/widgets/googleButton.dart';
 import 'package:autocare_carowners/Authentication/widgets/or.dart';
@@ -14,7 +14,6 @@ import 'package:autocare_carowners/Authentication/screens/forgotPassword.dart';
 import 'package:autocare_carowners/Authentication/screens/signup.dart';
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import 'package:autocare_carowners/Authentication/Widgets/snackBar.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.child});
@@ -52,14 +51,12 @@ class _LoginScreenState extends State<LoginScreen> {
       // Check if email is verified
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null && user.emailVerified) {
-        // Navigate to the home screen if email is verified
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (context) => const NavBar(),
           ),
         );
       } else {
-        // Inform the user to verify their email
         setState(() {
           isLoading = false;
         });
@@ -116,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               ),
               child: SingleChildScrollView(
                 child: Column(
@@ -149,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFieldInput(
                       icon: Icons.email,
                       textEditingController: emailController,
-                      hintText: 'Enter your Email',
+                      hintText: 'Email',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -164,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: passwordController,
-                      hintText: 'Enter your Password',
+                      hintText: 'Password',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -184,7 +181,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Forgot Password?',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 15,
+                              fontSize: 13,
                             ),
                           ),
                           onTap: () => Navigator.of(context).push(
@@ -198,7 +195,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     // Sign Up Button
-                    MyButtons(onTap: loginUser, text: "Log In"),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: MyButtons(
+                        onTap: loginUser,
+                        text: "Log In",
+                        isLoading: isLoading, // Pass the loading state
+                      ),
+                    ),
 
                     // Sign Up OR
                     SizedBox(height: size.height * 0.02),
@@ -207,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Sign Up with Google
                     SizedBox(height: size.height * 0.03),
                     GoogleButton(
-                      onTap: logInWithGoogleForCarOwners,
+                      onTap: logInWithGoogleForCarOwners, // Google button is always enabled
                       hintText: 'Log In with Google',
                     ),
 
@@ -230,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // Navigate to LoginScreen
+                                  // Navigate to SignupScreen
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(

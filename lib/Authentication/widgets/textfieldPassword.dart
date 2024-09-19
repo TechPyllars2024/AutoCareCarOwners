@@ -29,7 +29,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 0),
+      padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

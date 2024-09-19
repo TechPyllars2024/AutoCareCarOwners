@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../Widgets/button.dart';
-import '../Widgets/snackBar.dart';
+import '../widgets/button.dart';
+import '../widgets/snackBar.dart';
 import '../Widgets/text_field.dart';
 import '../widgets/textfieldPassword.dart';
 import '../widgets/validator.dart';
@@ -30,8 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -133,50 +132,52 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Auto",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 50,
-                          color: Colors.white,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "Care",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(duration: const Duration(seconds: 3)),
-              ),
-
               // Sign Up Image
               const CarImageWidget(
-                      imagePath: 'lib/Authentication/assets/images/carBlack.png')
-                  .animate()
-                  .fadeIn(duration: const Duration(seconds: 1)),
+                imagePath: 'lib/Authentication/assets/images/carBlack.png',
+              ).animate().fadeIn(duration: const Duration(seconds: 2)),
+
               // Sign Up Form
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
                 child: Column(
                   children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Auto",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 50,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Care",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 50,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).animate().fadeIn(duration: const Duration(seconds: 3)),
+                    ),
                     TextFieldInput(
                       icon: Icons.person,
                       textEditingController: nameController,
-                      hintText: 'Enter your Name',
+                      hintText: 'Name',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -188,7 +189,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFieldInput(
                       icon: Icons.email,
                       textEditingController: emailController,
-                      hintText: 'Enter your Email',
+                      hintText: 'Email',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -203,7 +204,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: passwordController,
-                      hintText: 'Enter your Password',
+                      hintText: 'Password',
                       textInputType: TextInputType.text,
                       validator: passwordValidator,
                       isPass: true,
@@ -211,7 +212,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: confirmPasswordController,
-                      hintText: 'Confirm your Password',
+                      hintText: 'Confirm Password',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -223,10 +224,20 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
                     // Sign Up Button
-                    MyButtons(onTap: signupUser, text: "Sign Up"),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: MyButtons(
+                        onTap: signupUser,
+                        text: "Sign Up",
+                        isLoading: isLoading, // Pass the loading state
+                      ),
+                    ),
 
                     // Sign Up OR
-                    const Or(),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 3.0),
+                      child: const Or(),
+                    ),
 
                     // Sign Up with Google
                     SizedBox(height: size.height * 0.01),
@@ -236,10 +247,15 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
                     // Already have an account? Log In
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 5),
                     TextButton(
                       onPressed: () {
-                        // Handle navigation to login screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
                       },
                       child: RichText(
                         text: TextSpan(
@@ -254,12 +270,11 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // Navigate to LoginScreen
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen()),
+                                      builder: (context) => const LoginScreen(),
+                                    ),
                                   );
                                 },
                             ),
@@ -270,10 +285,11 @@ class _SignupScreenState extends State<SignupScreen> {
                   ],
                 ),
               ).animate().slide(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                  begin: const Offset(0, 1),
-                  end: const Offset(0, 0)),
+                duration: const Duration(milliseconds: 1000),
+                curve: Curves.easeInOut,
+                begin: const Offset(0, 1),
+                end: const Offset(0, 0),
+              ),
             ],
           ),
         ),
