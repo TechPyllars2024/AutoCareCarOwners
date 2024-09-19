@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-import '../Widgets/button.dart';
-import '../Widgets/snackBar.dart';
+import '../widgets/button.dart';
+import '../widgets/snackBar.dart';
 import '../Widgets/text_field.dart';
 import '../widgets/textfieldPassword.dart';
 import '../widgets/validator.dart';
@@ -30,8 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController =
-      TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
   bool isLoading = false;
 
   @override
@@ -133,24 +132,23 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-
-
               // Sign Up Image
               const CarImageWidget(
-                      imagePath: 'lib/Authentication/assets/images/carBlack.png')
-                  .animate()
-                  .fadeIn(duration: const Duration(seconds: 2)),
+                imagePath: 'lib/Authentication/assets/images/carBlack.png',
+              ).animate().fadeIn(duration: const Duration(seconds: 2)),
+
               // Sign Up Form
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
                 child: Column(
                   children: <Widget>[
-
-
                     Container(
                       margin: const EdgeInsets.only(bottom: 12),
                       child: RichText(
@@ -176,8 +174,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ).animate().fadeIn(duration: const Duration(seconds: 3)),
                     ),
-
-
                     TextFieldInput(
                       icon: Icons.person,
                       textEditingController: nameController,
@@ -230,7 +226,11 @@ class _SignupScreenState extends State<SignupScreen> {
                     // Sign Up Button
                     Padding(
                       padding: const EdgeInsets.only(top: 5.0),
-                      child: MyButtons(onTap: signupUser, text: "Sign Up"),
+                      child: MyButtons(
+                        onTap: signupUser,
+                        text: "Sign Up",
+                        isLoading: isLoading, // Pass the loading state
+                      ),
                     ),
 
                     // Sign Up OR
@@ -250,7 +250,12 @@ class _SignupScreenState extends State<SignupScreen> {
                     const SizedBox(height: 5),
                     TextButton(
                       onPressed: () {
-                        // Handle navigation to login screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
                       },
                       child: RichText(
                         text: TextSpan(
@@ -265,12 +270,11 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
-                                  // Navigate to LoginScreen
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen()),
+                                      builder: (context) => const LoginScreen(),
+                                    ),
                                   );
                                 },
                             ),
@@ -278,14 +282,14 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
-
                   ],
                 ),
               ).animate().slide(
-                  duration: const Duration(milliseconds: 1000),
-                  curve: Curves.easeInOut,
-                  begin: const Offset(0, 1),
-                  end: const Offset(0, 0)),
+                duration: const Duration(milliseconds: 1000),
+                curve: Curves.easeInOut,
+                begin: const Offset(0, 1),
+                end: const Offset(0, 0),
+              ),
             ],
           ),
         ),
