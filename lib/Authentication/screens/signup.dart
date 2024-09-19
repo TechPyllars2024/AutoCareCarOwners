@@ -133,31 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Container(
-                margin: const EdgeInsets.only(top: 40),
-                child: RichText(
-                  text: const TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Auto",
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                          fontSize: 50,
-                          color: Colors.white,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "Care",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50,
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
-                  ),
-                ).animate().fadeIn(duration: const Duration(seconds: 3)),
-              ),
+
 
               // Sign Up Image
               const CarImageWidget(
@@ -173,6 +149,35 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 child: Column(
                   children: <Widget>[
+
+
+                    Container(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: RichText(
+                        text: const TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "Auto",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 50,
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Care",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w900,
+                                fontSize: 50,
+                                color: Colors.orange,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ).animate().fadeIn(duration: const Duration(seconds: 3)),
+                    ),
+
+
                     TextFieldInput(
                       icon: Icons.person,
                       textEditingController: nameController,
