@@ -149,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFieldInput(
                       icon: Icons.email,
                       textEditingController: emailController,
-                      hintText: 'Enter your Email',
+                      hintText: 'Email',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     TextFieldPassword(
                       icon: Icons.lock,
                       textEditingController: passwordController,
-                      hintText: 'Enter your Password',
+                      hintText: 'Password',
                       textInputType: TextInputType.text,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Forgot Password?',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 15,
+                              fontSize: 13,
                             ),
                           ),
                           onTap: () => Navigator.of(context).push(
