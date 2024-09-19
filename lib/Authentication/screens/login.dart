@@ -198,7 +198,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
 
                     // Sign Up Button
-                    MyButtons(onTap: loginUser, text: "Log In"),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20.0),
+                      child: MyButtons(onTap: loginUser, text: "Log In"),
+                    ),
 
                     // Sign Up OR
                     SizedBox(height: size.height * 0.02),
