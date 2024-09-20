@@ -104,6 +104,9 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.visible, // Ensures text wraps to the next line
+                      softWrap: true,
                     ),
                   ),
                 ),
