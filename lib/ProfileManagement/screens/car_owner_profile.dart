@@ -111,9 +111,10 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 Text(
                   userEmail ?? 'No available Email',
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Colors.black54,
                   ),
+
                 ),
         
                 // fetching defualt address
@@ -128,28 +129,23 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       return const Text('Error fetching default address.');
                     }
                     if (snapshot.hasData && snapshot.data != null) {
-                      final defaultAddress = snapshot.data!;
+                      final fetchedAddress = snapshot.data!;
                       return Padding(
-                        padding: const EdgeInsets.only(
-                            top: 40.0, left: 20, bottom: 30),
+                        padding: const EdgeInsets.only(top: 40.0, left: 20, bottom: 30),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(Icons.location_on, size: 30, color: Colors.orange,),
+                            const Icon(Icons.location_on, size: 30, color: Colors.orange),
                             const SizedBox(width: 4),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${defaultAddress.street}, ${defaultAddress.baranggay}, ',
-                                  style: const TextStyle(color: Colors.black54, fontSize: 18),
+                            Expanded(
+                              child: Flexible(
+                                child: Text(
+                                  '${fetchedAddress.street}, ${fetchedAddress.baranggay}, ${fetchedAddress.city}, ${fetchedAddress.province}',
+                                  style: const TextStyle(color: Colors.black54, fontSize: 15),
+                                  overflow: TextOverflow.visible, // Ensures text wraps to the next line
+                                  softWrap: true, // Allows text to wrap
                                 ),
-                                const SizedBox(height: 4), // Adds some spacing between lines
-                                Text(
-                                  '${defaultAddress.city}, ${defaultAddress.province}',
-                                  style: const TextStyle(color: Colors.black54, fontSize: 18),
-                                ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
@@ -161,7 +157,11 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                     );
                   },
                 ),
-        
+
+
+
+
+
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: ElevatedButton(
