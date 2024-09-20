@@ -110,31 +110,51 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                               : null,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          WidgetStateProperty.all(Colors.grey.shade300),
+                    ),
                     onPressed: () => _pickImage(ImageSource.gallery),
                     child: const Text('Change Photo',
-                        style: TextStyle(color: Colors.black)),
+                        style: TextStyle(
+                            color: Colors.orange, fontWeight: FontWeight.bold)),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 160, top: 20),
                     child: TextField(
                       controller: nameController,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)), // Set border radius to 15
+                          borderSide: BorderSide(
+                            color: Colors.grey, // Set border color to grey
+                          ),
+                        ),
                         hintText: 'Edit name',
                       ),
                     ),
+
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.grey,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15)),
+                        minimumSize: const Size(400, 50),
+                        backgroundColor: Colors.orange,
+                      ),
+                      onPressed: _saveProfile,
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
                     ),
-                    onPressed: _saveProfile,
-                    child: const Text('Save'),
                   ),
                 ],
               ),
