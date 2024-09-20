@@ -150,7 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      margin: const EdgeInsets.only(bottom: 12),
+                      margin: const EdgeInsets.only(bottom: 8),
                       child: RichText(
                         text: const TextSpan(
                           children: [
