@@ -211,52 +211,57 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               itemCount: addresses.length,
               itemBuilder: (context, index) {
                 final address = addresses[index];
-                return Card(
-                  child: ListTile(
-                    title: Text(address.fullName),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Phone: ${address.phoneNumber}'),
-                        Text('Street: ${address.street}'),
-                        Text('City/Municipality: ${address.city}'),
-                        Text('Province: ${address.province}'),
-                        if (address.isDefault)
-                          const Text('Default Address',
-                              style: TextStyle(color: Colors.green)),
-                      ],
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            _showAddressDialog(address: address, index: index);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            _showDeleteConfirmationDialog(index);
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(
-                            address.isDefault ? Icons.star : Icons.star_border,
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Card(
+                    child: ListTile(
+
+                      title: Text(address.fullName),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Phone: ${address.phoneNumber}'),
+                          Text('Street: ${address.street}'),
+                          Text('City/Municipality: ${address.city}'),
+                          Text('Province: ${address.province}'),
+                          if (address.isDefault)
+                            const Text('Default Address',
+                                style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Colors.grey,),
+                            onPressed: () {
+                              _showAddressDialog(address: address, index: index);
+                            },
                           ),
-                          onPressed: () async {
-                            setState(() {
-                              for (int i = 0; i < addresses.length; i++) {
-                                addresses[i].isDefault = i == index;
-                              }
-                            });
-                            await addressService.setDefaultAddress(
-                                index, addresses);
-                            _fetchAddresses();
-                          },
-                        ),
-                      ],
+                          IconButton(
+                            icon: const Icon(Icons.delete, color: Colors.grey,),
+                            onPressed: () {
+                              _showDeleteConfirmationDialog(index);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              address.isDefault ? Icons.star : Icons.star_border,
+                              color: address.isDefault ? Colors.orange : Colors.grey,
+                            ),
+                            onPressed: () async {
+                              setState(() {
+                                for (int i = 0; i < addresses.length; i++) {
+                                  addresses[i].isDefault = i == index;
+                                }
+                              });
+                              await addressService.setDefaultAddress(
+                                  index, addresses);
+                              _fetchAddresses();
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
