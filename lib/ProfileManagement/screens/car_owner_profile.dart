@@ -131,12 +131,12 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       final defaultAddress = snapshot.data!;
                       return Padding(
                         padding: const EdgeInsets.only(
-                            top: 40.0, left: 20, bottom: 50),
+                            top: 40.0, left: 20, bottom: 30),
                         child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(Icons.location_on_outlined, size: 30, color: Colors.orange,),
-                            const SizedBox(width: 8),
+                            const Icon(Icons.location_on, size: 30, color: Colors.orange,),
+                            const SizedBox(width: 4),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -169,7 +169,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
                       minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.orange,
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -193,7 +193,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
                       minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.orange,
                     ),
                     onPressed: () {
                       Navigator.push(
