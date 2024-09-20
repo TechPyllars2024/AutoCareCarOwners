@@ -156,52 +156,58 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       );
                     }
                     return const Padding(
-                      padding: EdgeInsets.only(top: 30.0, left: 20, bottom: 50),
+                      padding: EdgeInsets.only(top: 10.0, left: 20, bottom: 50),
                       child: Text('No default address set.'),
                     );
                   },
                 ),
         
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    minimumSize: const Size(400, 50),
-                    backgroundColor: Colors.grey,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      minimumSize: const Size(400, 50),
+                      backgroundColor: Colors.grey,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          //pushReplacement if you don't want to go back
+                          MaterialPageRoute(
+                              builder: (context) => const CarOwnerAddress()));
+                    },
+                    child: const Text('ADDRESS',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20)),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        //pushReplacement if you don't want to go back
-                        MaterialPageRoute(
-                            builder: (context) => const CarOwnerAddress()));
-                  },
-                  child: const Text('ADDRESS',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20)),
                 ),
                 const SizedBox(height: 12),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    minimumSize: const Size(400, 50),
-                    backgroundColor: Colors.grey,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      minimumSize: const Size(400, 50),
+                      backgroundColor: Colors.grey,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          //pushReplacement if you don't want to go back
+                          MaterialPageRoute(
+                              builder: (context) => const CarDetails()));
+                    },
+                    child: const Text('CAR PROFILE',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20)),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        //pushReplacement if you don't want to go back
-                        MaterialPageRoute(
-                            builder: (context) => const CarDetails()));
-                  },
-                  child: const Text('CAR PROFILE',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20)),
                 ),
               ],
             ),
