@@ -231,23 +231,26 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       ),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           IconButton(
-                            icon: const Icon(Icons.edit, color: Colors.grey,),
+                            icon: Icon(Icons.edit, color: Colors.grey.shade600, size: 20,),
                             onPressed: () {
                               _showAddressDialog(address: address, index: index);
                             },
                           ),
+                          SizedBox(width: 0,),
                           IconButton(
-                            icon: const Icon(Icons.delete, color: Colors.grey,),
+                            icon: Icon(Icons.delete, color: Colors.grey.shade600,size: 20,),
                             onPressed: () {
                               _showDeleteConfirmationDialog(index);
                             },
                           ),
+                          SizedBox(width: 0,),
                           IconButton(
                             icon: Icon(
-                              address.isDefault ? Icons.star : Icons.star_border,
-                              color: address.isDefault ? Colors.orange : Colors.grey,
+                              address.isDefault ? Icons.star : Icons.star_border, size: 20,
+                              color: address.isDefault ? Colors.orange : Colors.grey.shade600,
                             ),
                             onPressed: () async {
                               setState(() {
