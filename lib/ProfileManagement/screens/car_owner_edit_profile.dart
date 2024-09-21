@@ -114,22 +114,34 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
-                          WidgetStateProperty.all(Colors.grey.shade300),
+                          WidgetStateProperty.all(Colors.orange.shade900),
                     ),
                     onPressed: () => _pickImage(ImageSource.gallery),
                     child: const Text('Change Photo',
                         style: TextStyle(
-                            color: Colors.orange, fontWeight: FontWeight.bold)),
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 160, top: 20),
                     child: TextField(
                       controller: nameController,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)), // Set border radius to 15
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(
-                            color: Colors.grey, // Set border color to grey
+                            color: Colors.orange.shade900, // Default border color
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(
+                            color: Colors.orange.shade900, // Border color when focused
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(
+                            color: Colors.orange.shade900, // Border color when enabled
                           ),
                         ),
                         hintText: 'Edit name',
@@ -144,7 +156,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),
                         minimumSize: const Size(400, 50),
-                        backgroundColor: Colors.orange,
+                        backgroundColor: Colors.orange.shade900,
                       ),
                       onPressed: _saveProfile,
                       child: const Text(
