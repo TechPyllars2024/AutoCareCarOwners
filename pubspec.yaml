@@ -50,6 +50,7 @@ dependencies:
   get: ^4.6.5
   dropdown_plus: ^0.0.9
   logger: ^1.1.0
+  carousel_slider: ^5.0.0
 
 
 
