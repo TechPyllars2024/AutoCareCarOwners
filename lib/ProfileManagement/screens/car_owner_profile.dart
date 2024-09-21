@@ -55,28 +55,41 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
         ),
         backgroundColor: Colors.grey.shade100,
         actions: [
-          IconButton(
-              onPressed: () async {
-                if (profile != null) {
-                  final updatedProfile = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CarOwnerEditProfile(
-                        currentUser: profile!,
+          Transform.translate(
+            offset: const Offset(-12, 0),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.orange.shade900, // Inner color
+                border: Border.all(color: Colors.orange.shade900, width: 2), // Border color and width
+                borderRadius: BorderRadius.circular(10), // Rounded corners
+              ),
+              child: IconButton(
+                onPressed: () async {
+                  if (profile != null) {
+                    final updatedProfile = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CarOwnerEditProfile(
+                          currentUser: profile!,
+                        ),
                       ),
-                    ),
-                  );
-                  if (updatedProfile != null) {
-                    setState(() {
-                      profile = updatedProfile;
-                    });
+                    );
+                    if (updatedProfile != null) {
+                      setState(() {
+                        profile = updatedProfile;
+                      });
+                    }
                   }
-                }
-              },
-              icon: const Icon(
-                Icons.edit,
-                size: 30,
-              )),
+                },
+                icon: const Icon(
+                  Icons.edit,
+                  size: 30,
+                  color: Colors.white, // Icon color
+                ),
+              ),
+            ),
+          ),
+
         ],
       ),
       body: SingleChildScrollView(
