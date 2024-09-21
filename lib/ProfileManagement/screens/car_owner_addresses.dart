@@ -290,10 +290,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange.shade900,
         onPressed: () {
           _showAddressDialog();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white, size: 30, weight: 20,),
       ),
     );
   }
