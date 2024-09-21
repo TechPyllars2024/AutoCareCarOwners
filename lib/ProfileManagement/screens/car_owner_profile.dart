@@ -46,13 +46,14 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+
         title: const Text(
           'PROFILE',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: Colors.grey.shade100,
         actions: [
           IconButton(
               onPressed: () async {
@@ -100,9 +101,10 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                   child: Center(
                     child: Text(
                       profile?.name ?? 'No available Name',
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
+                        color: Colors.black,
                       ),
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.visible, // Ensures text wraps to the next line
@@ -113,9 +115,9 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
         
                 Text(
                   userEmail ?? 'No available Email',
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 18,
-                    color: Colors.black54,
+                    color: Colors.black45,
                   ),
 
                 ),
@@ -138,7 +140,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Icon(Icons.location_on, size: 30, color: Colors.orange),
+                             Icon(Icons.location_on, size: 30, color: Colors.orange.shade900),
                             const SizedBox(width: 4),
                             Expanded(
                               child: Flexible(
@@ -168,25 +170,39 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.orange,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                            (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.pressed)) {
+                            return Colors.orange.shade900; // Change to orange when pressed
+                          }
+                          return Colors.grey.shade100; // Default background color
+                        },
+                      ),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(color: Colors.orange.shade900, width: 2), // Orange border
+                        ),
+                      ),
+                      minimumSize: WidgetStateProperty.all<Size>(Size(400, 50)),
                     ),
                     onPressed: () {
                       Navigator.push(
-                          context,
-                          //pushReplacement if you don't want to go back
-                          MaterialPageRoute(
-                              builder: (context) => const CarOwnerAddress()));
+                        context,
+                        MaterialPageRoute(builder: (context) => const CarOwnerAddress()),
+                      );
                     },
-                    child: const Text('ADDRESS',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20)),
+                    child: Text(
+                      'ADDRESS',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.orange.shade900, // Orange text when not pressed
+                        fontSize: 20,
+                      ),
+                    ),
                   ),
+
                 ),
                 const SizedBox(height: 12),
                 Padding(
@@ -196,7 +212,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15)),
                       minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.orange,
+                      backgroundColor: Colors.deepOrange.shade700,
                     ),
                     onPressed: () {
                       Navigator.push(
