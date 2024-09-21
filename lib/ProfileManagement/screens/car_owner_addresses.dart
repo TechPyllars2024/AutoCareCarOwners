@@ -63,15 +63,15 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
 
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
     final fullNameController =
-        TextEditingController(text: address?.fullName ?? '');
+    TextEditingController(text: address?.fullName ?? '');
     final phoneNumberController =
-        TextEditingController(text: address?.phoneNumber ?? '');
+    TextEditingController(text: address?.phoneNumber ?? '');
     final streetController = TextEditingController(text: address?.street ?? '');
     final baranggayController =
-        TextEditingController(text: address?.baranggay ?? '');
+    TextEditingController(text: address?.baranggay ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
     final provinceController =
-        TextEditingController(text: address?.province ?? '');
+    TextEditingController(text: address?.province ?? '');
 
     final formKey = GlobalKey<FormState>();
 
@@ -98,9 +98,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   TextFormField(
                     controller: phoneNumberController,
                     decoration:
-                        const InputDecoration(labelText: 'Phone Number'),
+                    const InputDecoration(labelText: 'Phone Number'),
                     keyboardType: TextInputType.phone,
-                    // inputFormatters: [phoneNumberFormatter],
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
                       LengthLimitingTextInputFormatter(11),
@@ -208,68 +207,88 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       body: addresses.isEmpty
           ? const Center(child: Text('No addresses. Add a new address.'))
           : ListView.builder(
-              itemCount: addresses.length,
-              itemBuilder: (context, index) {
-                final address = addresses[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  child: Card(
-                    child: ListTile(
-
-                      title: Text(address.fullName),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Phone: ${address.phoneNumber}'),
-                          Text('Street: ${address.street}'),
-                          Text('City/Municipality: ${address.city}'),
-                          Text('Province: ${address.province}'),
-                          if (address.isDefault)
-                            const Text('Default Address',
-                                style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
-                        ],
+        itemCount: addresses.length,
+        itemBuilder: (context, index) {
+          final address = addresses[index];
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            child: Card(
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: address.isDefault ? Colors.orange.shade900 : Colors.transparent, // Orange border if default
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: ListTile(
+                title: Text(address.fullName),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Phone: ${address.phoneNumber}'),
+                    Text('Street: ${address.street}'),
+                    Text('City/Municipality: ${address.city}'),
+                    Text('Province: ${address.province}'),
+                    if (address.isDefault)
+                       Text('Default Address',
+                          style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.bold)),
+                  ],
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.grey.shade600,
+                        size: 20,
                       ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit, color: Colors.grey.shade600, size: 20,),
-                            onPressed: () {
-                              _showAddressDialog(address: address, index: index);
-                            },
-                          ),
-                          SizedBox(width: 0,),
-                          IconButton(
-                            icon: Icon(Icons.delete, color: Colors.grey.shade600,size: 20,),
-                            onPressed: () {
-                              _showDeleteConfirmationDialog(index);
-                            },
-                          ),
-                          SizedBox(width: 0,),
-                          IconButton(
-                            icon: Icon(
-                              address.isDefault ? Icons.star : Icons.star_border, size: 20,
-                              color: address.isDefault ? Colors.orange : Colors.grey.shade600,
-                            ),
-                            onPressed: () async {
-                              setState(() {
-                                for (int i = 0; i < addresses.length; i++) {
-                                  addresses[i].isDefault = i == index;
-                                }
-                              });
-                              await addressService.setDefaultAddress(
-                                  index, addresses);
-                              _fetchAddresses();
-                            },
-                          ),
-                        ],
-                      ),
+                      onPressed: () {
+                        _showAddressDialog(address: address, index: index);
+                      },
                     ),
-                  ),
-                );
-              },
+                    SizedBox(width: 0),
+
+                    IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.grey.shade600,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        _showDeleteConfirmationDialog(index);
+                      },
+                    ),
+                    SizedBox(width: 0),
+                    IconButton(
+                      icon: Icon(
+                        address.isDefault
+                            ? Icons.star
+                            : Icons.star_border,
+                        size: 20,
+                        color: address.isDefault
+                            ? Colors.orange.shade900
+                            : Colors.grey.shade600,
+                      ),
+                      onPressed: () async {
+                        setState(() {
+                          for (int i = 0; i < addresses.length; i++) {
+                            addresses[i].isDefault = i == index;
+                          }
+                        });
+                        await addressService.setDefaultAddress(
+                            index, addresses);
+                        _fetchAddresses();
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddressDialog();
