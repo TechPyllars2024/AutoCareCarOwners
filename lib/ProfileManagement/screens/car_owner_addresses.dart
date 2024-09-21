@@ -202,7 +202,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Addresses'),
+        title: const Text('Address', style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: addresses.isEmpty
           ? const Center(child: Text('No addresses. Add a new address.'))
