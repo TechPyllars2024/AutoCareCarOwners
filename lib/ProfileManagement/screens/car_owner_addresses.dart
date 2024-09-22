@@ -35,14 +35,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete Address'),
+          title: const Text('Delete Address', style: TextStyle(fontWeight: FontWeight.w700),),
           content: const Text('Are you sure you want to delete this address?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: TextStyle(color: Colors.black45),),
             ),
             TextButton(
               onPressed: () async {
@@ -53,7 +53,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 await addressService.deleteAddress(docId);
                 _fetchAddresses();
               },
-              child: const Text('Delete'),
+              child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange.shade900),),
             ),
           ],
         );
@@ -197,7 +197,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel', style: TextStyle(color: Colors.grey),),
+              child: Text('Cancel', style: TextStyle(color: Colors.black45),),
             ),
             TextButton(
               onPressed: () async {
@@ -224,7 +224,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text(address == null ? 'Add' : 'Update', style: TextStyle(color: Colors.orange.shade900),),
+              child: Text(address == null ? 'Add' : 'Update', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.bold),),
             ),
           ],
         );
