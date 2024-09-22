@@ -50,8 +50,8 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
       appBar: AppBar(
 
         title: const Text(
-          'PROFILE',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'Profile',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
         backgroundColor: Colors.grey.shade100,
         actions: [
