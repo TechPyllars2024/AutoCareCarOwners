@@ -313,6 +313,7 @@ class _CarDetailsState extends State<CarDetails> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: const Text('Car Details'),
       ),
       body: carDetails.isEmpty
