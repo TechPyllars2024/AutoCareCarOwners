@@ -32,11 +32,11 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: Text(
           'Services',
           style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
         ),
-        backgroundColor: Colors.grey.shade300,
         elevation: 0,
         actions: const [],
       ),
