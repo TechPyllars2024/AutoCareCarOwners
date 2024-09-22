@@ -33,6 +33,7 @@ class _BookingState extends State<Booking> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: Text(widget.serviceName), // Use the passed serviceName
       ),
       body: SafeArea(
