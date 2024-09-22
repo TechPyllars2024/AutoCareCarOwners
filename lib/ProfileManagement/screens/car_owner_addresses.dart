@@ -237,6 +237,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: const Text('Address', style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: addresses.isEmpty
