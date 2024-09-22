@@ -30,7 +30,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade300,
         title: Text(
