@@ -15,9 +15,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text(
-          '',
-          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
+        title:  Row(
+          children: [
+             Text(
+              'Auto',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 40, color: Colors.black),
+            ),
+            Text(
+              'Care',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 40, color: Colors.orange.shade900),
+            ),
+          ],
         ),
         backgroundColor: Colors.grey.shade100,
       ),
