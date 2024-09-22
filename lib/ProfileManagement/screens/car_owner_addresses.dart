@@ -79,7 +79,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(address == null ? 'Add Address' : 'Edit Address'),
+          title: Text(address == null ? 'Add Address' : 'Edit Address', style: TextStyle(fontWeight: FontWeight.bold),),
           content: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -163,7 +163,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyle(color: Colors.grey),),
             ),
             TextButton(
               onPressed: () async {
@@ -190,7 +190,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text(address == null ? 'Add' : 'Update'),
+              child: Text(address == null ? 'Add' : 'Update', style: TextStyle(color: Colors.orange.shade900),),
             ),
           ],
         );
