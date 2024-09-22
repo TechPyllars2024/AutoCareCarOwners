@@ -65,6 +65,8 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                   );
                 },
                 child: Card(
+                  color: Colors.white,
+                  elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),
@@ -108,9 +110,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                   // Location row with icon and address
                                   Row(
                                     children: [
-                                      const Icon(
+                                       Icon(
                                         Icons.location_on,
-                                        color: Colors.orange,
+                                        color: Colors.orange.shade900,
                                       ),
                                       const SizedBox(width: 4.0),
                                       Text(
@@ -135,8 +137,8 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                         child: PannableRatingBar(
                           rate: rating,
                           items: List.generate(5, (index) =>
-                          const RatingWidget(
-                            selectedColor: Colors.orange,
+                           RatingWidget(
+                            selectedColor: Colors.orange.shade900,
                             unSelectedColor: Colors.grey,
                             child: Icon(
                               Icons.star,

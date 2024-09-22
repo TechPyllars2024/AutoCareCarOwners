@@ -18,7 +18,7 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
         backgroundColor: Colors.grey.shade100,
         title: const Text(
           'Car Owner Messages',
-          style: TextStyle(fontWeight: FontWeight.w900),
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
 
       ),

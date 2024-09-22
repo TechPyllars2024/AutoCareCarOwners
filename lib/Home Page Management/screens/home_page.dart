@@ -16,8 +16,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text(
-          'Home Page',
-          style: TextStyle(fontWeight: FontWeight.w900),
+          '',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
         backgroundColor: Colors.grey.shade100,
       ),

@@ -35,7 +35,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
         backgroundColor: Colors.grey.shade100,
         title: Text(
           'Services',
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 30),
         ),
         elevation: 0,
         actions: const [],
@@ -64,6 +64,8 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                   );
                 },
                 child: Card(
+                  color: Colors.white,
+                  elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),
@@ -93,10 +95,10 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                             children: [
                               Text(
                                 services[index].name,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 25,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.grey[800],
+                                  color: Colors.black,
                                 ),
                               ),
                               const SizedBox(height: 8.0),
