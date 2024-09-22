@@ -32,7 +32,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: Colors.grey.shade100,
         title: Text(
           widget.serviceName,
           style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
