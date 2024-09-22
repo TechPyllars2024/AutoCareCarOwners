@@ -19,7 +19,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
           'Home Page',
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: Colors.grey.shade100,
       ),
     );
   }
