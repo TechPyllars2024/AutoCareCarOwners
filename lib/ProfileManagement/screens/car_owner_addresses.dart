@@ -79,7 +79,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(address == null ? 'Add Address' : 'Edit Address', style: TextStyle(fontWeight: FontWeight.bold),),
+          title: Text(address == null ? 'Add Address' : 'Edit Address', style: TextStyle(fontWeight: FontWeight.w700),),
           content: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -87,7 +87,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 children: [
                   TextFormField(
                     controller: fullNameController,
-                    decoration: const InputDecoration(labelText: 'Full Name'),
+                    decoration: InputDecoration(
+                      labelText: 'Full Name',
+                      labelStyle: TextStyle(color: Colors.grey),
+                      floatingLabelStyle: TextStyle(color: Colors.black),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.orange),
+                      ),
+                    ),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a full name';
@@ -95,6 +102,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       return null;
                     },
                   ),
+
                   TextFormField(
                     controller: phoneNumberController,
                     decoration:
