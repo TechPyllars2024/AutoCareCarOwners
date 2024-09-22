@@ -87,12 +87,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 children: [
                   TextFormField(
                     controller: fullNameController,
-                    decoration: InputDecoration(
-                      labelText: 'Full Name',
-                      labelStyle: TextStyle(color: Colors.grey),
-                      floatingLabelStyle: TextStyle(color: Colors.black),
+                    decoration:  InputDecoration(labelText: 'Full Name',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
                       focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.orange),
+                        borderSide: BorderSide(color: Colors.black45),
                       ),
                     ),
                     validator: (value) {
@@ -102,11 +101,15 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       return null;
                     },
                   ),
-
                   TextFormField(
                     controller: phoneNumberController,
                     decoration:
-                    const InputDecoration(labelText: 'Phone Number'),
+                     InputDecoration(labelText: 'Phone Number',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black45),
+                      ),),
                     keyboardType: TextInputType.phone,
                     inputFormatters: [
                       FilteringTextInputFormatter.digitsOnly,
@@ -124,7 +127,12 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   ),
                   TextFormField(
                     controller: streetController,
-                    decoration: const InputDecoration(labelText: 'Street'),
+                    decoration:  InputDecoration(labelText: 'Street',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black45),
+                      ),),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a street';
@@ -134,7 +142,12 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   ),
                   TextFormField(
                     controller: baranggayController,
-                    decoration: const InputDecoration(labelText: 'Baranggay'),
+                    decoration:  InputDecoration(labelText: 'Baranggay',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black45),
+                      ),),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a street';
@@ -144,7 +157,12 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   ),
                   TextFormField(
                     controller: cityController,
-                    decoration: const InputDecoration(labelText: 'City/Municipality'),
+                    decoration:  InputDecoration(labelText: 'City/Municipality',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black45),
+                      ),),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a city';
@@ -154,7 +172,12 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   ),
                   TextFormField(
                     controller: provinceController,
-                    decoration: const InputDecoration(labelText: 'Province'),
+                    decoration:  InputDecoration(labelText: 'Province',
+                      labelStyle: TextStyle(color: Colors.black),
+                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black45),
+                      ),),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a country';
