@@ -47,6 +47,7 @@ class _ShopProfileState extends State<ShopProfile> {
     return Scaffold(
         backgroundColor: Colors.grey.shade100,
         appBar: AppBar(
+          backgroundColor: Colors.grey.shade100,
           // Keep the AppBar title as the serviceName
           title: Text(widget.serviceName),
         ),
