@@ -80,112 +80,115 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       builder: (context) {
         return AlertDialog(
           title: Text(address == null ? 'Add Address' : 'Edit Address', style: TextStyle(fontWeight: FontWeight.w700),),
-          content: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: fullNameController,
-                    decoration:  InputDecoration(labelText: 'Full Name',
-                      labelStyle: TextStyle(color: Colors.black),
-                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
+          content: Container(
+            width: MediaQuery.of(context).size.width * 0.9,
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: fullNameController,
+                      decoration:  InputDecoration(labelText: 'Full Name',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a full name';
+                        }
+                        return null;
+                      },
                     ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a full name';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: phoneNumberController,
-                    decoration:
-                     InputDecoration(labelText: 'Phone Number',
-                      labelStyle: TextStyle(color: Colors.black),
-                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
-                      ),),
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(11),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      if (value.length != 11) {
-                        return 'Please enter a valid phone number';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: streetController,
-                    decoration:  InputDecoration(labelText: 'Street',
-                      labelStyle: TextStyle(color: Colors.black),
-                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
-                      ),),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a street';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: baranggayController,
-                    decoration:  InputDecoration(labelText: 'Baranggay',
-                      labelStyle: TextStyle(color: Colors.black),
-                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
-                      ),),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a street';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: cityController,
-                    decoration:  InputDecoration(labelText: 'City/Municipality',
-                      labelStyle: TextStyle(color: Colors.black),
-                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
-                      ),),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a city';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: provinceController,
-                    decoration:  InputDecoration(labelText: 'Province',
-                      labelStyle: TextStyle(color: Colors.black),
-                      floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black45),
-                      ),),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a country';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
+                    TextFormField(
+                      controller: phoneNumberController,
+                      decoration:
+                       InputDecoration(labelText: 'Phone Number',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),),
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(11),
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your phone number';
+                        }
+                        if (value.length != 11) {
+                          return 'Please enter a valid phone number';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: streetController,
+                      decoration:  InputDecoration(labelText: 'Street',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a street';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: baranggayController,
+                      decoration:  InputDecoration(labelText: 'Baranggay',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a street';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: cityController,
+                      decoration:  InputDecoration(labelText: 'City/Municipality',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a city';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: provinceController,
+                      decoration:  InputDecoration(labelText: 'Province',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a country';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
