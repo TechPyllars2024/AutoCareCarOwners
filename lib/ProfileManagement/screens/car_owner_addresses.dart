@@ -235,6 +235,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text('Address', style: TextStyle(fontWeight: FontWeight.bold),),
       ),
@@ -247,6 +248,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Card(
+              color: address.isDefault ? Colors.orangeAccent.shade100 : Colors.grey.shade200,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   color: address.isDefault ? Colors.orange.shade900 : Colors.transparent, // Orange border if default
@@ -265,7 +267,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     Text('Province: ${address.province}'),
                     if (address.isDefault)
                        Text('Default Address',
-                          style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.bold)),
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 trailing: Row(
