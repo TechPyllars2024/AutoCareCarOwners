@@ -65,6 +65,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text(
           'CAR PROFILES',
