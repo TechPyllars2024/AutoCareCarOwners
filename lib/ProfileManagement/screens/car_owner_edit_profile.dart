@@ -73,13 +73,14 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: const Text(
           'EDIT PROFILE',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.grey.shade300,
+
         actions: [
           IconButton(
               onPressed: () => {},
