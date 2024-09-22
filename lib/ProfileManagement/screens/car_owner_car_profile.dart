@@ -67,6 +67,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: const Text(
           'CAR PROFILES',
           style: TextStyle(fontWeight: FontWeight.bold),
