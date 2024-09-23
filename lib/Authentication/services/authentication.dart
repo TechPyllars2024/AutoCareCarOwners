@@ -134,7 +134,11 @@ class AuthenticationMethod {
   Future<String> signInWithGoogleForCarOwner() async {
     try {
       // Initiate Google Sign-In process
-      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignIn googleSignIn = GoogleSignIn(scopes: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ]);
+
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
@@ -210,7 +214,10 @@ class AuthenticationMethod {
       await GoogleSignIn().signOut();
 
       // Initiate Google Log-In process
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ]).signIn();
       if (googleUser == null) {
         return "Google Log-In aborted";
       }
