@@ -134,7 +134,13 @@ class AuthenticationMethod {
   Future<String> signInWithGoogleForCarOwner() async {
     try {
       // Initiate Google Sign-In process
-      final GoogleSignIn googleSignIn = GoogleSignIn();
+      // Initiate Google Sign-In process
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+          scopes: [
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email"
+          ]
+      );
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
@@ -206,41 +212,37 @@ class AuthenticationMethod {
   // Handles Google Log-In and checks user role for Car Owners
   Future<String> logInWithGoogleForCarOwners() async {
     try {
-      // Ensure the user is signed out before starting the Google Sign-In process
       await GoogleSignIn().signOut();
 
-      // Initiate Google Log-In process
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(
+          scopes: [
+            "https://www.googleapis.com/auth/userinfo.profile",
+            "https://www.googleapis.com/auth/userinfo.email"
+          ]
+      ).signIn();
       if (googleUser == null) {
         return "Google Log-In aborted";
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-      // Get the credentials from Google
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      // Log in to Firebase with the Google credentials
-      UserCredential userCredential =
-          await auth.signInWithCredential(credential);
+      UserCredential userCredential = await auth.signInWithCredential(credential);
       final User? user = userCredential.user;
 
       if (user == null) {
         return "Google Log-In failed";
       }
 
-      // Check if the user exists in the users collection and has the car_owner role
-      DocumentSnapshot userDoc =
-          await firestore.collection("users").doc(user.uid).get();
+      DocumentSnapshot userDoc = await firestore.collection("users").doc(user.uid).get();
 
       if (userDoc.exists) {
         var userData = userDoc.data() as Map<String, dynamic>;
 
-        // Check for the car_owner role
         List<dynamic> roles = userData['roles'] ?? [];
         if (roles.contains('car_owner')) {
           return "Car Owner";
