@@ -17,7 +17,7 @@ class AuthenticationMethod {
     required String password,
   }) async {
     if (email.isEmpty || password.isEmpty || name.isEmpty) {
-      return "Please provide all the fields";
+      return "Please fill in all the required fields.";
     }
     try {
       // Check if the user already exists in the "users" collection
@@ -28,7 +28,7 @@ class AuthenticationMethod {
         UserModel existingUser =
             UserModel.fromMap(existingUserDoc.data() as Map<String, dynamic>);
         if (existingUser.roles.contains('service_provider')) {
-          return "You already have an account as a service provider";
+          return "It looks like you already have a service provider account. Please use a different email or log in.";
         }
       }
 
@@ -51,9 +51,18 @@ class AuthenticationMethod {
 
       return 'SUCCESS';
     } on FirebaseAuthException catch (e) {
-      return e.message ?? "An error occurred";
+      switch (e.code) {
+        case 'email-already-in-use':
+          return "The email address is already in use by another account. Please use a different email.";
+        case 'weak-password':
+          return "The password is too weak. Please choose a stronger password.";
+        case 'invalid-email':
+          return "The email address is not valid. Please check and try again.";
+        default:
+          return e.message ?? "We encountered an error during registration. Please try again.";
+      }
     } catch (e) {
-      return "An unexpected error occurred";
+      return "Something went wrong. Please try again later.";
     }
   }
 
@@ -63,7 +72,7 @@ class AuthenticationMethod {
     required String password,
   }) async {
     if (email.isEmpty || password.isEmpty) {
-      return "Please provide all the fields";
+      return "Please enter both your email and password.";
     }
 
     try {
@@ -75,9 +84,20 @@ class AuthenticationMethod {
 
       return "SUCCESS";
     } on FirebaseAuthException catch (e) {
-      return e.message ?? "An error occurred";
+      switch (e.code) {
+        case 'user-not-found':
+          return "No account found with this email. Please check or sign up.";
+        case 'wrong-password':
+          return "Incorrect password. Please try again.";
+        case 'invalid-email':
+          return "The email address is not valid. Please check and try again.";
+        case 'user-disabled':
+          return "This account has been disabled. Please contact support.";
+        default:
+          return e.message ?? "An error occurred. Please try again.";
+      }
     } catch (e) {
-      return "An unexpected error occurred";
+      return "Something went wrong. Please try again later.";
     }
   }
 
@@ -96,7 +116,7 @@ class AuthenticationMethod {
     required String email,
   }) async {
     if (email.isEmpty) {
-      return "Please provide an email";
+      return "Please enter your email address.";
     }
 
     try {
@@ -109,7 +129,7 @@ class AuthenticationMethod {
 
       // Check if any documents were returned
       if (querySnapshot.docs.isEmpty) {
-        return "No account found with that email";
+        return "No account found with this email. Please check or sign up.";
       }
 
       // If email exists, proceed to send the password reset email
@@ -118,15 +138,18 @@ class AuthenticationMethod {
       return "A reset link has been sent.";
     } on FirebaseAuthException catch (e) {
       // Handle specific errors
-      if (e.code == 'invalid-email') {
-        return "The email address is badly formatted";
-      } else if (e.code == 'too-many-requests') {
-        return "Too many requests, please try again later";
-      } else {
-        return e.message ?? "An error occurred";
+      switch (e.code) {
+        case 'invalid-email':
+          return "The email address you entered is not properly formatted. Please check it.";
+        case 'user-not-found':
+          return "There is no account registered with this email.";
+        case 'too-many-requests':
+          return "You've made too many requests. Please wait for a moment and try again.";
+        default:
+          return e.message ?? "An error occurred. Please try again.";
       }
     } catch (e) {
-      return "An unexpected error occurred";
+      return "Something went wrong. Please try again later.";
     }
   }
 
@@ -144,7 +167,7 @@ class AuthenticationMethod {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
-        return "Google Sign-In aborted";
+        return "Google Sign-In was canceled. Please try again.";
       }
 
       final GoogleSignInAuthentication googleAuth =
@@ -162,7 +185,7 @@ class AuthenticationMethod {
       final User? user = userCredential.user;
 
       if (user == null) {
-        return "Google Sign-In failed";
+        return "Failed to sign in with Google. Please try again.";
       }
 
       // Check if the user already exists as a service provider
@@ -175,7 +198,7 @@ class AuthenticationMethod {
       if (existingServiceProvider.docs.isNotEmpty) {
         // Sign out the user from Google Sign-In
         await googleSignIn.signOut();
-        return "You already have an account as a service provider. Please sign in with a different account.";
+        return "An account already exists for you as a service provider. Please use a different Google account.";
       }
 
       // Check if the user already exists as a car owner
@@ -188,7 +211,7 @@ class AuthenticationMethod {
       if (existingCarOwner.docs.isNotEmpty) {
         // Sign out the user from Google Sign-In
         await googleSignIn.signOut();
-        return "You already have an account as a car owner. Please sign in with a different account.";
+        return "You already have a car owner account. Please log in using your existing account.";
       }
 
       // Create the CarOwnerModel and store in Firestore
@@ -203,9 +226,9 @@ class AuthenticationMethod {
 
       return 'SUCCESS';
     } on FirebaseAuthException catch (e) {
-      return e.message ?? "An error occurred";
+      return e.message ?? "A problem occurred during Google Sign-In. Please try again.";
     } catch (e) {
-      return "An unexpected error occurred";
+      return "An unexpected error occurred. Please try again later.";
     }
   }
 
@@ -221,7 +244,7 @@ class AuthenticationMethod {
           ]
       ).signIn();
       if (googleUser == null) {
-        return "Google Log-In aborted";
+        return "Google Log-In was canceled. Please try again.";
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
@@ -235,7 +258,7 @@ class AuthenticationMethod {
       final User? user = userCredential.user;
 
       if (user == null) {
-        return "Google Log-In failed";
+        return "Failed to log in with Google. Please try again.";
       }
 
       DocumentSnapshot userDoc = await firestore.collection("users").doc(user.uid).get();
@@ -247,15 +270,15 @@ class AuthenticationMethod {
         if (roles.contains('car_owner')) {
           return "Car Owner";
         } else {
-          return "You are not registered as a car owner";
+          return "You are not registered as a car owner. Please use the appropriate account.";
         }
       } else {
-        return "User does not exist. Please register first.";
+        return "No account found. Please register as a car owner.";
       }
     } on FirebaseAuthException catch (e) {
-      return e.message ?? "An error occurred";
+      return e.message ?? "A problem occurred during Google Log-In. Please try again.";
     } catch (e) {
-      return "An unexpected error occurred";
+      return "An unexpected error occurred. Please try again later.";
     }
   }
 }
