@@ -9,7 +9,6 @@ import '../widgets/snackBar.dart';
 import '../Widgets/text_field.dart';
 import '../widgets/textfieldPassword.dart';
 import '../widgets/validator.dart';
-import 'homeScreen.dart';
 import 'login.dart';
 import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
 import 'package:autocare_carowners/Authentication/widgets/or.dart';
@@ -134,13 +133,13 @@ class _SignupScreenState extends State<SignupScreen> {
             children: <Widget>[
               // Sign Up Image
               const CarImageWidget(
-                imagePath: 'lib/Authentication/assets/images/carBlack.png',
+                imagePath: 'lib/Authentication/assets/images/repair.jpg',
               ).animate().fadeIn(duration: const Duration(seconds: 2)),
 
               // Sign Up Form
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
@@ -234,9 +233,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
                     // Sign Up OR
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
-                      child: const Or(),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 3.0),
+                      child: Or(),
                     ),
 
                     // Sign Up with Google
