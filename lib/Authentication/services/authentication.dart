@@ -90,11 +90,13 @@ class AuthenticationMethod {
         case 'wrong-password':
           return "Incorrect password. Please try again.";
         case 'invalid-email':
-          return "The email address is not valid. Please check and try again.";
+          return "The email address format is not valid. Please check and try again.";
         case 'user-disabled':
           return "This account has been disabled. Please contact support.";
+        case 'invalid-credential':
+          return "The entered email/password is invalid. Please check your inputs.";
         default:
-          return e.message ?? "An error occurred. Please try again.";
+          return e.message ?? "An unknown error occurred. Please try again.";
       }
     } catch (e) {
       return "Something went wrong. Please try again later.";
