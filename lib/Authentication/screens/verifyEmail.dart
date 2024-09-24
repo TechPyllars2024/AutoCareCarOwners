@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import '../Widgets/snackBar.dart';
-import 'homeScreen.dart';
 
 class VerifyEmailScreen extends StatefulWidget {
   const VerifyEmailScreen({super.key, this.child});
@@ -48,7 +47,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   Future<void> checkEmailVerified() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await user.reload();
+      await user.reload(); // Reload user to check the latest email verification status
       setState(() {
         isEmailVerified = user.emailVerified;
       });
@@ -64,7 +63,20 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
     try {
       final user = FirebaseAuth.instance.currentUser;
+
+      // Check if user exists and if it's allowed to resend email
       if (user != null && canResendEmail) {
+        // Avoid sending email if it's already verified
+        await user.reload();
+        if (user.emailVerified) {
+          setState(() {
+            isEmailVerified = true;
+          });
+          Utils.showSnackBar("Your email is already verified.");
+          return;
+        }
+
+        // Send verification email
         await user.sendEmailVerification();
 
         setState(() {
@@ -105,6 +117,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
       isLoading = false; // Hide loader
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

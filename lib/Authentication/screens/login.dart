@@ -103,7 +103,7 @@ class _LoginScreenState extends State<LoginScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           const CarImageWidget(
-              imagePath: 'lib/Authentication/assets/images/carBlack.png')
+              imagePath: 'lib/Authentication/assets/images/repair2.jpg')
               .animate()
               .fadeIn(duration: const Duration(seconds: 2)),
 
