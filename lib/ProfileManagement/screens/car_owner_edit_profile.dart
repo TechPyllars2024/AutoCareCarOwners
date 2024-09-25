@@ -123,7 +123,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                             color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 160, top: 20),
+                    padding: const EdgeInsets.only(left: 25.0, right: 25.0, bottom: 160, top: 20),
                     child: TextField(
                       controller: nameController,
                       decoration: InputDecoration(
@@ -151,7 +151,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
 
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
