@@ -97,6 +97,7 @@ class _CarDetailsState extends State<CarDetails> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text('Delete Car Details'),
           content:
               const Text('Are you sure you want to delete this car detail?'),
@@ -105,7 +106,7 @@ class _CarDetailsState extends State<CarDetails> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontSize: 15), ),
             ),
             TextButton(
               onPressed: () async {
@@ -117,7 +118,7 @@ class _CarDetailsState extends State<CarDetails> {
                 await carDetailsService.deleteCarDetails(docId);
                 _fetchCarDetails();
               },
-              child: const Text('Delete'),
+              child:  Text('Delete', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w700, fontSize: 15),),
             ),
           ],
         );
