@@ -103,7 +103,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                     ? NetworkImage(profile!.profileImage)
                     : null,
                 child: profile?.profileImage.isEmpty == true
-                    ? const Icon(Icons.person, size: 150, color: Colors.black)
+                    ? const Icon(Icons.person, size: 120, color: Colors.black)
                     : null,
               ),
             ),
@@ -115,7 +115,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                     child: Text(
                       profile?.name ?? 'No available Name',
                       style:  TextStyle(
-                        fontSize: 40,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
@@ -129,7 +129,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 Text(
                   userEmail ?? 'No available Email',
                   style:  TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     color: Colors.black45,
                   ),
 
@@ -211,7 +211,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.orange.shade900, // Orange text when not pressed
-                        fontSize: 20,
+                        fontSize: 15,
                       ),
                     ),
                   ),
@@ -249,7 +249,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.orange.shade900,
-                            fontSize: 20)),
+                            fontSize: 15)),
                   ),
                 ),
 
@@ -267,11 +267,11 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                     onPressed: () {
                       //logout
                     },
-                    child: const Text('Log out',
+                    child: const Text('LOG OUT',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 20)),
+                            fontSize: 15)),
                   ),
                 ),
               ],
