@@ -247,8 +247,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
         itemBuilder: (context, index) {
           final address = addresses[index];
           return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
             child: Card(
+              elevation: 8,
               color: address.isDefault ? Colors.white : Colors.grey.shade300,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
