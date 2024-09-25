@@ -111,8 +111,8 @@ class _ShopProfileState extends State<ShopProfile> {
                 rate: rating,
                 items: List.generate(
                   5,
-                      (index) => const RatingWidget(
-                    selectedColor: Colors.orange,
+                      (index) =>  RatingWidget(
+                    selectedColor: Colors.orange.shade900,
                     unSelectedColor: Colors.grey,
                     child: Icon(
                       Icons.star,
@@ -406,7 +406,7 @@ class _ShopProfileState extends State<ShopProfile> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+          padding: EdgeInsets.symmetric(vertical: 8.0),
           child: Text('Feedbacks', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         ),
         Container(
