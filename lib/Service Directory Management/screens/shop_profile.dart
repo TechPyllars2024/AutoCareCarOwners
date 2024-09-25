@@ -62,7 +62,7 @@ class _ShopProfileState extends State<ShopProfile> {
                   shopInformation(),
 
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -116,7 +116,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     unSelectedColor: Colors.grey,
                     child: Icon(
                       Icons.star,
-                      size: 20,
+                      size: 12,
                     ),
                   ),
                 ),
@@ -157,8 +157,8 @@ class _ShopProfileState extends State<ShopProfile> {
   );
 
 
-  Widget buildShopName() => const Padding(
-    padding: EdgeInsets.all(16.0),
+  Widget buildShopName() =>  Padding(
+    padding: EdgeInsets.only(bottom: 16.0, top: 5, left: 25),
     child: Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -171,11 +171,11 @@ class _ShopProfileState extends State<ShopProfile> {
           SizedBox(height: 5),
           Row(
             children: [
-              Icon(Icons.location_on, color: Colors.orange),
+              Icon(Icons.location_on, color: Colors.orange.shade900, size: 18,),
               SizedBox(width: 4),
               Text(
                 'Location details',
-                style: TextStyle(fontSize: 15),
+                style: TextStyle(fontSize: 16),
               ),
             ],
           ),
@@ -193,8 +193,8 @@ class _ShopProfileState extends State<ShopProfile> {
     const String openTime = '7:00';
     const String closeTime = '5:00';
 
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
+    return  Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -202,7 +202,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.message, color: Colors.orange, size: 40,),
+              Icon(Icons.message, color: Colors.orange.shade900, size: 30,),
               Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -221,7 +221,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.call, color: Colors.orange, size: 40,),
+              Icon(Icons.call, color: Colors.orange.shade900, size: 30,),
               Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -240,7 +240,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.access_time, color: Colors.orange, size: 40,),
+              Icon(Icons.access_time, color: Colors.orange.shade900, size: 30,),
               Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -260,7 +260,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.location_on_outlined, color: Colors.orange, size: 40,),
+              Icon(Icons.location_on_outlined, color: Colors.orange.shade900, size: 30,),
               Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -284,7 +284,7 @@ class _ShopProfileState extends State<ShopProfile> {
   Widget servicesCarousel() => Column(
     children: [
       const Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(12.0),
         child: Row(
           children: [
             Text(
@@ -401,12 +401,12 @@ class _ShopProfileState extends State<ShopProfile> {
 
 
   Widget feedbackSection() => Padding(
-    padding: const EdgeInsets.only(top: 20.0),
+    padding: const EdgeInsets.only(top: 20.0,left: 12, right: 12),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
           child: Text('Feedbacks', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
         ),
         Container(
