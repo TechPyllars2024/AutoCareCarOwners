@@ -361,10 +361,11 @@ class _CarDetailsState extends State<CarDetails> {
               },
             ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange.shade900,
         onPressed: () {
           _showCarDetailsDialog();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white, size: 30, weight: 20,),
       ),
     );
   }
