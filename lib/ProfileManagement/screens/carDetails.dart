@@ -314,7 +314,7 @@ class _CarDetailsState extends State<CarDetails> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
-        title: const Text('Car Details'),
+        title: const Text('Car Details', style: TextStyle(fontWeight: FontWeight.w700),),
       ),
       body: carDetails.isEmpty
           ? const Center(child: Text('No car details. Add a new car.'))
@@ -322,34 +322,39 @@ class _CarDetailsState extends State<CarDetails> {
               itemCount: carDetails.length,
               itemBuilder: (context, index) {
                 final car = carDetails[index];
-                return Card(
-                  child: ListTile(
-                    title: Text('${car.brand} ${car.model}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Year: ${car.year}'),
-                        Text('Color: ${car.color}'),
-                        Text('Transmission: ${car.transmissionType}'),
-                        Text('Fuel: ${car.fuelType}'),
-                      ],
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () {
-                            _showCarDetailsDialog(car: car, index: index);
-                          },
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            _showDeleteConfirmationDialog(index);
-                          },
-                        ),
-                      ],
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 8,
+                    child: ListTile(
+                      title: Text('${car.brand} ${car.model}'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Year: ${car.year}'),
+                          Text('Color: ${car.color}'),
+                          Text('Transmission: ${car.transmissionType}'),
+                          Text('Fuel: ${car.fuelType}'),
+                        ],
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.edit),
+                            onPressed: () {
+                              _showCarDetailsDialog(car: car, index: index);
+                            },
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              _showDeleteConfirmationDialog(index);
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
