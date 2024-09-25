@@ -73,50 +73,55 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 2,
-            mainAxisSpacing: 2,
-            childAspectRatio: 1 / 1),
-        itemCount: cars.length,
-        itemBuilder: (context, index) => Card(
-          color: Colors.orange.shade200,
-          child: Stack(
-            children: [
-              Center(
-                child: Text(
-                  cars[index],
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+        child: GridView.builder(
+
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2,
+              childAspectRatio: 1 / 1),
+          itemCount: cars.length,
+          itemBuilder: (context, index) => Card(
+            elevation: 8,
+            color: Colors.orange.shade200,
+            child: Stack(
+              children: [
+                Center(
+                  child: Text(
+                    cars[index],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: const Size(150, 40),
+                        backgroundColor: Colors.orange.shade900,
                       ),
-                      minimumSize: const Size(150, 40),
-                      backgroundColor: Colors.grey,
-                    ),
-                    onPressed: () {
-                      _editCar(index);
-                    },
-                    child: const Text(
-                      'Edit',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20),
+                      onPressed: () {
+                        _editCar(index);
+                      },
+                      child: const Text(
+                        'Edit',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
