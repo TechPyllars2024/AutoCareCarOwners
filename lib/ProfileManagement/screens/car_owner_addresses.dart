@@ -250,7 +250,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
             padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
             child: Card(
               elevation: 8,
-              color: address.isDefault ? Colors.white : Colors.grey.shade300,
+              color: address.isDefault ? Colors.white : Colors.white,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   color: address.isDefault ? Colors.orange.shade900 : Colors.transparent, // Orange border if default
