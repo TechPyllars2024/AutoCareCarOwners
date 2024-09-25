@@ -35,6 +35,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text('Delete Address', style: TextStyle(fontWeight: FontWeight.w700),),
           content: const Text('Are you sure you want to delete this address?'),
           actions: [
@@ -92,7 +93,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       controller: fullNameController,
                       decoration:  InputDecoration(labelText: 'Full Name',
                         labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),
@@ -109,7 +110,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       decoration:
                        InputDecoration(labelText: 'Phone Number',
                         labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
@@ -132,7 +133,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       controller: streetController,
                       decoration:  InputDecoration(labelText: 'Street',
                         labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
@@ -147,7 +148,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       controller: baranggayController,
                       decoration:  InputDecoration(labelText: 'Baranggay',
                         labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
@@ -162,7 +163,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       controller: cityController,
                       decoration:  InputDecoration(labelText: 'City/Municipality',
                         labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
@@ -177,7 +178,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       controller: provinceController,
                       decoration:  InputDecoration(labelText: 'Province',
                         labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
                         focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
