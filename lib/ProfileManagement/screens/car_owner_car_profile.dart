@@ -21,9 +21,10 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text('Edit ${cars[index]}'),
           content: SizedBox(
-            width: 400,
+            width: MediaQuery.of(context).size.width * 0.9,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -54,7 +55,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Save'),
+              child:  Text('Save', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w900, fontSize: 15),),
             ),
           ],
         );
