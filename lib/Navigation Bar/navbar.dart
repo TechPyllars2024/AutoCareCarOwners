@@ -36,10 +36,10 @@ class _NavBarState extends State<NavBar> {
           color: Colors.white,
           key: _bottomNavigationKey,
           items: <Widget>[
-            Icon(Icons.home, size: 30, color: _page == 0 ? Colors.orange.shade900 : Colors.grey.shade500),
-            Icon(Icons.message, size: 30, color: _page == 1 ? Colors.orange.shade900 : Colors.grey.shade500),
-            Icon(Icons.directions_car, size: 30, color: _page == 2 ? Colors.orange.shade900 : Colors.grey.shade500),
-            Icon(Icons.person, size: 30, color: _page == 3 ? Colors.orange.shade900 : Colors.grey.shade500),
+            Icon(Icons.home, size: 30, color: _page == 0 ? Colors.orange.shade900 : Colors.grey.shade700),
+            Icon(Icons.message, size: 30, color: _page == 1 ? Colors.orange.shade900 : Colors.grey.shade700),
+            Icon(Icons.directions_car, size: 30, color: _page == 2 ? Colors.orange.shade900 : Colors.grey.shade700),
+            Icon(Icons.person, size: 30, color: _page == 3 ? Colors.orange.shade900 : Colors.grey.shade700),
           ],
           onTap: (index) {
             setState(() {
