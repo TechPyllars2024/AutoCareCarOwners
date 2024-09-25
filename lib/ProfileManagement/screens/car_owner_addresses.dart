@@ -79,7 +79,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(address == null ? 'Add Address' : 'Edit Address', style: TextStyle(fontWeight: FontWeight.w700),),
+          title: Text(address == null ? 'Add Address' : 'Edit Address', style: const TextStyle(fontWeight: FontWeight.w700),),
           content: Container(
             width: MediaQuery.of(context).size.width * 0.9,
             child: SingleChildScrollView(
@@ -90,9 +90,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     TextFormField(
                       controller: fullNameController,
                       decoration:  InputDecoration(labelText: 'Full Name',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),
                       ),
@@ -107,9 +107,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       controller: phoneNumberController,
                       decoration:
                        InputDecoration(labelText: 'Phone Number',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
                       keyboardType: TextInputType.phone,
@@ -130,9 +130,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     TextFormField(
                       controller: streetController,
                       decoration:  InputDecoration(labelText: 'Street',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
                       validator: (value) {
@@ -145,9 +145,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     TextFormField(
                       controller: baranggayController,
                       decoration:  InputDecoration(labelText: 'Baranggay',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
                       validator: (value) {
@@ -160,9 +160,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     TextFormField(
                       controller: cityController,
                       decoration:  InputDecoration(labelText: 'City/Municipality',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
                       validator: (value) {
@@ -175,9 +175,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     TextFormField(
                       controller: provinceController,
                       decoration:  InputDecoration(labelText: 'Province',
-                        labelStyle: TextStyle(color: Colors.black),
+                        labelStyle: const TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.orange.shade900),
-                        focusedBorder: UnderlineInputBorder(
+                        focusedBorder: const UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),),
                       validator: (value) {
@@ -197,7 +197,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel', style: TextStyle(color: Colors.black45),),
+              child: const Text('Cancel', style: TextStyle(color: Colors.black45),),
             ),
             TextButton(
               onPressed: () async {
@@ -285,7 +285,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         _showAddressDialog(address: address, index: index);
                       },
                     ),
-                    SizedBox(width: 0),
+                    const SizedBox(width: 0),
 
                     IconButton(
                       icon: Icon(
@@ -297,7 +297,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         _showDeleteConfirmationDialog(index);
                       },
                     ),
-                    SizedBox(width: 0),
+                    const SizedBox(width: 0),
                     IconButton(
                       icon: Icon(
                         address.isDefault
