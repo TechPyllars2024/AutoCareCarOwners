@@ -46,9 +46,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
             child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
-                crossAxisSpacing: 5,
+                crossAxisSpacing: 3,
                 mainAxisSpacing: 8,
-                childAspectRatio: 2 / .8, // 2:1 aspect ratio
+                childAspectRatio: 2 / .7, // 2:1 aspect ratio
               ),
               itemCount: services.length,
               itemBuilder: (context, index) => GestureDetector(
@@ -66,7 +66,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                 },
                 child: Card(
                   color: Colors.white,
-                  elevation: 10,
+                  elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),
@@ -100,7 +100,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                   Text(
                                     services[index].name,
                                     style: TextStyle(
-                                      fontSize: 25,
+                                      fontSize: 20,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.grey[800],
                                     ),
@@ -113,12 +113,13 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                        Icon(
                                         Icons.location_on,
                                         color: Colors.orange.shade900,
+                                         size: 15,
                                       ),
                                       const SizedBox(width: 4.0),
                                       Text(
                                         '123 Main St', // Example address
                                         style: TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           color: Colors.grey[600],
                                         ),
                                       ),
@@ -142,7 +143,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                             unSelectedColor: Colors.grey,
                             child: Icon(
                               Icons.star,
-                              size: 20,
+                              size: 12,
                             ),
                           )),
                           // Removed the onChanged callback to make it non-adjustable
