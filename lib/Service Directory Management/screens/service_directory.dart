@@ -50,7 +50,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                 crossAxisCount: 1,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 8,
-                childAspectRatio: 2 / 1, // 2:1 aspect ratio
+                childAspectRatio: 2 / 0.9, // 2:1 aspect ratio
               ),
               itemCount: services.length,
               itemBuilder: (context, index) => GestureDetector(
@@ -65,7 +65,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                 },
                 child: Card(
                   color: Colors.white,
-                  elevation: 10,
+                  elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),
@@ -96,7 +96,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                               Text(
                                 services[index].name,
                                 style: const TextStyle(
-                                  fontSize: 25,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                 ),
