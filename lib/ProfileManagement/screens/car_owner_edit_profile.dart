@@ -81,14 +81,14 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
 
-        actions: [
-          IconButton(
-              onPressed: () => {},
-              icon: const Icon(
-                Icons.settings,
-                size: 30,
-              )),
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () => {},
+        //       icon: const Icon(
+        //         Icons.settings,
+        //         size: 30,
+        //       )),
+        // ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -165,7 +165,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
-                            fontSize: 20),
+                            fontSize: 15),
                       ),
                     ),
                   ),
