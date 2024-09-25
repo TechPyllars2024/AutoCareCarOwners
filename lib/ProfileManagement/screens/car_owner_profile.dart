@@ -149,7 +149,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                     if (snapshot.hasData && snapshot.data != null) {
                       final fetchedAddress = snapshot.data!;
                       return Padding(
-                        padding: const EdgeInsets.only(top: 40.0, left: 20, bottom: 30),
+                        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -181,7 +181,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
 
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.resolveWith<Color>(
@@ -219,13 +219,24 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 ),
                 const SizedBox(height: 12),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.deepOrange.shade700,
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                            (Set<WidgetState> states) {
+                          if (states.contains(WidgetState.pressed)) {
+                            return Colors.orange.shade900; // Change to orange when pressed
+                          }
+                          return Colors.grey.shade100; // Default background color
+                        },
+                      ),
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          side: BorderSide(color: Colors.orange.shade900, width: 2), // Orange border
+                        ),
+                      ),
+                      minimumSize: WidgetStateProperty.all<Size>(Size(400, 50)),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -234,7 +245,29 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                           MaterialPageRoute(
                               builder: (context) => const CarDetails()));
                     },
-                    child: const Text('CAR PROFILE',
+                    child: Text('CAR PROFILE',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange.shade900,
+                            fontSize: 20)),
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      minimumSize: const Size(400, 50),
+                      backgroundColor: Colors.deepOrange.shade700,
+                    ),
+                    onPressed: () {
+                      //logout
+                    },
+                    child: const Text('Log out',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
