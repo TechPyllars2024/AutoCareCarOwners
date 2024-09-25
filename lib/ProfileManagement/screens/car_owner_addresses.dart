@@ -249,7 +249,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 12.0),
             child: Card(
-              color: address.isDefault ? Colors.orangeAccent.shade100 : Colors.grey.shade200,
+              color: address.isDefault ? Colors.white : Colors.grey.shade300,
               shape: RoundedRectangleBorder(
                 side: BorderSide(
                   color: address.isDefault ? Colors.orange.shade900 : Colors.transparent, // Orange border if default
@@ -268,7 +268,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     Text('Province: ${address.province}'),
                     if (address.isDefault)
                        Text('Default Address',
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 trailing: Row(
