@@ -26,7 +26,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -37,15 +36,24 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
-    nameController.dispose();
     confirmPasswordController.dispose();
   }
 
   void signupUser() async {
+    final passwordError = passwordValidator(passwordController.text);
+    String? confirmPasswordError;
+
     setState(() {
       isLoading = true;
     });
 
+    if (passwordError != null || confirmPasswordError != null) {
+      setState(() {
+        isLoading = false;
+      });
+      Utils.showSnackBar("Please enter a valid password");
+      return;
+    }
     // Check if passwords match
     if (passwordController.text != confirmPasswordController.text) {
       setState(() {
@@ -58,7 +66,6 @@ class _SignupScreenState extends State<SignupScreen> {
     String res = await AuthenticationMethod().signupCarOwner(
       email: emailController.text,
       password: passwordController.text,
-      name: nameController.text,
     );
 
     if (res == "SUCCESS") {
@@ -149,11 +156,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      margin: const EdgeInsets.only(bottom: 12),
+                      margin: const EdgeInsets.only(bottom: 8),
                       child: RichText(
-                        text: const TextSpan(
+                        text:  TextSpan(
                           children: [
-                            TextSpan(
+                            const TextSpan(
                               text: "Auto",
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
@@ -166,7 +173,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 50,
-                                color: Colors.orange,
+                                color: Colors.orange.shade900,
                               ),
                             ),
                           ],
@@ -174,29 +181,25 @@ class _SignupScreenState extends State<SignupScreen> {
                       ).animate().fadeIn(duration: const Duration(seconds: 3)),
                     ),
                     TextFieldInput(
-                      icon: Icons.person,
-                      textEditingController: nameController,
-                      hintText: 'Name',
-                      textInputType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a name';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFieldInput(
                       icon: Icons.email,
                       textEditingController: emailController,
                       hintText: 'Email',
                       textInputType: TextInputType.text,
                       validator: (value) {
+                        // Regular expression for validating an email
                         final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+
+                        // Check if the field is empty
                         if (value == null || value.isEmpty) {
                           return 'Please enter an email';
-                        } else if (!emailRegex.hasMatch(value)) {
+                        }
+
+                        // Check if the value matches the email format
+                        else if (!emailRegex.hasMatch(value)) {
                           return 'Please enter a valid email address';
                         }
+
+                        // Return null if validation passes
                         return null;
                       },
                     ),
@@ -214,9 +217,23 @@ class _SignupScreenState extends State<SignupScreen> {
                       hintText: 'Confirm Password',
                       textInputType: TextInputType.text,
                       validator: (value) {
+                        // First, check if the confirm password field is empty
                         if (value == null || value.isEmpty) {
                           return 'Please confirm your password';
                         }
+
+                        // Check if the password passes the main password validator
+                        final passwordError = passwordValidator(passwordController.text);
+                        if (passwordError != null) {
+                          return 'The password does not meet the required criteria';
+                        }
+
+                        // Ensure the confirm password matches the original password
+                        if (value != passwordController.text) {
+                          return 'Passwords do not match';
+                        }
+
+                        // All conditions passed, return null
                         return null;
                       },
                       isPass: true,
@@ -263,8 +280,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           children: <TextSpan>[
                             TextSpan(
                               text: 'Log In',
-                              style: const TextStyle(
-                                color: Colors.orange,
+                              style: TextStyle(
+                                color: Colors.orange.shade900,
                                 fontWeight: FontWeight.bold,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -293,9 +310,7 @@ class _SignupScreenState extends State<SignupScreen> {
             ],
           ),
         ),
-
       ),
-
     );
   }
 }

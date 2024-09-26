@@ -28,7 +28,7 @@ class MyButtons extends StatelessWidget {
                 Radius.circular(15),
               ),
             ),
-            color: Colors.orange, // Keep the button color consistent
+            color: Colors.orange.shade900, // Keep the button color consistent
           ),
           child: Stack(
             alignment: Alignment.center,

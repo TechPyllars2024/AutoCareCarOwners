@@ -36,6 +36,7 @@ class _CarDetailsState extends State<CarDetails> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text('Delete Car Details'),
           content:
               const Text('Are you sure you want to delete this car detail?'),
@@ -44,7 +45,7 @@ class _CarDetailsState extends State<CarDetails> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontSize: 15), ),
             ),
             TextButton(
               onPressed: () async {
@@ -56,7 +57,7 @@ class _CarDetailsState extends State<CarDetails> {
                 await carDetailsService.deleteCarDetails(docId);
                 _fetchCarDetails();
               },
-              child: const Text('Delete'),
+              child:  Text('Delete', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w700, fontSize: 15),),
             ),
           ],
         );
@@ -71,7 +72,7 @@ class _CarDetailsState extends State<CarDetails> {
         TextEditingController(text: car?.year.toString() ?? '');
     String color = car?.color ?? 'Red';
     String transmissionType = car?.transmissionType ?? 'Automatic';
-    String fuelType = car?.fuelType ?? 'Petrol';
+    String fuelType = car?.fuelType ?? 'Gasoline';
 
     final formKey = GlobalKey<FormState>();
 
@@ -79,6 +80,7 @@ class _CarDetailsState extends State<CarDetails> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text(car == null ? 'Add Car Details' : 'Edit Car Details'),
           content: SingleChildScrollView(
             child: Form(
@@ -182,7 +184,7 @@ class _CarDetailsState extends State<CarDetails> {
                   DropdownButtonFormField<String>(
                     value: fuelType,
                     decoration: const InputDecoration(labelText: 'Fuel Type'),
-                    items: ['Diesel', 'Gasoline', 'Electric']
+                    items: ['Diesel', 'Gasoline']
                         .map((fuel) => DropdownMenuItem(
                               value: fuel,
                               child: Text(fuel),
@@ -209,7 +211,7 @@ class _CarDetailsState extends State<CarDetails> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontSize: 15),),
             ),
             TextButton(
               onPressed: () async {
@@ -237,7 +239,7 @@ class _CarDetailsState extends State<CarDetails> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text(car == null ? 'Add' : 'Update'),
+              child: Text(car == null ? 'Add' : 'Update', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w900, fontSize: 15),),
             ),
           ],
         );
@@ -248,8 +250,10 @@ class _CarDetailsState extends State<CarDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Car Details'),
+        backgroundColor: Colors.grey.shade100,
+        title: const Text('Car Details', style: TextStyle(fontWeight: FontWeight.w700),),
       ),
       body: carDetails.isEmpty
           ? const Center(child: Text('No car details. Add a new car.'))
@@ -291,10 +295,11 @@ class _CarDetailsState extends State<CarDetails> {
               },
             ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange.shade900,
         onPressed: () {
           _showCarDetailsDialog();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white, size: 30, weight: 20,),
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:autocare_carowners/Booking%20Management/widgets/button.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../services/profile_service.dart';
@@ -79,13 +80,13 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: const Text(
           'EDIT PROFILE',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        backgroundColor: Colors.grey.shade300,
         actions: [
           IconButton(
               onPressed: () => {},
@@ -118,17 +119,26 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          WidgetStateProperty.all(Colors.orange.shade900),
+                    ),
                     onPressed: () => _pickImage(ImageSource.gallery),
                     child: const Text('Change Photo',
-                        style: TextStyle(color: Colors.black)),
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                     child: TextField(
                       controller: firstNameController,
                       decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Edit first name',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(color: Colors.orange
+                          ),
+                        ),
+                        hintText: 'First Name',
                         contentPadding: EdgeInsets.all(10),
                       ),
                     ),
@@ -139,7 +149,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                       controller: lastNameController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'Edit last name',
+                        hintText: 'Last Name',
                         contentPadding: EdgeInsets.all(10),
                       ),
                     ),
@@ -150,9 +160,14 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                       controller: phoneNumberController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'Edit phone number',
+                        hintText: 'Phone Number',
                         contentPadding: EdgeInsets.all(10),
                       ),
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(11)
+                      ],
                     ),
                   ),
                   const SizedBox(height: 20),

@@ -35,14 +35,21 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Delete Address'),
+          backgroundColor: Colors.white,
+          title: const Text(
+            'Delete Address',
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
           content: const Text('Are you sure you want to delete this address?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black45),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -53,7 +60,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 await addressService.deleteAddress(docId);
                 _fetchAddresses();
               },
-              child: const Text('Delete'),
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.orange.shade900),
+              ),
             ),
           ],
         );
@@ -63,12 +74,12 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
 
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
     final houseNumberandStreetController =
-        TextEditingController(text: address?.houseNumberandStreet ?? '');
+    TextEditingController(text: address?.houseNumberandStreet ?? '');
     final baranggayController =
-        TextEditingController(text: address?.baranggay ?? '');
+    TextEditingController(text: address?.baranggay ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
     final provinceController =
-        TextEditingController(text: address?.province ?? '');
+    TextEditingController(text: address?.province ?? '');
     final nearestLandmarkController =
     TextEditingController(text: address?.nearestLandmark ?? '');
 
@@ -78,66 +89,110 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(address == null ? 'Add Address' : 'Edit Address'),
-          content: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: houseNumberandStreetController,
-                    decoration: const InputDecoration(
-                        labelText: 'House Number / Street'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your house number and street';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: baranggayController,
-                    decoration: const InputDecoration(labelText: 'Baranggay'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a street';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: cityController,
-                    decoration:
-                        const InputDecoration(labelText: 'City/Municipality'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a city';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: provinceController,
-                    decoration: const InputDecoration(labelText: 'Province'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a country';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: nearestLandmarkController,
-                    decoration:
-                        const InputDecoration(labelText: 'Nearest Landmark'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a nearest landmark';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
+          backgroundColor: Colors.white,
+          title: Text(
+            address == null ? 'Add Address' : 'Edit Address',
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          content: SingleChildScrollView( // Wrap the content with SingleChildScrollView
+            child: Container(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.9,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // Ensure the dialog does not take up unnecessary space
+                  children: [
+                    TextFormField(
+                      controller: houseNumberandStreetController,
+                      decoration: const InputDecoration(
+                        labelText: 'House Number / Street',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your house number and street';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: baranggayController,
+                      decoration: const InputDecoration(
+                        labelText: 'Baranggay',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a baranggay';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: cityController,
+                      decoration: const InputDecoration(
+                        labelText: 'City/Municipality',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a city/municipality';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: provinceController,
+                      decoration: const InputDecoration(
+                        labelText: 'Province',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a province';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: nearestLandmarkController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nearest Landmark',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a nearest landmark';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -146,7 +201,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel'),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black45, fontSize: 15),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -172,7 +230,13 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text(address == null ? 'Add' : 'Update'),
+              child: Text(
+                address == null ? 'Add' : 'Update',
+                style: TextStyle(
+                    color: Colors.orange.shade900,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15),
+              ),
             ),
           ],
         );
@@ -183,8 +247,13 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Addresses'),
+        backgroundColor: Colors.grey.shade100,
+        title: const Text(
+          'Address',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: addresses.isEmpty
           ? const Center(child: Text('No addresses. Add a new address.'))
@@ -197,27 +266,33 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('House Number / Street: ${address.houseNumberandStreet}'),
+                        Text(
+                            'House Number / Street: ${address.houseNumberandStreet}'),
                         Text('Phone: ${address.houseNumberandStreet}'),
                         Text('City/Municipality: ${address.city}'),
                         Text('Province: ${address.province}'),
                         Text('Nearest Landmark: ${address.nearestLandmark}'),
                         if (address.isDefault)
-                          const Text('Default Address',
-                              style: TextStyle(color: Colors.green)),
+                          Text('Default Address',
+                              style: TextStyle(
+                                  color: Colors.orange.shade900,
+                                  fontWeight: FontWeight.bold)),
                       ],
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.edit),
+                          icon: Icon(Icons.edit,
+                              color: Colors.grey.shade600, size: 20),
                           onPressed: () {
                             _showAddressDialog(address: address, index: index);
                           },
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete),
+                          icon: Icon(Icons.delete,
+                              color: Colors.grey.shade600, size: 20),
                           onPressed: () {
                             _showDeleteConfirmationDialog(index);
                           },
@@ -225,6 +300,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         IconButton(
                           icon: Icon(
                             address.isDefault ? Icons.star : Icons.star_border,
+                            size: 20,
+                            color: address.isDefault
+                                ? Colors.orange.shade900
+                                : Colors.grey.shade600,
                           ),
                           onPressed: () async {
                             setState(() {
@@ -244,10 +323,16 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               },
             ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.orange.shade900,
         onPressed: () {
           _showAddressDialog();
         },
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 30,
+          weight: 20,
+        ),
       ),
     );
   }

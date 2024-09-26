@@ -46,14 +46,14 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: Text(
           'Services',
           style:
-              TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
+          TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
         ),
-        backgroundColor: Colors.grey.shade300,
         elevation: 0,
         actions: const [],
       ),
@@ -82,6 +82,8 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                   );
                 },
                 child: Card(
+                  color: Colors.white,
+                  elevation: 8,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(16.0),
                   ),

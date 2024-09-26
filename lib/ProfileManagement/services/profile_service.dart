@@ -54,10 +54,10 @@ class CarOwnerProfileService {
           return CarOwnerProfileModel(
             profileId: _firestore.collection("car_owner_profile").doc().id,
             uid: user.uid,
-            firstName: user.displayName ?? 'Unknown',
-            lastName: user.displayName ?? 'Unknown',
-            phoneNumber: user.phoneNumber ?? 'Unknown',
-            email: user.email ?? 'No email',
+            firstName: '',
+            lastName: '',
+            phoneNumber: user.phoneNumber ?? '',
+            email: user.email ?? '',
             profileImage: '',
           );
         }

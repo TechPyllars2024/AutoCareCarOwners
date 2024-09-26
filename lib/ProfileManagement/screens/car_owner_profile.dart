@@ -1,9 +1,12 @@
+import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_model.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/carDetails.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_addresses.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
+import 'package:autocare_carowners/Authentication/screens/login.dart';
 import 'package:flutter/material.dart';
+import '../../Authentication/Widgets/snackBar.dart';
 import '../services/profile_service.dart';
 
 class CarOwnerProfile extends StatefulWidget {
@@ -46,13 +49,13 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text(
-          'PROFILE',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'Profile',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: Colors.grey.shade100,
         actions: [
           IconButton(
               onPressed: () async {
@@ -246,7 +249,35 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                           color: Colors.white,
                           fontSize: 20)),
                 ),
-              )
+              ),
+              const SizedBox(height: 12),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    minimumSize: const Size(400, 50),
+                    backgroundColor: Colors.deepOrange.shade700,
+                  ),
+                  onPressed: () async {
+                    try {
+                      await AuthenticationMethod().signOut();
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      );
+                    } catch (e) {
+                      Utils.showSnackBar('Error Signing Out: $e');
+                    }
+                  },
+                  child: const Text('LOG OUT',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15)),
+                ),
+              ),
             ],
           ),
         ],

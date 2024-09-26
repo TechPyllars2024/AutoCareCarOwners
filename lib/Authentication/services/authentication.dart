@@ -12,11 +12,10 @@ class AuthenticationMethod {
 
   // SIGN UP with Email and Password for Car Owners
   Future<String> signupCarOwner({
-    required String name,
     required String email,
     required String password,
   }) async {
-    if (email.isEmpty || password.isEmpty || name.isEmpty) {
+    if (email.isEmpty || password.isEmpty) {
       return "Please fill in all the required fields.";
     }
     try {
@@ -41,7 +40,6 @@ class AuthenticationMethod {
       // Create the UserModel for a car owner
       UserModel newUser = UserModel(
         uid: credential.user!.uid,
-        name: name,
         email: email,
         roles: ['car_owner'], // Set role to car_owner
       );
@@ -219,8 +217,7 @@ class AuthenticationMethod {
       // Create the CarOwnerModel and store in Firestore
       UserModel newUser = UserModel(
         uid: user.uid,
-        name: user.displayName ?? "No Name",
-        email: user.email ?? "No Email",
+        email: user.email ?? "",
         roles: ['car_owner'],
       );
 

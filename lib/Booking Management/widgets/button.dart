@@ -11,7 +11,7 @@ class WideButtons extends StatelessWidget {
     required this.onTap,
     required this.text,
     this.color = Colors.orange,
-    this.padding = 20.0,
+    this.padding = 25.0,
   });
 
   @override
@@ -23,19 +23,19 @@ class WideButtons extends StatelessWidget {
         padding: EdgeInsets.all(padding),
         child: Container(
           alignment: Alignment.center,
-          padding: const EdgeInsets.symmetric(vertical: 12),
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
           decoration: ShapeDecoration(
-            shape: const RoundedRectangleBorder(
+            shape:  RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(15),
               ),
             ),
-            color: color,
+            color: Colors.orange.shade900,
           ),
           child: Text(
             text,
             style: const TextStyle(
-              fontSize: 20,
+              fontSize:16,
               color: Colors.white,
               fontWeight: FontWeight.bold,
             ),

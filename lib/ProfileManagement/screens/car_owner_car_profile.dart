@@ -21,9 +21,10 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: Text('Edit ${cars[index]}'),
           content: SizedBox(
-            width: 400,
+            width: MediaQuery.of(context).size.width * 0.9,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -54,7 +55,7 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Save'),
+              child:  Text('Save', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w900, fontSize: 15),),
             ),
           ],
         );
@@ -65,56 +66,63 @@ class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
         title: const Text(
           'CAR PROFILES',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 2,
-            mainAxisSpacing: 2,
-            childAspectRatio: 1 / 1),
-        itemCount: cars.length,
-        itemBuilder: (context, index) => Card(
-          color: Colors.orange.shade200,
-          child: Stack(
-            children: [
-              Center(
-                child: Text(
-                  cars[index],
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+        child: GridView.builder(
+
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 2,
+              mainAxisSpacing: 2,
+              childAspectRatio: 1 / 1),
+          itemCount: cars.length,
+          itemBuilder: (context, index) => Card(
+            elevation: 8,
+            color: Colors.orange.shade200,
+            child: Stack(
+              children: [
+                Center(
+                  child: Text(
+                    cars[index],
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 18),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        minimumSize: const Size(150, 40),
+                        backgroundColor: Colors.orange.shade900,
                       ),
-                      minimumSize: const Size(150, 40),
-                      backgroundColor: Colors.grey,
-                    ),
-                    onPressed: () {
-                      _editCar(index);
-                    },
-                    child: const Text(
-                      'Edit',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20),
+                      onPressed: () {
+                        _editCar(index);
+                      },
+                      child: const Text(
+                        'Edit',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 20),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

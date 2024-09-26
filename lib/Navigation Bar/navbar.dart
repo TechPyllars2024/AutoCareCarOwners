@@ -30,14 +30,16 @@ class _NavBarState extends State<NavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: Colors.grey.shade300,
+          backgroundColor: Colors.grey.shade100,
+          color: Colors.white,
           key: _bottomNavigationKey,
           items: <Widget>[
-            Icon(Icons.home, size: 30, color: _page == 0 ? Colors.orange : Colors.black),
-            Icon(Icons.message, size: 30, color: _page == 1 ? Colors.orange : Colors.black),
-            Icon(Icons.directions_car, size: 30, color: _page == 2 ? Colors.orange : Colors.black),
-            Icon(Icons.person, size: 30, color: _page == 3 ? Colors.orange : Colors.black),
+            Icon(Icons.home, size: 30, color: _page == 0 ? Colors.orange.shade900 : Colors.grey.shade700),
+            Icon(Icons.message, size: 30, color: _page == 1 ? Colors.orange.shade900 : Colors.grey.shade700),
+            Icon(Icons.directions_car, size: 30, color: _page == 2 ? Colors.orange.shade900 : Colors.grey.shade700),
+            Icon(Icons.person, size: 30, color: _page == 3 ? Colors.orange.shade900 : Colors.grey.shade700),
           ],
           onTap: (index) {
             setState(() {
