@@ -64,13 +64,13 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
     final houseNumberandStreetController =
         TextEditingController(text: address?.houseNumberandStreet ?? '');
-    final nearestLandmarkController =
-        TextEditingController(text: address?.nearestLandmark ?? '');
     final baranggayController =
         TextEditingController(text: address?.baranggay ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
     final provinceController =
         TextEditingController(text: address?.province ?? '');
+    final nearestLandmarkController =
+    TextEditingController(text: address?.nearestLandmark ?? '');
 
     final formKey = GlobalKey<FormState>();
 
@@ -86,7 +86,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 children: [
                   TextFormField(
                     controller: houseNumberandStreetController,
-                    decoration: const InputDecoration(labelText: 'House Number / Street'),
+                    decoration: const InputDecoration(
+                        labelText: 'House Number / Street'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your house number and street';
@@ -106,7 +107,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   ),
                   TextFormField(
                     controller: cityController,
-                    decoration: const InputDecoration(labelText: 'City/Municipality'),
+                    decoration:
+                        const InputDecoration(labelText: 'City/Municipality'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter a city';
@@ -127,19 +129,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   TextFormField(
                     controller: nearestLandmarkController,
                     decoration:
-                    const InputDecoration(labelText: 'Nearest Landmark'),
-                    keyboardType: TextInputType.phone,
-                    // inputFormatters: [phoneNumberFormatter],
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(11),
-                    ],
+                        const InputDecoration(labelText: 'Nearest Landmark'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return '';
-                      }
-                      if (value.length != 11) {
-                        return '';
+                        return 'Please enter a nearest landmark';
                       }
                       return null;
                     },
@@ -160,10 +153,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 if (formKey.currentState!.validate()) {
                   final newAddress = CarOwnerAddressModel(
                     houseNumberandStreet: houseNumberandStreetController.text,
-                    nearestLandmark: nearestLandmarkController.text,
                     baranggay: baranggayController.text,
                     city: cityController.text,
                     province: provinceController.text,
+                    nearestLandmark: nearestLandmarkController.text,
                     isDefault: address?.isDefault ?? false,
                   );
 
@@ -204,9 +197,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text('House Number / Street: ${address.houseNumberandStreet}'),
                         Text('Phone: ${address.houseNumberandStreet}'),
                         Text('City/Municipality: ${address.city}'),
                         Text('Province: ${address.province}'),
+                        Text('Nearest Landmark: ${address.nearestLandmark}'),
                         if (address.isDefault)
                           const Text('Default Address',
                               style: TextStyle(color: Colors.green)),

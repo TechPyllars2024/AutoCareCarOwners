@@ -28,7 +28,7 @@ class CarOwnerAddressModel {
 
   factory CarOwnerAddressModel.fromMap(Map<String, dynamic> map) {
     return CarOwnerAddressModel(
-      houseNumberandStreet: map['housenumberandStreet'],
+      houseNumberandStreet: map['houseNumberandStreet'],
       nearestLandmark: map['nearestLandmark'],
       baranggay: map['baranggay'],
       city: map['city'],
