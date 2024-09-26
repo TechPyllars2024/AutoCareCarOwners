@@ -1,6 +1,8 @@
 import 'dart:io';
+import 'package:autocare_carowners/Booking%20Management/widgets/button.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../services/profile_service.dart';
@@ -8,15 +10,16 @@ import '../services/profile_service.dart';
 class CarOwnerEditProfile extends StatefulWidget {
   final CarOwnerProfileModel currentUser;
 
-  const CarOwnerEditProfile({Key? key, required this.currentUser})
-      : super(key: key);
+  const CarOwnerEditProfile({super.key, required this.currentUser});
 
   @override
   State<CarOwnerEditProfile> createState() => _CarOwnerEditProfileState();
 }
 
 class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
-  late TextEditingController nameController;
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
+  late TextEditingController phoneNumberController;
   late TextEditingController profileImageController;
   File? _image;
   bool _isLoading = false;
@@ -25,7 +28,9 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.currentUser.name);
+    firstNameController = TextEditingController(text: widget.currentUser.firstName);
+    lastNameController = TextEditingController(text: widget.currentUser.lastName);
+    phoneNumberController = TextEditingController(text: widget.currentUser.phoneNumber);
     profileImageController =
         TextEditingController(text: widget.currentUser.profileImage);
   }
@@ -56,7 +61,9 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
     final updatedProfile = CarOwnerProfileModel(
       profileId: widget.currentUser.profileId,
       uid: widget.currentUser.uid,
-      name: nameController.text,
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
+      phoneNumber: phoneNumberController.text,
       email: widget.currentUser.email,
       profileImage: profileImageController.text,
     );
@@ -80,15 +87,14 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
           'EDIT PROFILE',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-
-        // actions: [
-        //   IconButton(
-        //       onPressed: () => {},
-        //       icon: const Icon(
-        //         Icons.settings,
-        //         size: 30,
-        //       )),
-        // ],
+        actions: [
+          IconButton(
+              onPressed: () => {},
+              icon: const Icon(
+                Icons.settings,
+                size: 30,
+              )),
+        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -97,7 +103,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                 children: [
                   GestureDetector(
                     child: CircleAvatar(
-                      radius: 150,
+                      radius: 120,
                       backgroundColor: Colors.white,
                       backgroundImage: _image != null
                           ? FileImage(_image!)
@@ -111,7 +117,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                               : null,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
@@ -123,51 +129,51 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                             color: Colors.white, fontWeight: FontWeight.bold)),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 25.0, right: 25.0, bottom: 160, top: 20),
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                     child: TextField(
-                      controller: nameController,
-                      decoration: InputDecoration(
+                      controller: firstNameController,
+                      decoration: const InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(
-                            color: Colors.orange.shade900, // Default border color
+                          borderSide: BorderSide(color: Colors.orange
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(
-                            color: Colors.orange.shade900, // Border color when focused
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(
-                            color: Colors.orange.shade900, // Border color when enabled
-                          ),
-                        ),
-                        hintText: 'Edit name',
+                        hintText: 'First Name',
+                        contentPadding: EdgeInsets.all(10),
                       ),
                     ),
-
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        minimumSize: const Size(400, 50),
-                        backgroundColor: Colors.orange.shade900,
-                      ),
-                      onPressed: _saveProfile,
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 15),
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                    child: TextField(
+                      controller: lastNameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Last Name',
+                        contentPadding: EdgeInsets.all(10),
                       ),
                     ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                    child: TextField(
+                      controller: phoneNumberController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Phone Number',
+                        contentPadding: EdgeInsets.all(10),
+                      ),
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(11)
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  WideButtons(
+                      onTap: _saveProfile,
+                      text: "Save Profile"
                   ),
                 ],
               ),

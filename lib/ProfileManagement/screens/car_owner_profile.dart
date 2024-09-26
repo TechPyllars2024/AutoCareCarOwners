@@ -23,7 +23,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
   CarOwnerAddressModel? defaultAddress;
   String? userEmail;
   final CarOwnerProfileService _profileService =
-  CarOwnerProfileService(); // Instantiate the service
+      CarOwnerProfileService(); // Instantiate the service
 
   @override
   void initState() {
@@ -51,243 +51,236 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-
         title: const Text(
           'Profile',
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
         backgroundColor: Colors.grey.shade100,
         actions: [
-          Transform.translate(
-            offset: const Offset(-12, 0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.orange.shade900, // Inner color
-                border: Border.all(color: Colors.orange.shade900, width: 2), // Border color and width
-                borderRadius: BorderRadius.circular(10), // Rounded corners
-              ),
-              child: IconButton(
-                onPressed: () async {
-                  if (profile != null) {
-                    final updatedProfile = await Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CarOwnerEditProfile(
-                          currentUser: profile!,
-                        ),
+          IconButton(
+              onPressed: () async {
+                if (profile != null) {
+                  final updatedProfile = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CarOwnerEditProfile(
+                        currentUser: profile!,
                       ),
-                    );
-                    if (updatedProfile != null) {
-                      setState(() {
-                        profile = updatedProfile;
-                      });
-                    }
+                    ),
+                  );
+                  if (updatedProfile != null) {
+                    setState(() {
+                      profile = updatedProfile;
+                    });
                   }
-                },
-                icon: const Icon(
-                  Icons.edit,
-                  size: 30,
-                  color: Colors.white, // Icon color
-                ),
-              ),
-            ),
-          ),
-
+                }
+              },
+              icon: const Icon(
+                Icons.edit,
+                size: 30,
+              )),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Center(
-              child: CircleAvatar(
-                radius: 150,
-                backgroundColor: Colors.white,
-                backgroundImage: profile?.profileImage.isNotEmpty == true
-                    ? NetworkImage(profile!.profileImage)
-                    : null,
-                child: profile?.profileImage.isEmpty == true
-                    ? const Icon(Icons.person, size: 120, color: Colors.black)
-                    : null,
-              ),
+      body: Column(
+        children: [
+          Center(
+            child: CircleAvatar(
+              radius: 80,
+              backgroundColor: Colors.white,
+              backgroundImage: profile?.profileImage.isNotEmpty == true
+                  ? NetworkImage(profile!.profileImage)
+                  : null,
+              child: profile?.profileImage.isEmpty == true
+                  ? const Icon(Icons.person, size: 80, color: Colors.black)
+                  : null,
             ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: Center(
-                    child: Text(
-                      profile?.name ?? 'No available Name',
-                      style:  TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.visible, // Ensures text wraps to the next line
-                      softWrap: true,
+          ),
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: Center(
+                  child: Text(
+                    '${profile?.firstName} ${profile?.lastName}' ?? '',
+                    style: const TextStyle(
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-        
-                Text(
-                  userEmail ?? 'No available Email',
-                  style:  TextStyle(
-                    fontSize: 15,
-                    color: Colors.black45,
-                  ),
+              ),
 
-                ),
-        
-                // fetching defualt address
-              //  const SizedBox(height: 10),
-                StreamBuilder<CarOwnerAddressModel?>(
-                  stream: _profileService.getDefaultAddress(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    }
-                    if (snapshot.hasError) {
-                      return const Text('Error fetching default address.');
-                    }
-                    if (snapshot.hasData && snapshot.data != null) {
-                      final fetchedAddress = snapshot.data!;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 30),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                             Icon(Icons.location_on, size: 30, color: Colors.orange.shade900),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Flexible(
-                                child: Text(
-                                  '${fetchedAddress.street}, ${fetchedAddress.baranggay}, ${fetchedAddress.city}, ${fetchedAddress.province}',
-                                  style: const TextStyle(color: Colors.black54, fontSize: 15),
-                                  overflow: TextOverflow.visible, // Ensures text wraps to the next line
-                                  softWrap: true, // Allows text to wrap
-                                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.phone, // Phone icon
+                    size: 25,
+                    color: Colors.black54,
+                  ),
+                  const SizedBox(
+                      width: 10), // Adds space between the icon and text
+                  Text(
+                    profile?.phoneNumber ?? 'No phone number available',
+                    style: const TextStyle(
+                      fontSize: 25,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.email, // Email icon
+                    size: 25,
+                    color: Colors.black54,
+                  ),
+                  const SizedBox(
+                      width: 10), // Adds space between the icon and text
+                  Text(
+                    userEmail ?? 'No available Email',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+
+              // fetching defualt address
+              StreamBuilder<CarOwnerAddressModel?>(
+                stream: _profileService.getDefaultAddress(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    return const Text('Error fetching default address.');
+                  }
+                  if (snapshot.hasData && snapshot.data != null) {
+                    final defaultAddress = snapshot.data!;
+                    return Padding(
+                      padding:
+                          const EdgeInsets.only(top: 25, left: 20, bottom: 50),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.location_on_outlined, size: 40),
+                          const SizedBox(width: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '${defaultAddress.houseNumberandStreet}, ${defaultAddress.baranggay}',
+                                style: const TextStyle(
+                                    color: Colors.black54, fontSize: 20),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                    return const Padding(
-                      padding: EdgeInsets.only(top: 10.0, left: 20, bottom: 50),
-                      child: Text('No default address set.'),
+                              const SizedBox(height: 4),
+                              Text(
+                                '${defaultAddress.city}, ${defaultAddress.province}',
+                                style: const TextStyle(
+                                    color: Colors.black54, fontSize: 20),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 40.0, left: 20, bottom: 50),
+                    child: Text('No default address set.'),
+                  );
+                },
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20), // Adjust the padding value as needed
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize: const Size(400, 50),
+                    backgroundColor: Colors.orange,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const CarOwnerAddress(),
+                      ),
                     );
                   },
-                ),
-
-
-
-
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                            (Set<WidgetState> states) {
-                          if (states.contains(WidgetState.pressed)) {
-                            return Colors.orange.shade900; // Change to orange when pressed
-                          }
-                          return Colors.grey.shade100; // Default background color
-                        },
-                      ),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: BorderSide(color: Colors.orange.shade900, width: 2), // Orange border
-                        ),
-                      ),
-                      minimumSize: WidgetStateProperty.all<Size>(Size(400, 50)),
+                  child: const Text(
+                    'ADDRESS',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 20,
                     ),
-                    onPressed: () {
-                      Navigator.push(
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    minimumSize: const Size(400, 50),
+                    backgroundColor: Colors.orange,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const CarOwnerAddress()),
-                      );
-                    },
-                    child: Text(
-                      'ADDRESS',
+                        //pushReplacement if you don't want to go back
+                        MaterialPageRoute(
+                            builder: (context) => const CarDetails()));
+                  },
+                  child: const Text('CAR PROFILE',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange.shade900, // Orange text when not pressed
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20)),
                 ),
-                const SizedBox(height: 12),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.resolveWith<Color>(
-                            (Set<WidgetState> states) {
-                          if (states.contains(WidgetState.pressed)) {
-                            return Colors.orange.shade900; // Change to orange when pressed
-                          }
-                          return Colors.grey.shade100; // Default background color
-                        },
-                      ),
-                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          side: BorderSide(color: Colors.orange.shade900, width: 2), // Orange border
-                        ),
-                      ),
-                      minimumSize: WidgetStateProperty.all<Size>(Size(400, 50)),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          //pushReplacement if you don't want to go back
-                          MaterialPageRoute(
-                              builder: (context) => const CarDetails()));
-                    },
-                    child: Text('CAR PROFILE',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade900,
-                            fontSize: 15)),
-                  ),
-                ),
+              ),
+              const SizedBox(height: 12),
 
-                const SizedBox(height: 12),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.deepOrange.shade700,
-                    ),
-                    onPressed: () async {
-                      try {
-                        await AuthenticationMethod().signOut();
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
-                        );
-                      } catch (e) {
-                        Utils.showSnackBar('Error Signing Out: $e');
-                      }
-                    },
-                    child: const Text('LOG OUT',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 15)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    minimumSize: const Size(400, 50),
+                    backgroundColor: Colors.deepOrange.shade700,
                   ),
+                  onPressed: () async {
+                    try {
+                      await AuthenticationMethod().signOut();
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      );
+                    } catch (e) {
+                      Utils.showSnackBar('Error Signing Out: $e');
+                    }
+                  },
+                  child: const Text('LOG OUT',
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 15)),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

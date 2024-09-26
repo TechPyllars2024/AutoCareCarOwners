@@ -9,7 +9,6 @@ import '../widgets/snackBar.dart';
 import '../Widgets/text_field.dart';
 import '../widgets/textfieldPassword.dart';
 import '../widgets/validator.dart';
-import 'homeScreen.dart';
 import 'login.dart';
 import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
 import 'package:autocare_carowners/Authentication/widgets/or.dart';
@@ -27,7 +26,6 @@ class SignupScreen extends StatefulWidget {
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
@@ -38,15 +36,24 @@ class _SignupScreenState extends State<SignupScreen> {
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
-    nameController.dispose();
     confirmPasswordController.dispose();
   }
 
   void signupUser() async {
+    final passwordError = passwordValidator(passwordController.text);
+    String? confirmPasswordError;
+
     setState(() {
       isLoading = true;
     });
 
+    if (passwordError != null || confirmPasswordError != null) {
+      setState(() {
+        isLoading = false;
+      });
+      Utils.showSnackBar("Please enter a valid password");
+      return;
+    }
     // Check if passwords match
     if (passwordController.text != confirmPasswordController.text) {
       setState(() {
@@ -59,7 +66,6 @@ class _SignupScreenState extends State<SignupScreen> {
     String res = await AuthenticationMethod().signupCarOwner(
       email: emailController.text,
       password: passwordController.text,
-      name: nameController.text,
     );
 
     if (res == "SUCCESS") {
@@ -134,13 +140,13 @@ class _SignupScreenState extends State<SignupScreen> {
             children: <Widget>[
               // Sign Up Image
               const CarImageWidget(
-                imagePath: 'lib/Authentication/assets/images/carBlack.png',
+                imagePath: 'lib/Authentication/assets/images/repair.jpg',
               ).animate().fadeIn(duration: const Duration(seconds: 2)),
 
               // Sign Up Form
               Container(
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20),
@@ -175,29 +181,25 @@ class _SignupScreenState extends State<SignupScreen> {
                       ).animate().fadeIn(duration: const Duration(seconds: 3)),
                     ),
                     TextFieldInput(
-                      icon: Icons.person,
-                      textEditingController: nameController,
-                      hintText: 'Name',
-                      textInputType: TextInputType.text,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a name';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFieldInput(
                       icon: Icons.email,
                       textEditingController: emailController,
                       hintText: 'Email',
                       textInputType: TextInputType.text,
                       validator: (value) {
+                        // Regular expression for validating an email
                         final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+
+                        // Check if the field is empty
                         if (value == null || value.isEmpty) {
                           return 'Please enter an email';
-                        } else if (!emailRegex.hasMatch(value)) {
+                        }
+
+                        // Check if the value matches the email format
+                        else if (!emailRegex.hasMatch(value)) {
                           return 'Please enter a valid email address';
                         }
+
+                        // Return null if validation passes
                         return null;
                       },
                     ),
@@ -215,9 +217,23 @@ class _SignupScreenState extends State<SignupScreen> {
                       hintText: 'Confirm Password',
                       textInputType: TextInputType.text,
                       validator: (value) {
+                        // First, check if the confirm password field is empty
                         if (value == null || value.isEmpty) {
                           return 'Please confirm your password';
                         }
+
+                        // Check if the password passes the main password validator
+                        final passwordError = passwordValidator(passwordController.text);
+                        if (passwordError != null) {
+                          return 'The password does not meet the required criteria';
+                        }
+
+                        // Ensure the confirm password matches the original password
+                        if (value != passwordController.text) {
+                          return 'Passwords do not match';
+                        }
+
+                        // All conditions passed, return null
                         return null;
                       },
                       isPass: true,
@@ -234,9 +250,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
 
                     // Sign Up OR
-                    Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
-                      child: const Or(),
+                    const Padding(
+                      padding: EdgeInsets.only(top: 3.0),
+                      child: Or(),
                     ),
 
                     // Sign Up with Google
@@ -282,6 +298,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 25)
                   ],
                 ),
               ).animate().slide(

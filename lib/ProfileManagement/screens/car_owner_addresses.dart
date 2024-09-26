@@ -36,14 +36,20 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('Delete Address', style: TextStyle(fontWeight: FontWeight.w700),),
+          title: const Text(
+            'Delete Address',
+            style: TextStyle(fontWeight: FontWeight.w700),
+          ),
           content: const Text('Are you sure you want to delete this address?'),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel', style: TextStyle(color: Colors.black45),),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black45),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -54,7 +60,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 await addressService.deleteAddress(docId);
                 _fetchAddresses();
               },
-              child: Text('Delete', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.orange.shade900),),
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                    fontWeight: FontWeight.bold, color: Colors.orange.shade900),
+              ),
             ),
           ],
         );
@@ -63,16 +73,15 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   }
 
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
-    final fullNameController =
-    TextEditingController(text: address?.fullName ?? '');
-    final phoneNumberController =
-    TextEditingController(text: address?.phoneNumber ?? '');
-    final streetController = TextEditingController(text: address?.street ?? '');
+    final houseNumberandStreetController =
+    TextEditingController(text: address?.houseNumberandStreet ?? '');
     final baranggayController =
     TextEditingController(text: address?.baranggay ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
     final provinceController =
     TextEditingController(text: address?.province ?? '');
+    final nearestLandmarkController =
+    TextEditingController(text: address?.nearestLandmark ?? '');
 
     final formKey = GlobalKey<FormState>();
 
@@ -81,110 +90,103 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       builder: (context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: Text(address == null ? 'Add Address' : 'Edit Address', style: const TextStyle(fontWeight: FontWeight.w700),),
-          content: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            child: SingleChildScrollView(
+          title: Text(
+            address == null ? 'Add Address' : 'Edit Address',
+            style: const TextStyle(fontWeight: FontWeight.w700),
+          ),
+          content: SingleChildScrollView( // Wrap the content with SingleChildScrollView
+            child: Container(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.9,
               child: Form(
                 key: formKey,
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  // Ensure the dialog does not take up unnecessary space
                   children: [
                     TextFormField(
-                      controller: fullNameController,
-                      decoration:  InputDecoration(labelText: 'Full Name',
-                        labelStyle: const TextStyle(color: Colors.black),
+                      controller: houseNumberandStreetController,
+                      decoration: const InputDecoration(
+                        labelText: 'House Number / Street',
+                        labelStyle: TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.black54),
-                        focusedBorder: const UnderlineInputBorder(
+                        focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
                         ),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a full name';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: phoneNumberController,
-                      decoration:
-                       InputDecoration(labelText: 'Phone Number',
-                        labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.black54),
-                        focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black45),
-                        ),),
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(11),
-                      ],
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter your phone number';
-                        }
-                        if (value.length != 11) {
-                          return 'Please enter a valid phone number';
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      controller: streetController,
-                      decoration:  InputDecoration(labelText: 'Street',
-                        labelStyle: const TextStyle(color: Colors.black),
-                        floatingLabelStyle: TextStyle(color: Colors.black54),
-                        focusedBorder: const UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.black45),
-                        ),),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a street';
+                          return 'Please enter your house number and street';
                         }
                         return null;
                       },
                     ),
                     TextFormField(
                       controller: baranggayController,
-                      decoration:  InputDecoration(labelText: 'Baranggay',
-                        labelStyle: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
+                        labelText: 'Baranggay',
+                        labelStyle: TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.black54),
-                        focusedBorder: const UnderlineInputBorder(
+                        focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
-                        ),),
+                        ),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a street';
+                          return 'Please enter a baranggay';
                         }
                         return null;
                       },
                     ),
                     TextFormField(
                       controller: cityController,
-                      decoration:  InputDecoration(labelText: 'City/Municipality',
-                        labelStyle: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
+                        labelText: 'City/Municipality',
+                        labelStyle: TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.black54),
-                        focusedBorder: const UnderlineInputBorder(
+                        focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
-                        ),),
+                        ),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a city';
+                          return 'Please enter a city/municipality';
                         }
                         return null;
                       },
                     ),
                     TextFormField(
                       controller: provinceController,
-                      decoration:  InputDecoration(labelText: 'Province',
-                        labelStyle: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
+                        labelText: 'Province',
+                        labelStyle: TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.black54),
-                        focusedBorder: const UnderlineInputBorder(
+                        focusedBorder: UnderlineInputBorder(
                           borderSide: BorderSide(color: Colors.black45),
-                        ),),
+                        ),
+                      ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a country';
+                          return 'Please enter a province';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: nearestLandmarkController,
+                      decoration: const InputDecoration(
+                        labelText: 'Nearest Landmark',
+                        labelStyle: TextStyle(color: Colors.black),
+                        floatingLabelStyle: TextStyle(color: Colors.black54),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.black45),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a nearest landmark';
                         }
                         return null;
                       },
@@ -199,18 +201,20 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel', style: TextStyle(color: Colors.black45, fontSize: 15),),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.black45, fontSize: 15),
+              ),
             ),
             TextButton(
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
                   final newAddress = CarOwnerAddressModel(
-                    fullName: fullNameController.text,
-                    phoneNumber: phoneNumberController.text,
-                    street: streetController.text,
+                    houseNumberandStreet: houseNumberandStreetController.text,
                     baranggay: baranggayController.text,
                     city: cityController.text,
                     province: provinceController.text,
+                    nearestLandmark: nearestLandmarkController.text,
                     isDefault: address?.isDefault ?? false,
                   );
 
@@ -226,7 +230,13 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text(address == null ? 'Add' : 'Update', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w900, fontSize: 15),),
+              child: Text(
+                address == null ? 'Add' : 'Update',
+                style: TextStyle(
+                    color: Colors.orange.shade900,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15),
+              ),
             ),
           ],
         );
@@ -240,101 +250,89 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
-        title: const Text('Address', style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text(
+          'Address',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: addresses.isEmpty
           ? const Center(child: Text('No addresses. Add a new address.'))
           : ListView.builder(
-        itemCount: addresses.length,
-        itemBuilder: (context, index) {
-          final address = addresses[index];
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
-            child: Card(
-              elevation: 8,
-              color: address.isDefault ? Colors.white : Colors.white,
-              shape: RoundedRectangleBorder(
-                side: BorderSide(
-                  color: address.isDefault ? Colors.orange.shade900 : Colors.transparent, // Orange border if default
-                  width: 2.0,
-                ),
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              child: ListTile(
-                title: Text(address.fullName),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Phone: ${address.phoneNumber}'),
-                    Text('Street: ${address.street}'),
-                    Text('City/Municipality: ${address.city}'),
-                    Text('Province: ${address.province}'),
-                    if (address.isDefault)
-                       Text('Default Address',
-                          style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.bold)),
-                  ],
-                ),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        _showAddressDialog(address: address, index: index);
-                      },
+              itemCount: addresses.length,
+              itemBuilder: (context, index) {
+                final address = addresses[index];
+                return Card(
+                  child: ListTile(
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            'House Number / Street: ${address.houseNumberandStreet}'),
+                        Text('Phone: ${address.houseNumberandStreet}'),
+                        Text('City/Municipality: ${address.city}'),
+                        Text('Province: ${address.province}'),
+                        Text('Nearest Landmark: ${address.nearestLandmark}'),
+                        if (address.isDefault)
+                          Text('Default Address',
+                              style: TextStyle(
+                                  color: Colors.orange.shade900,
+                                  fontWeight: FontWeight.bold)),
+                      ],
                     ),
-                    const SizedBox(width: 0),
-
-                    IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.grey.shade600,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        _showDeleteConfirmationDialog(index);
-                      },
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.edit,
+                              color: Colors.grey.shade600, size: 20),
+                          onPressed: () {
+                            _showAddressDialog(address: address, index: index);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete,
+                              color: Colors.grey.shade600, size: 20),
+                          onPressed: () {
+                            _showDeleteConfirmationDialog(index);
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(
+                            address.isDefault ? Icons.star : Icons.star_border,
+                            size: 20,
+                            color: address.isDefault
+                                ? Colors.orange.shade900
+                                : Colors.grey.shade600,
+                          ),
+                          onPressed: () async {
+                            setState(() {
+                              for (int i = 0; i < addresses.length; i++) {
+                                addresses[i].isDefault = i == index;
+                              }
+                            });
+                            await addressService.setDefaultAddress(
+                                index, addresses);
+                            _fetchAddresses();
+                          },
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 0),
-                    IconButton(
-                      icon: Icon(
-                        address.isDefault
-                            ? Icons.star
-                            : Icons.star_border,
-                        size: 20,
-                        color: address.isDefault
-                            ? Colors.orange.shade900
-                            : Colors.grey.shade600,
-                      ),
-                      onPressed: () async {
-                        setState(() {
-                          for (int i = 0; i < addresses.length; i++) {
-                            addresses[i].isDefault = i == index;
-                          }
-                        });
-                        await addressService.setDefaultAddress(
-                            index, addresses);
-                        _fetchAddresses();
-                      },
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange.shade900,
         onPressed: () {
           _showAddressDialog();
         },
-        child: const Icon(Icons.add, color: Colors.white, size: 30, weight: 20,),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 30,
+          weight: 20,
+        ),
       ),
     );
   }
