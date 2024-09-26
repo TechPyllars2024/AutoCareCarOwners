@@ -62,7 +62,7 @@ class _ShopProfileState extends State<ShopProfile> {
                   shopInformation(),
 
                   const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0,),
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -116,7 +116,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     unSelectedColor: Colors.grey,
                     child: Icon(
                       Icons.star,
-                      size: 12,
+                      size: 14,
                     ),
                   ),
                 ),
@@ -203,7 +203,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.message, color: Colors.orange.shade900, size: 30,),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   'Message',
@@ -222,7 +222,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.call, color: Colors.orange.shade900, size: 30,),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   'Call',
@@ -241,7 +241,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.access_time, color: Colors.orange.shade900, size: 30,),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   "$openTime - $closeTime",
@@ -261,7 +261,7 @@ class _ShopProfileState extends State<ShopProfile> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.location_on_outlined, color: Colors.orange.shade900, size: 30,),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   "Direction",
@@ -284,12 +284,12 @@ class _ShopProfileState extends State<ShopProfile> {
   Widget servicesCarousel() => Column(
     children: [
       const Padding(
-        padding: EdgeInsets.all(12.0),
+        padding: EdgeInsets.all(8.0),
         child: Row(
           children: [
             Text(
               'Other Services',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Spacer(),
           ],
@@ -307,8 +307,8 @@ class _ShopProfileState extends State<ShopProfile> {
                   text: const TextSpan(
                     text: 'Car Wash', // This is the first text
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
+                      color: Colors.white,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -320,9 +320,9 @@ class _ShopProfileState extends State<ShopProfile> {
                   text: const TextSpan(
                     text: 'Starts at XXXX', // This is the second text
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      fontSize: 15,
+
                     ),
                   ),
                   maxLines: 1,
@@ -334,12 +334,13 @@ class _ShopProfileState extends State<ShopProfile> {
                     firstTextPainter.width + secondTextPainter.width + 20; // Adding some padding
 
                 return Container(
-                  color: Colors.orangeAccent.shade100,
+                  color: Colors.orange.shade900,
+
                   child: Stack(
                     children: [
                       // ClipRRect to add curved corners and crop the bottom
                       Container(
-                        margin: const EdgeInsets.all(8),
+                        margin: const EdgeInsets.all(6),
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: Radius.circular(20), // Curve on the left
@@ -359,8 +360,8 @@ class _ShopProfileState extends State<ShopProfile> {
                       // Overlay Text in the bottom 25% space
                       Positioned(
                         bottom: 0,
-                        left: 0,
-                        right: 0,
+                        left: 2,
+                        right: 2,
                         child: Container(
                           height: 50, // Allocating 25% space for text
                           padding: const EdgeInsets.all(10),
@@ -369,8 +370,8 @@ class _ShopProfileState extends State<ShopProfile> {
                               const Text(
                                 'Car Wash',
                                 style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontSize: 16,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -379,7 +380,7 @@ class _ShopProfileState extends State<ShopProfile> {
                                 const Text(
                                   'Starts at XXXX',
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontSize: 15,
 
                                   ),
@@ -401,19 +402,20 @@ class _ShopProfileState extends State<ShopProfile> {
 
 
   Widget feedbackSection() => Padding(
-    padding: const EdgeInsets.only(top: 20.0,left: 12, right: 12),
+    padding: const EdgeInsets.only(top: 20.0,left: 10, right: 10),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
           padding: EdgeInsets.symmetric(vertical: 8.0),
-          child: Text('Feedbacks', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+          child: Text('Feedbacks', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),),
         ),
-        Container(
+        Card(
+          color: Colors.white,
           margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16), // Curved edges
+          elevation: 5.0, // Set the elevation value
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16), // Optional: for rounded corners
           ),
           child: const Padding(
             padding: EdgeInsets.all(18.0),

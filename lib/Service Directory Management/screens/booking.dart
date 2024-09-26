@@ -25,7 +25,7 @@ class _BookingState extends State<Booking> {
   // Define constants used in buildTopSection
   final double coverHeight = 220;
   final double profileHeight = 130;
-  final double top = 220 - 130 / 2; // Example calculation
+  final double top = 220 - 130 / 2;
 
 
   @override
@@ -44,12 +44,12 @@ class _BookingState extends State<Booking> {
             children: [
               buildTopSection(), // Use the same top section
               buildShopName(),  // Use the same shop name
-              ShopInformation(),
+              shopInformation(),
 
 
 
               const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: 16.0,),
                 child: Divider(
                   thickness: 1,
                   color: Colors.grey,
@@ -99,12 +99,12 @@ class _BookingState extends State<Booking> {
                 rate: rating,
                 items: List.generate(
                   5,
-                      (index) => const RatingWidget(
-                    selectedColor: Colors.orange,
+                      (index) =>  RatingWidget(
+                    selectedColor: Colors.orange.shade900,
                     unSelectedColor: Colors.grey,
                     child: Icon(
                       Icons.star,
-                      size: 20,
+                      size: 14,
                     ),
                   ),
                 ),
@@ -122,7 +122,7 @@ class _BookingState extends State<Booking> {
   }
 
   Widget buildShopName() => Padding(
-    padding: const EdgeInsets.all(16.0),
+    padding: const EdgeInsets.only(bottom: 16.0, top: 5, left: 25),
     child: Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -135,11 +135,11 @@ class _BookingState extends State<Booking> {
           const SizedBox(height: 5),
           Row(
             children: [
-              const Icon(Icons.location_on, color: Colors.orange),
+               Icon(Icons.location_on, color: Colors.orange.shade900, size: 18,),
               const SizedBox(width: 4),
               Text(
                 'Location details', // You can also use the same location details if needed
-                style: const TextStyle(fontSize: 15),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),
@@ -148,12 +148,12 @@ class _BookingState extends State<Booking> {
     ),
   );
 
-  Widget ShopInformation() {
+  Widget shopInformation() {
     const String openTime = '7:00';
     const String closeTime = '5:00';
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
@@ -161,7 +161,7 @@ class _BookingState extends State<Booking> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.message, color: Colors.orange, size: 40,),
+               Icon(Icons.message, color: Colors.orange.shade900, size: 30,),
               const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -179,7 +179,7 @@ class _BookingState extends State<Booking> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.call, color: Colors.orange, size: 40,),
+               Icon(Icons.call, color: Colors.orange.shade900, size: 30,),
               const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -197,12 +197,12 @@ class _BookingState extends State<Booking> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.access_time, color: Colors.orange, size: 40,),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
+              Icon(Icons.access_time, color: Colors.orange.shade900, size: 30,),
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0),
                 child: Text(
                   "$openTime - $closeTime",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w400,
                     color: Colors.black,
@@ -215,7 +215,7 @@ class _BookingState extends State<Booking> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.location_on_outlined, color: Colors.orange, size: 40,),
+               Icon(Icons.location_on_outlined, color: Colors.orange.shade900, size: 30,),
               const Padding(
                 padding: EdgeInsets.only(top: 8.0),
                 child: Text(
@@ -272,7 +272,7 @@ class _BookingState extends State<Booking> {
           'Select Service',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -284,7 +284,7 @@ class _BookingState extends State<Booking> {
             'Paint and Body Works',
             'Car Wash and Auto-Detailing'
           ],
-          hintText: 'Service Specialization',
+          hintText: 'Services',
           controller: dropdownController,
           onSelectionChanged: (selectedOptions) {
             print('Selected Options: $selectedOptions');
@@ -305,7 +305,7 @@ class _BookingState extends State<Booking> {
           'Select Date and Time',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -321,8 +321,8 @@ class _BookingState extends State<Booking> {
 
                   Expanded(
                     child: Container(
-                      width: 200, // Set the same fixed width for this container
-                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 40),
+                      width: 180, // Set the same fixed width for this container
+                      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 2),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15),
@@ -330,7 +330,7 @@ class _BookingState extends State<Booking> {
                       ),
                       child: DatePickerDisplay(
                         initialDate: DateTime.now(),
-                        textStyle: TextStyle(fontSize: 20, color: Colors.black),
+                        textStyle: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     ),
                   ),
@@ -366,7 +366,7 @@ class _BookingState extends State<Booking> {
 
 
   Widget carDetails() => Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: const EdgeInsets.all(30),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -374,7 +374,7 @@ class _BookingState extends State<Booking> {
           'Car Details',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),

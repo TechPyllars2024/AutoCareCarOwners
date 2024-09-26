@@ -152,9 +152,9 @@ class _SignupScreenState extends State<SignupScreen> {
                     Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       child: RichText(
-                        text: const TextSpan(
+                        text:  TextSpan(
                           children: [
-                            TextSpan(
+                            const TextSpan(
                               text: "Auto",
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
@@ -167,7 +167,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               style: TextStyle(
                                 fontWeight: FontWeight.w900,
                                 fontSize: 50,
-                                color: Colors.orange,
+                                color: Colors.orange.shade900,
                               ),
                             ),
                           ],
@@ -264,8 +264,8 @@ class _SignupScreenState extends State<SignupScreen> {
                           children: <TextSpan>[
                             TextSpan(
                               text: 'Log In',
-                              style: const TextStyle(
-                                color: Colors.orange,
+                              style: TextStyle(
+                                color: Colors.orange.shade900,
                                 fontWeight: FontWeight.bold,
                               ),
                               recognizer: TapGestureRecognizer()

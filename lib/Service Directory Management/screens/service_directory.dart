@@ -50,7 +50,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                 crossAxisCount: 1,
                 crossAxisSpacing: 5,
                 mainAxisSpacing: 8,
-                childAspectRatio: 2 / 0.9, // 2:1 aspect ratio
+                childAspectRatio: 2 / 0.85, // 2:1 aspect ratio
               ),
               itemCount: services.length,
               itemBuilder: (context, index) => GestureDetector(
