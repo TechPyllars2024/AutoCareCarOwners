@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:autocare_carowners/Booking%20Management/widgets/button.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,15 +9,16 @@ import '../services/profile_service.dart';
 class CarOwnerEditProfile extends StatefulWidget {
   final CarOwnerProfileModel currentUser;
 
-  const CarOwnerEditProfile({Key? key, required this.currentUser})
-      : super(key: key);
+  const CarOwnerEditProfile({super.key, required this.currentUser});
 
   @override
   State<CarOwnerEditProfile> createState() => _CarOwnerEditProfileState();
 }
 
 class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
-  late TextEditingController nameController;
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
+  late TextEditingController phoneNumberController;
   late TextEditingController profileImageController;
   File? _image;
   bool _isLoading = false;
@@ -25,7 +27,9 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: widget.currentUser.name);
+    firstNameController = TextEditingController(text: widget.currentUser.firstName);
+    lastNameController = TextEditingController(text: widget.currentUser.lastName);
+    phoneNumberController = TextEditingController(text: widget.currentUser.phoneNumber);
     profileImageController =
         TextEditingController(text: widget.currentUser.profileImage);
   }
@@ -56,7 +60,9 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
     final updatedProfile = CarOwnerProfileModel(
       profileId: widget.currentUser.profileId,
       uid: widget.currentUser.uid,
-      name: nameController.text,
+      firstName: firstNameController.text,
+      lastName: lastNameController.text,
+      phoneNumber: phoneNumberController.text,
       email: widget.currentUser.email,
       profileImage: profileImageController.text,
     );
@@ -96,7 +102,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                 children: [
                   GestureDetector(
                     child: CircleAvatar(
-                      radius: 150,
+                      radius: 120,
                       backgroundColor: Colors.white,
                       backgroundImage: _image != null
                           ? FileImage(_image!)
@@ -117,24 +123,42 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                         style: TextStyle(color: Colors.black)),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(20.0),
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                     child: TextField(
-                      controller: nameController,
+                      controller: firstNameController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        hintText: 'Edit name',
+                        hintText: 'Edit first name',
+                        contentPadding: EdgeInsets.all(10),
                       ),
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      minimumSize: const Size(400, 50),
-                      backgroundColor: Colors.grey,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                    child: TextField(
+                      controller: lastNameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Edit last name',
+                        contentPadding: EdgeInsets.all(10),
+                      ),
                     ),
-                    onPressed: _saveProfile,
-                    child: const Text('Save'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                    child: TextField(
+                      controller: phoneNumberController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Edit phone number',
+                        contentPadding: EdgeInsets.all(10),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  WideButtons(
+                      onTap: _saveProfile,
+                      text: "Save Profile"
                   ),
                 ],
               ),

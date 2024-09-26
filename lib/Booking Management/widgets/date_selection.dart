@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class DatePickerDisplay extends StatefulWidget {
   final DateTime initialDate;
   final TextStyle textStyle;
+  final Function(DateTime) onDateSelected;
 
   const DatePickerDisplay({
     super.key,
     required this.initialDate,
+    required this.onDateSelected,
     this.textStyle = const TextStyle(fontSize: 20),
   });
 
@@ -48,16 +50,21 @@ class _DatePickerDisplayState extends State<DatePickerDisplay> {
   }
 
   Future<void> _selectDate() async {
+    DateTime now = DateTime.now();
+    DateTime sixMonthsLater = DateTime(now.year, now.month + 6, now.day);
+
     DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _selectedDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
+      firstDate: now, // Restrict past dates
+      lastDate: sixMonthsLater, // Restrict dates to 6 months after today
     );
+
     if (pickedDate != null && pickedDate != _selectedDate) {
       setState(() {
         _selectedDate = pickedDate;
       });
+      widget.onDateSelected(_selectedDate); // Call the parent callback
     }
   }
 }

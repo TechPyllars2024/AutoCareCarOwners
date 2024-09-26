@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 import '../models/services_model.dart';
 
 class CategoriesService {
   late CollectionReference addressCollection;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final logger = Logger();
 
   // Fetch all unique categories from the services collection
   Future<List<String>> fetchServiceCategories() async {
@@ -22,6 +24,7 @@ class CategoriesService {
 
       return categories;
     } catch (e) {
+      logger.i('Error fetching service categories: $e');
       return [];
     }
   }
@@ -66,21 +69,26 @@ class CategoriesService {
       if (services.isNotEmpty) {
         serviceCache[category] = services;
       }
-
       return services;
     } catch (e) {
+      logger.i('Error fetching services for category "$category": $e');
       return [];
     }
   }
 
   // Fetch service provider by uid
   Future<Map<String, dynamic>> fetchProviderByUid(String uid) async {
-    DocumentSnapshot providerSnapshot = await FirebaseFirestore.instance
-        .collection('automotiveShops_profile')
-        .doc(uid)
-        .get();
+    try {
+      DocumentSnapshot providerSnapshot = await FirebaseFirestore.instance
+          .collection('automotiveShops_profile')
+          .doc(uid)
+          .get();
 
-    return providerSnapshot.data() as Map<String, dynamic>;
+      return providerSnapshot.data() as Map<String, dynamic>;
+    } catch (e) {
+      logger.i('Error fetching provider by UID $uid: $e');
+      return {};
+    }
   }
 
   // Fetch all services for a particular service provider
@@ -91,6 +99,9 @@ class CategoriesService {
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => ServiceModel.fromMap(doc.data(), doc.id))
-            .toList());
+            .toList())
+        .handleError((e) {
+      logger.i('Error fetching services for provider ID $serviceProviderId: $e');
+    });
   }
 }
