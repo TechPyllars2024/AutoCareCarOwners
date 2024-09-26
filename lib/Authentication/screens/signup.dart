@@ -281,6 +281,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
+                    const SizedBox(height: 25)
                   ],
                 ),
               ).animate().slide(
@@ -292,7 +293,9 @@ class _SignupScreenState extends State<SignupScreen> {
             ],
           ),
         ),
+
       ),
+
     );
   }
 }

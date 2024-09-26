@@ -62,11 +62,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   }
 
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
-    final fullNameController =
-        TextEditingController(text: address?.fullName ?? '');
-    final phoneNumberController =
-        TextEditingController(text: address?.phoneNumber ?? '');
-    final streetController = TextEditingController(text: address?.street ?? '');
+    final houseNumberandStreetController =
+        TextEditingController(text: address?.houseNumberandStreet ?? '');
+    final nearestLandmarkController =
+        TextEditingController(text: address?.nearestLandmark ?? '');
     final baranggayController =
         TextEditingController(text: address?.baranggay ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
@@ -86,41 +85,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: fullNameController,
-                    decoration: const InputDecoration(labelText: 'Full Name'),
+                    controller: houseNumberandStreetController,
+                    decoration: const InputDecoration(labelText: 'House Number / Street'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a full name';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: phoneNumberController,
-                    decoration:
-                        const InputDecoration(labelText: 'Phone Number'),
-                    keyboardType: TextInputType.phone,
-                    // inputFormatters: [phoneNumberFormatter],
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(11),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your phone number';
-                      }
-                      if (value.length != 11) {
-                        return 'Please enter a valid phone number';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: streetController,
-                    decoration: const InputDecoration(labelText: 'Street'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a street';
+                        return 'Please enter your house number and street';
                       }
                       return null;
                     },
@@ -155,6 +124,26 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       return null;
                     },
                   ),
+                  TextFormField(
+                    controller: nearestLandmarkController,
+                    decoration:
+                    const InputDecoration(labelText: 'Nearest Landmark'),
+                    keyboardType: TextInputType.phone,
+                    // inputFormatters: [phoneNumberFormatter],
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(11),
+                    ],
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '';
+                      }
+                      if (value.length != 11) {
+                        return '';
+                      }
+                      return null;
+                    },
+                  ),
                 ],
               ),
             ),
@@ -170,9 +159,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
               onPressed: () async {
                 if (formKey.currentState!.validate()) {
                   final newAddress = CarOwnerAddressModel(
-                    fullName: fullNameController.text,
-                    phoneNumber: phoneNumberController.text,
-                    street: streetController.text,
+                    houseNumberandStreet: houseNumberandStreetController.text,
+                    nearestLandmark: nearestLandmarkController.text,
                     baranggay: baranggayController.text,
                     city: cityController.text,
                     province: provinceController.text,
@@ -213,12 +201,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                 final address = addresses[index];
                 return Card(
                   child: ListTile(
-                    title: Text(address.fullName),
                     subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Phone: ${address.phoneNumber}'),
-                        Text('Street: ${address.street}'),
+                        Text('Phone: ${address.houseNumberandStreet}'),
                         Text('City/Municipality: ${address.city}'),
                         Text('Province: ${address.province}'),
                         if (address.isDefault)
