@@ -85,7 +85,7 @@ class _ChecklistState extends State<Checklist> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            'Select Options',
+            'Select Services',
             style: TextStyle(color: Colors.grey[800]), // Dark grey text
           ),
           backgroundColor: Colors.grey[200], // Very light grey background
