@@ -58,6 +58,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1000331742478-7fh2muol7akfucpl0n8o919q6163m80v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.autocarecarowners.autocare_carowners",
+            "certificate_hash": "045d7b7977c7aedf77e7573462191f6846cbd57a"
+          }
+        },
+        {
           "client_id": "1000331742478-r9l6g5mv8u06s38jm8206ers6ujejngf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
