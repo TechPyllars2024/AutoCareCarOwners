@@ -59,7 +59,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
+          padding: const EdgeInsets.only(bottom: 1.0),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: GridView.builder(
