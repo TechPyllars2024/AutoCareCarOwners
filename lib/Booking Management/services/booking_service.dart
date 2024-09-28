@@ -1,11 +1,13 @@
 import 'package:autocare_carowners/Booking%20Management/models/booking_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import '../../ProfileManagement/models/car_owner_car_details_model.dart';
 
 class BookingService {
   late final FirebaseFirestore firestore = FirebaseFirestore.instance;
   late CollectionReference carDetailsCollection;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final logger = Logger();
 
   //Fetch services offered by the service provider
@@ -65,6 +67,63 @@ class BookingService {
     }
   }
 
+  Future<String?> fetchFullName() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        final doc = await firestore
+            .collection('car_owner_profile')
+            .doc(user.uid)
+            .get();
+        final data = doc.data();
+
+        if (data != null) {
+          // Extract only firstName and lastName from the document data
+          final String firstName = data['firstName'] ?? '';
+          final String lastName = data['lastName'] ?? '';
+
+          // Return the full name concatenated
+          return '$firstName $lastName';
+        } else {
+          logger.i('No full name for: ${user.uid}');
+          return null; // Return null if no data found
+        }
+      } catch (e) {
+        logger.e('Error fetching user profile: $e');
+        return null;
+      }
+    }
+    return null; // Return null if user is not logged in
+  }
+
+  Future<String?> fetchPhoneNumber() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        final doc = await firestore
+            .collection('car_owner_profile')
+            .doc(user.uid)
+            .get();
+        final data = doc.data();
+
+        if (data != null) {
+          // Extract only firstName and lastName from the document data
+          final String carOwnerPhoneNumber = data['phoneNumber'] ?? '';
+
+          // Return the full name concatenated
+          return carOwnerPhoneNumber;
+        } else {
+          logger.i('No profile data found for user: ${user.uid}');
+          return null; // Return null if no data found
+        }
+      } catch (e) {
+        logger.e('Error fetching user profile: $e');
+        return null;
+      }
+    }
+    return null; // Return null if user is not logged in
+  }
+
   // Create a booking request
   Future<String> createBookingRequest({
     required String carOwnerUid,
@@ -80,6 +139,9 @@ class BookingService {
     required String transmission,
     required DateTime createdAt,
     required String status,
+    required String? phoneNumber,
+    required String fullName,
+    required double totalPrice
   }) async {
     try {
       // Create a booking ID using Firestore's document ID generation
@@ -100,6 +162,9 @@ class BookingService {
         transmission: transmission,
         createdAt: createdAt,
         bookingDate: bookingDate,
+        phoneNumber: phoneNumber,
+        fullName: fullName,
+        totalPrice: totalPrice,
         status: status
       );
 
