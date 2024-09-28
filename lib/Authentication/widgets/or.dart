@@ -16,7 +16,7 @@ class Or extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Text(
-          'OR',
+          'Or',
           style: TextStyle(color: Colors.black),
           ),
         ),

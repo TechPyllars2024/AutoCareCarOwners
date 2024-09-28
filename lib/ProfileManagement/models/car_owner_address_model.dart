@@ -1,39 +1,35 @@
 class CarOwnerAddressModel {
-  String fullName;
-  String phoneNumber;
-  String street;
+  String houseNumberandStreet;
   String baranggay;
   String city;
   String province;
+  String nearestLandmark;
   bool isDefault;
 
   CarOwnerAddressModel({
-    required this.fullName,
-    required this.phoneNumber,
-    required this.street,
+    required this.houseNumberandStreet,
     required this.baranggay,
     required this.city,
     required this.province,
+    required this.nearestLandmark,
     this.isDefault = false,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'fullName': fullName,
-      'phoneNumber': phoneNumber,
-      'street': street,
+      'houseNumberandStreet': houseNumberandStreet,
       'baranggay': baranggay,
       'city': city,
       'province': province,
+      'nearestLandmark': nearestLandmark,
       'isDefault': isDefault,
     };
   }
 
   factory CarOwnerAddressModel.fromMap(Map<String, dynamic> map) {
     return CarOwnerAddressModel(
-      fullName: map['fullName'],
-      phoneNumber: map['phoneNumber'],
-      street: map['street'],
+      houseNumberandStreet: map['houseNumberandStreet'],
+      nearestLandmark: map['nearestLandmark'],
       baranggay: map['baranggay'],
       city: map['city'],
       province: map['province'],

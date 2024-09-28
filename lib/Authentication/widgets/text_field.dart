@@ -32,38 +32,41 @@ class _TextFieldInputState extends State<TextFieldInput> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextField(
-            style: const TextStyle(fontSize: 15),
-            controller: widget.textEditingController,
-            obscureText: widget.isPass, // Handle password visibility
-            keyboardType: widget.textInputType,
-            decoration: InputDecoration(
-              labelText: widget.hintText,
-              prefixIcon: widget.icon != null
-                  ? Icon(widget.icon, color: Colors.grey.shade800, size: 24)
-                  : null,
-              labelStyle:
-                  const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15.0),
-                borderSide: BorderSide(color: Colors.grey),
+          SizedBox(
+            height: 45,
+            child: TextField(
+              style: const TextStyle(fontSize: 15),
+              controller: widget.textEditingController,
+              obscureText: widget.isPass, // Handle password visibility
+              keyboardType: widget.textInputType,
+              decoration: InputDecoration(
+                labelText: widget.hintText,
+                prefixIcon: widget.icon != null
+                    ? Icon(widget.icon, color: Colors.grey.shade800, size: 18)
+                    : null,
+                labelStyle:
+                    const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                  borderSide: BorderSide(color: Colors.grey),
+                ),
+                // Remove errorText from InputDecoration
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15.0),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15.0),
-                borderSide: BorderSide(color: Colors.grey),
-              ),
-              // Remove errorText from InputDecoration
+              onChanged: (value) {
+                setState(() {
+                  errorMessage =
+                      widget.validator?.call(value); // Validate on text change
+                });
+              },
             ),
-            onChanged: (value) {
-              setState(() {
-                errorMessage =
-                    widget.validator?.call(value); // Validate on text change
-              });
-            },
           ),
           if (errorMessage != null && errorMessage!.isNotEmpty)
             Padding(

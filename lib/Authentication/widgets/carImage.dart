@@ -12,7 +12,9 @@ class CarImageWidget extends StatelessWidget {
 Widget build(BuildContext context) {
     return Image.asset(
       imagePath,
+      height: MediaQuery.of(context).size.height * 0.4,
       width: double.infinity,
+      fit: BoxFit.cover,
 
     );
   }

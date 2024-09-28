@@ -10,7 +10,7 @@ class CustomDropdown<T> extends StatefulWidget {
   final Color textColor;
 
   const CustomDropdown({
-    Key? key,
+    super.key,
     required this.items,
     required this.initialValue,
     required this.onChanged,
@@ -18,7 +18,7 @@ class CustomDropdown<T> extends StatefulWidget {
     this.dropdownColor = Colors.grey,
     this.underlineColor = Colors.grey,
     this.textColor = Colors.black,
-  }) : super(key: key);
+  });
 
   @override
   _CustomDropdownState<T> createState() => _CustomDropdownState<T>();
@@ -46,7 +46,7 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> {
       ),
       onChanged: (T? value) {
         setState(() {
-          dropdownValue = value!;
+          dropdownValue = value as T;
         });
         widget.onChanged(value);
       },
