@@ -3,6 +3,7 @@ import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_mo
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/carDetails.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_addresses.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_booking.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
 import 'package:autocare_carowners/Authentication/screens/login.dart';
 import 'package:flutter/material.dart';
@@ -81,7 +82,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 borderRadius: BorderRadius.circular(12.0), // Rounded edges
               ),
               padding: EdgeInsets.all(6.0), // Optional: Add some padding for better aesthetics
-              child: Center( // Center the icon
+              child: const Center( // Center the icon
                 child: Icon(
                   Icons.edit,
                   color: Colors.white, // Set the icon color to white
@@ -267,6 +268,34 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                               builder: (context) => const CarDetails()));
                     },
                     child:  Text('CAR PROFILE',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange.shade900,
+                            fontSize: 15)),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(color: Colors.orange.shade900), // Set the border color to orange
+                      ),
+                      minimumSize: const Size(400, 45),
+                      backgroundColor: Colors.transparent, // Make the background transparent
+                      elevation: 0, // Remove shadow for better transparency effect
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          //pushReplacement if you don't want to go back
+                          MaterialPageRoute(
+                              builder: (context) => const MyBookingsScreen()));
+                    },
+                    child:  Text('MY BOOKINGS',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.orange.shade900,
