@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class CarOwnerCarProfile extends StatefulWidget {
-  const CarOwnerCarProfile({super.key, this.child});
+class CarOwnerCarProfileScreen extends StatefulWidget {
+  const CarOwnerCarProfileScreen({super.key, this.child});
 
   final Widget? child;
 
   @override
-  State<CarOwnerCarProfile> createState() => _CarOwnerCarProfileState();
+  State<CarOwnerCarProfileScreen> createState() => _CarOwnerCarProfileScreenState();
 }
 
-class _CarOwnerCarProfileState extends State<CarOwnerCarProfile> {
+class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
   final carBrandController = TextEditingController();
   final carModelController = TextEditingController();
   final carYearController = TextEditingController();

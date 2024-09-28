@@ -32,6 +32,11 @@ class _BookingState extends State<Booking> {
   TimeOfDay? endTime;
   TimeOfDay selectedTime = TimeOfDay.now();
   DateTime selectedDate = DateTime.now();
+  late double totalPrice;
+  late String fullName;
+  late String phoneNumber;
+  late final String shopName;
+  late final String shopAddress;
 
   Future<void> fetchTimeData() async {
     try {
@@ -130,35 +135,71 @@ class _BookingState extends State<Booking> {
     loadServices();
     carOwnerData = fetchCarDetails();
     fetchTimeData();
+    _fetchFullName();
+    _fetchPhoneNumber();
+    _fetchShopName();
+    _fetchShopAddress();
   }
 
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
-      // Fetch the car details from the backend service
-      Map<String, dynamic> fetchedCarDetails =
-          await BookingService().fetchCarOwnerDetails(user!.uid);
+      Map<String, dynamic> fetchedCarDetails = await BookingService().fetchCarOwnerDetails(user!.uid);
 
-      // Log the car owner data
       logger.i('Car Owner Data: $fetchedCarDetails');
-
-      // Return the fetched car details
       return fetchedCarDetails;
     } catch (e) {
-      // Handle the error and log it
       logger.e('Error fetching car details: $e');
-      return {}; // Return an empty map in case of error
+      return {};
     }
   }
 
-  //load the services based the service provider UID
+  // Load services and calculate total price
   void loadServices() async {
-    // Fetch services and ensure the correct type is returned
-    List<Map<String, dynamic>> fetchedServices =
-        await BookingService().fetchServices(widget.serviceProviderUid);
-    // Update the state with the fetched services
+    List<Map<String, dynamic>> fetchedServices = await BookingService().fetchServices(widget.serviceProviderUid);
     setState(() {
       services = fetchedServices;
     });
+  }
+
+  Future<void> _fetchFullName() async {
+    final fetchedFullName = await BookingService().fetchFullName();
+    setState(() {
+      fullName = fetchedFullName!;
+    });
+  }
+
+  Future<void> _fetchShopName() async {
+    final fetchedShopName = await BookingService().fetchServiceProviderShopName(widget.serviceProviderUid);
+    setState(() {
+      shopName = fetchedShopName!;
+    });
+  }
+
+  Future<void> _fetchShopAddress() async {
+    final fetchedShopAddress = await BookingService().fetchServiceProviderLocation(widget.serviceProviderUid);
+    setState(() {
+      shopAddress = fetchedShopAddress!;
+      logger.i("ADDRESS", shopAddress);
+    });
+  }
+
+  Future<void> _fetchPhoneNumber() async {
+    final fetchedPhoneNumber = await BookingService().fetchPhoneNumber();
+    setState(() {
+      phoneNumber = fetchedPhoneNumber!;
+    });
+  }
+
+  double calculateTotalPrice(List<String> selectedServices) {
+    double total = 0.0;
+    for (var service in selectedServices) {
+      // Find the service in the list and add its price to the total
+      var matchingService = services.firstWhere((services) => services['name'] == service, orElse: () => {});
+      if (matchingService.isNotEmpty) {
+        total += matchingService['price'] ?? 0.0;
+      }
+    }
+    return total;
   }
 
   @override
@@ -393,17 +434,17 @@ class _BookingState extends State<Booking> {
 
         // Initialize controllers with current car data
         brandController = TextEditingController(
-            text: carDetails['brand'] as String? ?? 'Unknown');
+            text: carDetails['brand'] as String? ?? '');
         modelController = TextEditingController(
-            text: carDetails['model'] as String? ?? 'Unknown');
+            text: carDetails['model'] as String? ?? '');
         yearController = TextEditingController(
-            text: carDetails['year']?.toString() ?? 'Unknown');
+            text: carDetails['year']?.toString() ?? '');
         fuelTypeController = TextEditingController(
-            text: carDetails['fuelType'] as String? ?? 'Unknown');
+            text: carDetails['fuelType'] as String? ?? '');
         colorController = TextEditingController(
-            text: carDetails['color'] as String? ?? 'Unknown');
+            text: carDetails['color'] as String? ?? '');
         transmissionController = TextEditingController(
-            text: carDetails['transmissionType'] as String? ?? 'Unknown');
+            text: carDetails['transmissionType'] as String? ?? '');
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -509,6 +550,11 @@ class _BookingState extends State<Booking> {
           return; // Exit the method
         }
 
+        // Update the total price
+        setState(() {
+          totalPrice = calculateTotalPrice(selectedServices);
+        });
+
         try {
           // Call your booking service to save the booking
           await BookingService().createBookingRequest(
@@ -524,7 +570,14 @@ class _BookingState extends State<Booking> {
               color: color,
               transmission: transmission,
               createdAt: DateTime.now(),
-              status: 'pending');
+              status: 'pending',
+              phoneNumber: phoneNumber,
+              fullName: fullName,
+              totalPrice: totalPrice,
+              shopAddress: shopAddress,
+              shopName: shopName
+          );
+
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Successfully Booked'),
@@ -601,6 +654,7 @@ class _BookingState extends State<Booking> {
                       ),
                     ),
                     const SizedBox(width: 10),
+
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
