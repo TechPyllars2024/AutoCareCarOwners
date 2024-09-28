@@ -12,6 +12,7 @@ class BookingModel {
   String color;
   String transmission;
   DateTime createdAt;
+  String status;
 
   BookingModel({
     required this.carOwnerUid,
@@ -27,6 +28,7 @@ class BookingModel {
     required this.color,
     required this.transmission,
     required this.createdAt,
+    required this.status
   });
 
   // Converts a BookingModel instance to a Map for serialization
@@ -45,6 +47,7 @@ class BookingModel {
       'color': color,
       'transmission': transmission,
       'createdAt': createdAt.toIso8601String(),
+      'status': status
     };
   }
 
@@ -64,6 +67,7 @@ class BookingModel {
       color: map['color'] ?? '',
       transmission: map['transmission'] ?? '',
       createdAt: DateTime.parse(map['createdAt']),
+      status: map['status'] ?? 'pending'
     );
   }
 }

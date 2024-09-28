@@ -191,7 +191,6 @@ class _BookingState extends State<Booking> {
         title: const Text('Booking'),
       ),
       body: SafeArea(
-
         child: FutureBuilder<Map<String, dynamic>>(
           future: _providerData,
           builder: (context, snapshot) {
@@ -480,67 +479,68 @@ class _BookingState extends State<Booking> {
   //Submit Button
   Widget submitButton(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
-      child: ElevatedButton(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
+      child:
+      ElevatedButton(
+      onPressed: () async {
+        // Collecting information from the input fields and selected services
+        String brand = brandController.text;
+        String model = modelController.text;
+        String year = yearController.text;
+        String fuelType = fuelTypeController.text;
+        String color = colorController.text;
+        String transmission = transmissionController.text;
+        String bookingDate = formatBookingDate(selectedDate.toString()); // Adjust as needed
+        String bookingTime = formatBookingTime(selectedTime);
 
-        onPressed: () async {
-          // Collecting information from the input fields and selected services
-          String brand = brandController.text;
-          String model = modelController.text;
-          String year = yearController.text;
-          String fuelType = fuelTypeController.text;
-          String color = colorController.text;
-          String transmission = transmissionController.text;
-          String bookingDate = formatBookingDate(selectedDate.toString()); // Adjust as needed
-          String bookingTime = formatBookingTime(selectedTime);
+        // Assuming dropdownController.selectedOptions is a list of selected services
+        List<String> selectedServices = dropdownController.selectedOptionList;
 
-          // Assuming dropdownController.selectedOptions is a list of selected services
-          List<String> selectedServices = dropdownController.selectedOptionList;
+        // Validate the input
+        if (brand.isEmpty ||
+            model.isEmpty ||
+            year.isEmpty ||
+            fuelType.isEmpty ||
+            color.isEmpty ||
+            transmission.isEmpty ||
+            selectedServices.isEmpty) {
+          // Show an error message if validation fails
+          Utils.showSnackBar('Please complete the details');
+          return; // Exit the method
+        }
 
-          // Validate the input
-          if (brand.isEmpty ||
-              model.isEmpty ||
-              year.isEmpty ||
-              fuelType.isEmpty ||
-              color.isEmpty ||
-              transmission.isEmpty ||
-              selectedServices.isEmpty) {
-            // Show an error message if validation fails
-            Utils.showSnackBar('Please complete the details');
-            return; // Exit the method
-          }
-
-          try {
-            // Call your booking service to save the booking
-            await BookingService().createBookingRequest(
-                carOwnerUid: user!.uid,
-                serviceProviderUid: widget.serviceProviderUid,
-                selectedService: selectedServices.join(', '),
-                bookingDate: bookingDate,
-                bookingTime: bookingTime,
-                carBrand: brand,
-                carModel: model,
-                carYear: year,
-                fuelType: fuelType,
-                color: color,
-                transmission: transmission,
-                createdAt: DateTime.now());
-            ScaffoldMessenger.of(context).showSnackBar(
+        try {
+          // Call your booking service to save the booking
+          await BookingService().createBookingRequest(
+              carOwnerUid: user!.uid,
+              serviceProviderUid: widget.serviceProviderUid,
+              selectedService: selectedServices.join(', '),
+              bookingDate: bookingDate,
+              bookingTime: bookingTime,
+              carBrand: brand,
+              carModel: model,
+              carYear: year,
+              fuelType: fuelType,
+              color: color,
+              transmission: transmission,
+              createdAt: DateTime.now(),
+              status: 'pending');
+          ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Successfully Booked'),
                 backgroundColor: Colors.green,
               ),
-            );
-            // Show a success message
-            logger.i('Booking confirmed successfully!');
-            // Optionally, you can navigate to another page or reset the form
-            Navigator.pop(context); // This will go back to the previous page
-          } catch (e) {
-            // Handle any errors during booking submission
-            logger.e('Error confirming booking: $e');
-            Utils.showSnackBar('Failed to confirm booking. Please try again');
-          }
-        },
+          );
+          // Show a success message
+          logger.i('Booking confirmed successfully!');
+          // Optionally, you can navigate to another page or reset the form
+          Navigator.pop(context); // This will go back to the previous page
+        } catch (e) {
+          // Handle any errors during booking submission
+          logger.e('Error confirming booking: $e');
+          Utils.showSnackBar('Failed to confirm booking. Please try again');
+        }
+      },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange.shade900,
           foregroundColor: Colors.white,
@@ -551,9 +551,9 @@ class _BookingState extends State<Booking> {
         ),
         child: const Text('Submit',
           style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),),
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
       ),
     );
   }
@@ -602,9 +602,7 @@ class _BookingState extends State<Booking> {
                     ),
                     const SizedBox(width: 10),
                     Expanded(
-
                       child: Container(
-
                         padding: const EdgeInsets.symmetric(
                             vertical: 15.0, horizontal: 35),
                         decoration: BoxDecoration(
