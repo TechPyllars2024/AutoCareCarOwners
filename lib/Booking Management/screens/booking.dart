@@ -518,7 +518,10 @@ class _BookingState extends State<Booking> {
               fuelType: fuelType,
               color: color,
               transmission: transmission,
-              createdAt: DateTime.now());
+              createdAt: DateTime.now(),
+              status: 'pending'
+          );
+
           Utils.showSnackBar('successful!');
           // Show a success message
           logger.i('Booking confirmed successfully!');
