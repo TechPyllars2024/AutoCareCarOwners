@@ -87,14 +87,14 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
           'EDIT PROFILE',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        actions: [
-          IconButton(
-              onPressed: () => {},
-              icon: const Icon(
-                Icons.settings,
-                size: 30,
-              )),
-        ],
+        // actions: [
+        //   IconButton(
+        //       onPressed: () => {},
+        //       icon: const Icon(
+        //         Icons.settings,
+        //         size: 30,
+        //       )),
+        // ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -103,7 +103,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                 children: [
                   GestureDetector(
                     child: CircleAvatar(
-                      radius: 120,
+                      radius: 100,
                       backgroundColor: Colors.white,
                       backgroundImage: _image != null
                           ? FileImage(_image!)
@@ -113,11 +113,11 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                       child:
                           _image == null && profileImageController.text.isEmpty
                               ? const Icon(Icons.person,
-                                  size: 150, color: Colors.black)
+                                  size: 100, color: Colors.black)
                               : null,
                     ),
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor:
@@ -132,12 +132,17 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                     padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
                     child: TextField(
                       controller: firstNameController,
-                      decoration: const InputDecoration(
+                      decoration:  InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(color: Colors.orange
                           ),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                        ),
+
                         hintText: 'First Name',
                         contentPadding: EdgeInsets.all(10),
                       ),
@@ -147,8 +152,17 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                     padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                     child: TextField(
                       controller: lastNameController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration:  InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(color: Colors.orange.shade900
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                        ),
+
                         hintText: 'Last Name',
                         contentPadding: EdgeInsets.all(10),
                       ),
@@ -158,8 +172,17 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                     padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                     child: TextField(
                       controller: phoneNumberController,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
+                      decoration:  InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(color: Colors.orange
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                        ),
+
                         hintText: 'Phone Number',
                         contentPadding: EdgeInsets.all(10),
                       ),
@@ -173,7 +196,7 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
                   const SizedBox(height: 20),
                   WideButtons(
                       onTap: _saveProfile,
-                      text: "Save Profile"
+                      text: "Save"
                   ),
                 ],
               ),

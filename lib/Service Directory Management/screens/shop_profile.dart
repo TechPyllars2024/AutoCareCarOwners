@@ -70,7 +70,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     shopInformation(data),
                     const Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 20),
+                          EdgeInsets.only(right: 16.0,left: 16, top: 20,),
                       child: Divider(thickness: 1, color: Colors.grey),
                     ),
                     servicesCarousel(),
@@ -119,12 +119,12 @@ class _ShopProfileState extends State<ShopProfile> {
                 rate: rating,
                 items: List.generate(
                   5,
-                  (index) => const RatingWidget(
-                    selectedColor: Colors.orange,
+                  (index) =>  RatingWidget(
+                    selectedColor: Colors.orange.shade900,
                     unSelectedColor: Colors.grey,
-                    child: Icon(
+                    child: const Icon(
                       Icons.star,
-                      size: 20,
+                      size: 15,
                     ),
                   ),
                 ),
@@ -133,7 +133,7 @@ class _ShopProfileState extends State<ShopProfile> {
               Text(
                 '$numberOfRating ratings',
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ],
           ),
@@ -168,38 +168,40 @@ class _ShopProfileState extends State<ShopProfile> {
             children: [
               Text(
                 data['shopName'] ?? 'Unknown Shop',
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                   Icon(Icons.location_on, color: Colors.orange.shade900, size: 15,),
+                  const SizedBox(width: 4),
+                  Text(
+                    data['location'] ?? 'Location details',
+                  //  style: const TextStyle(fontSize: 13),
+                  ),
+                ],
               ),
               const SizedBox(height: 5),
               Row(
                 children: [
-                  const Icon(Icons.location_on, color: Colors.orange),
-                  const SizedBox(width: 4),
-                  Text(
-                    data['location'] ?? 'Location details',
-                    style: const TextStyle(fontSize: 15),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.calendar_month, color: Colors.orange),
+                   Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
                   const SizedBox(width: 4),
                   Text(
                     data['daysOfTheWeek'].join(', ') ?? 'Operating Days',
-                    style: const TextStyle(fontSize: 15),
+                    //style: const TextStyle(fontSize: 13),
                   ),
                 ],
               ),
+
+              const SizedBox(height: 5),
               Row(
                 children: [
-                  const Icon(Icons.check, color: Colors.orange),
+                   Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
                   const SizedBox(width: 4),
                   Text(
                     data['serviceSpecialization'].join(', ') ??
                         'Specialization',
-                    style: const TextStyle(fontSize: 15),
+                   // style: const TextStyle(fontSize: 13),
                   ),
                 ],
               ),
@@ -210,82 +212,94 @@ class _ShopProfileState extends State<ShopProfile> {
 
   Widget shopInformation(Map<String, dynamic> data) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 25.0, right: 25, top: 20),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          const Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.message, color: Colors.orange, size: 40),
-              Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  'Message',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
+           Container(
+             width: 70,
+             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.message, color: Colors.orange.shade900, size: 25),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    'Message',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.call, color: Colors.orange, size: 40),
-              Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  'Call',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
+              ],
+                       ),
+           ),
+           Container(
+             width: 70,
+             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.call, color: Colors.orange.shade900, size: 25),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    'Call',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.access_time, color: Colors.orange, size: 40),
-              Padding(
-                padding: const EdgeInsets.only(top: 8.0),
-                child: Text(
-                  data['operationTime'] ?? 'Operation Time',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
+              ],
+                       ),
+           ),
+          Container(
+            width: 100,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 Icon(Icons.access_time_filled, color: Colors.orange.shade900, size: 25),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    data['operationTime'] ?? 'Operation Time',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.location_on_outlined, color: Colors.orange, size: 40),
-              Padding(
-                padding: EdgeInsets.only(top: 8.0),
-                child: Text(
-                  "Direction",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black,
+           Container(
+             width: 70,
+             child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.location_on, color: Colors.orange.shade900, size: 25),
+                Padding(
+                  padding: EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    "Direction",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
+              ],
+                       ),
+           ),
         ],
       ),
     );
@@ -321,7 +335,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     Text(
                       'Other Services',
                       style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Spacer(),
                   ],
@@ -336,22 +350,50 @@ class _ShopProfileState extends State<ShopProfile> {
                     return Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15),
-                        color: Colors.grey.shade300,
+                        color: Colors.grey.shade200,
                       ),
                       margin: const EdgeInsets.all(5),
                       child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            service.servicePicture.isNotEmpty
-                                ? Image.network(
-                                    service.servicePicture,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  )
-                                : const Placeholder(),
-                            Text(service.name),
-                            Text('${service.price} PHP'),
+                            Expanded(
+                              flex: 8,
+
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    topRight: Radius.circular(15),
+                                  ),
+                                  color: Colors.grey.shade300,
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child: service.servicePicture.isNotEmpty
+                                    ? Image.network(
+                                        service.servicePicture,
+                                        height: 100,
+                                  width: double.infinity,  // Ensure the image fills the container's width
+                                  fit: BoxFit.cover,
+                                )
+                                    : const Placeholder(),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(service.name, style: TextStyle(fontWeight: FontWeight.bold),),
+
+                                    Text('Starts at Php ${service.price}', style: TextStyle(fontSize: 13),),
+                                  ],
+                                ),
+                              ),
+                            ),
+
                           ],
                         ),
                       ),
@@ -378,30 +420,45 @@ class _ShopProfileState extends State<ShopProfile> {
         children: [
           const Padding(
             padding: EdgeInsets.all(8.0),
-            child: Text('Feedbacks',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-          ),
-          Container(
-            margin: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text('Feedbacks',
+              
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
-            child: const Padding(
-              padding: EdgeInsets.all(18.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Paul Vincent Lerado',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-                    child: Text(
-                        'I was impressed with the professionalism and efficiency of your team during my recent oil change and brake inspection. '
-                        'However, the service took longer than expected, so providing more accurate time estimates would be helpful.'),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: PhysicalModel(
+              color: Colors.white,
+              elevation: 4, // Adds elevation to the container
+              borderRadius: BorderRadius.circular(16), // Matches the container's borderRadius
+              shadowColor: Colors.grey,
+              child: Container(
+
+                margin: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Paul Vincent Lerado',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
+                        child: Text(
+                            'I was impressed with the professionalism and efficiency of your team during my recent oil change and brake inspection. '
+                            'However, the service took longer than expected, so providing more accurate time estimates would be helpful.'),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),
