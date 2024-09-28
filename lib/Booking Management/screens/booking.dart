@@ -35,6 +35,8 @@ class _BookingState extends State<Booking> {
   late double totalPrice;
   late String fullName;
   late String phoneNumber;
+  late final String shopName;
+  late final String shopAddress;
 
   Future<void> fetchTimeData() async {
     try {
@@ -135,7 +137,10 @@ class _BookingState extends State<Booking> {
     fetchTimeData();
     _fetchFullName();
     _fetchPhoneNumber();
+    _fetchShopName();
+    _fetchShopAddress();
   }
+
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
       Map<String, dynamic> fetchedCarDetails = await BookingService().fetchCarOwnerDetails(user!.uid);
@@ -163,14 +168,27 @@ class _BookingState extends State<Booking> {
     });
   }
 
+  Future<void> _fetchShopName() async {
+    final fetchedShopName = await BookingService().fetchServiceProviderShopName(widget.serviceProviderUid);
+    setState(() {
+      shopName = fetchedShopName!;
+    });
+  }
+
+  Future<void> _fetchShopAddress() async {
+    final fetchedShopAddress = await BookingService().fetchServiceProviderLocation(widget.serviceProviderUid);
+    setState(() {
+      shopAddress = fetchedShopAddress!;
+      logger.i("ADDRESS", shopAddress);
+    });
+  }
+
   Future<void> _fetchPhoneNumber() async {
     final fetchedPhoneNumber = await BookingService().fetchPhoneNumber();
     setState(() {
       phoneNumber = fetchedPhoneNumber!;
     });
   }
-
-
 
   double calculateTotalPrice(List<String> selectedServices) {
     double total = 0.0;
@@ -555,9 +573,10 @@ class _BookingState extends State<Booking> {
               status: 'pending',
               phoneNumber: phoneNumber,
               fullName: fullName,
-              totalPrice: totalPrice
+              totalPrice: totalPrice,
+              shopAddress: shopAddress,
+              shopName: shopName
           );
-
 
           ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
