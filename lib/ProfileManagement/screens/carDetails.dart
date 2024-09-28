@@ -83,126 +83,132 @@ class _CarDetailsState extends State<CarDetails> {
           backgroundColor: Colors.white,
           title: Text(car == null ? 'Add Car Details' : 'Edit Car Details'),
           content: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  TextFormField(
-                    controller: brandController,
-                    decoration: const InputDecoration(labelText: 'Brand'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the brand';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: modelController,
-                    decoration: const InputDecoration(labelText: 'Model'),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter the model';
-                      }
-                      return null;
-                    },
-                  ),
-                  TextFormField(
-                    controller: yearController,
-                    decoration: const InputDecoration(labelText: 'Year'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                      LengthLimitingTextInputFormatter(4),
-                    ],
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please fill this section';
-                      }
-                      return null;
-                    },
-                  ),
-                  DropdownButtonFormField<String>(
-                    value: color,
-                    decoration: const InputDecoration(labelText: 'Color'),
-                    items: [
-                      'Red',
-                      'Black',
-                      'White',
-                      'Green',
-                      'Silver',
-                      'Yellow',
-                      'Beige',
-                      'Blue',
-                      'Brown',
-                      'Gold',
-                      'Grey',
-                      'Orange',
-                      'Pink',
-                      'Purple',
-                      'Tan'
-                    ]
-                        .map((color) => DropdownMenuItem(
-                              value: color,
-                              child: Text(color),
-                            ))
-                        .toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        color = newValue!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a color';
-                      }
-                      return null;
-                    },
-                  ),
-                  DropdownButtonFormField<String>(
-                    value: transmissionType,
-                    decoration:
-                        const InputDecoration(labelText: 'Transmission Type'),
-                    items: ['Automatic', 'Manual']
-                        .map((transmission) => DropdownMenuItem(
-                              value: transmission,
-                              child: Text(transmission),
-                            ))
-                        .toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        transmissionType = newValue!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a transmission type';
-                      }
-                      return null;
-                    },
-                  ),
-                  DropdownButtonFormField<String>(
-                    value: fuelType,
-                    decoration: const InputDecoration(labelText: 'Fuel Type'),
-                    items: ['Diesel', 'Gasoline']
-                        .map((fuel) => DropdownMenuItem(
-                              value: fuel,
-                              child: Text(fuel),
-                            ))
-                        .toList(),
-                    onChanged: (newValue) {
-                      setState(() {
-                        fuelType = newValue!;
-                      });
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please select a fuel type';
-                      }
-                      return null;
-                    },
-                  ),
-                ],
+            child: Container(
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.9,
+              child: Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: brandController,
+                      decoration: const InputDecoration(labelText: 'Brand'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the brand';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: modelController,
+                      decoration: const InputDecoration(labelText: 'Model'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter the model';
+                        }
+                        return null;
+                      },
+                    ),
+                    TextFormField(
+                      controller: yearController,
+                      decoration: const InputDecoration(labelText: 'Year'),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4),
+                      ],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please fill this section';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: color,
+                      decoration: const InputDecoration(labelText: 'Color'),
+                      items: [
+                        'Red',
+                        'Black',
+                        'White',
+                        'Green',
+                        'Silver',
+                        'Yellow',
+                        'Beige',
+                        'Blue',
+                        'Brown',
+                        'Gold',
+                        'Grey',
+                        'Orange',
+                        'Pink',
+                        'Purple',
+                        'Tan'
+                      ]
+                          .map((color) => DropdownMenuItem(
+                                value: color,
+                                child: Text(color),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          color = newValue!;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a color';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: transmissionType,
+                      decoration:
+                          const InputDecoration(labelText: 'Transmission Type'),
+                      items: ['Automatic', 'Manual']
+                          .map((transmission) => DropdownMenuItem(
+                                value: transmission,
+                                child: Text(transmission),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          transmissionType = newValue!;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a transmission type';
+                        }
+                        return null;
+                      },
+                    ),
+                    DropdownButtonFormField<String>(
+                      value: fuelType,
+                      decoration: const InputDecoration(labelText: 'Fuel Type'),
+                      items: ['Diesel', 'Gasoline']
+                          .map((fuel) => DropdownMenuItem(
+                                value: fuel,
+                                child: Text(fuel),
+                              ))
+                          .toList(),
+                      onChanged: (newValue) {
+                        setState(() {
+                          fuelType = newValue!;
+                        });
+                      },
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please select a fuel type';
+                        }
+                        return null;
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
