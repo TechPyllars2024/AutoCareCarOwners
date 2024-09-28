@@ -63,7 +63,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 final updatedProfile = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CarOwnerEditProfile(
+                    builder: (context) => CarOwnerEditProfileScreen(
                       currentUser: profile!,
                     ),
                   ),

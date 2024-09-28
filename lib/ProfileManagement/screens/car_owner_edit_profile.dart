@@ -7,16 +7,16 @@ import 'package:image_picker/image_picker.dart';
 
 import '../services/profile_service.dart';
 
-class CarOwnerEditProfile extends StatefulWidget {
+class CarOwnerEditProfileScreen extends StatefulWidget {
   final CarOwnerProfileModel currentUser;
 
-  const CarOwnerEditProfile({super.key, required this.currentUser});
+  const CarOwnerEditProfileScreen({super.key, required this.currentUser});
 
   @override
-  State<CarOwnerEditProfile> createState() => _CarOwnerEditProfileState();
+  State<CarOwnerEditProfileScreen> createState() => _CarOwnerEditProfileScreenState();
 }
 
-class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
+class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   late TextEditingController phoneNumberController;
@@ -84,17 +84,9 @@ class _CarOwnerEditProfileState extends State<CarOwnerEditProfile> {
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
         title: const Text(
-          'EDIT PROFILE',
+          'COMPLETE YOUR PROFILE',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
-        // actions: [
-        //   IconButton(
-        //       onPressed: () => {},
-        //       icon: const Icon(
-        //         Icons.settings,
-        //         size: 30,
-        //       )),
-        // ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
