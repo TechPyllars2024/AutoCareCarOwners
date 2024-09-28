@@ -79,6 +79,7 @@ class BookingService {
     required String color,
     required String transmission,
     required DateTime createdAt,
+    required String status,
   }) async {
     try {
       // Create a booking ID using Firestore's document ID generation
@@ -99,6 +100,7 @@ class BookingService {
         transmission: transmission,
         createdAt: createdAt,
         bookingDate: bookingDate,
+        status: status
       );
 
       // Store the booking in Firestore
