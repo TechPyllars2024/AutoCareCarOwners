@@ -112,8 +112,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                         );
                       },
                       child: Card(
+                        color: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
                         child: Stack(
                           children: [
@@ -146,26 +147,26 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                         // Service name with icon
                                         Row(
                                           children: [
-                                            Icon(Icons.build_circle,
-                                                size: 20,
+                                            Icon(Icons.miscellaneous_services_outlined,
+                                                size: 15,
                                                 color: Colors.grey[800]),
                                             const SizedBox(width: 4),
                                             Text(
                                               service['name'],
                                               style: TextStyle(
-                                                fontSize: 25,
+                                                fontSize: 20,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.grey[800],
                                               ),
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 1.0),
+                                        const SizedBox(height: 3.0),
                                         // Service location with icon
                                         Row(
                                           children: [
                                             Icon(Icons.store,
-                                                size: 20,
+                                                size: 15,
                                                 color: Colors.grey[600]),
                                             const SizedBox(width: 4),
                                             Text(
@@ -177,11 +178,12 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                             ),
                                           ],
                                         ),
+                                        const SizedBox(height: 3.0),
                                         // Service name with icon
                                         Row(
                                           children: [
                                             Icon(Icons.location_on,
-                                                size: 20,
+                                                size: 15,
                                                 color: Colors.grey[600]),
                                             const SizedBox(width: 4),
                                             Text(
@@ -193,16 +195,14 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 1.0),
+                                        const SizedBox(height: 3.0),
                                         // Price with icon
                                         Row(
                                           children: [
-                                            Icon(Icons.attach_money,
-                                                size: 20,
-                                                color: Colors.grey[600]),
+
                                             const SizedBox(width: 4),
                                             Text(
-                                              'Price: ${service['price']}',
+                                              'Starts at: Php ${service['price']}',
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 color: Colors.grey[600],
@@ -218,18 +218,18 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                             ),
                             // Align the rating at the bottom right
                             Positioned(
-                              bottom: 2,
-                              right: 8,
+                              bottom: 8,
+                              right: 12,
                               child: PannableRatingBar(
                                 rate: rating,
                                 items: List.generate(
                                     5,
-                                    (index) => const RatingWidget(
-                                          selectedColor: Colors.orange,
+                                    (index) =>  RatingWidget(
+                                          selectedColor: Colors.orange.shade900,
                                           unSelectedColor: Colors.grey,
                                           child: Icon(
                                             Icons.star,
-                                            size: 20,
+                                            size: 14,
                                           ),
                                         )),
                                 // Removed the onChanged callback to make it non-adjustable
