@@ -124,6 +124,66 @@ class BookingService {
     return null; // Return null if user is not logged in
   }
 
+  // Fetch shop name of the service provider
+  Future<String?> fetchServiceProviderShopName(String serviceProviderUid) async {
+    try {
+      final doc = await firestore
+          .collection('automotiveShops_profile') // Adjust the collection name if necessary
+          .doc(serviceProviderUid)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data();
+
+        if (data != null) {
+          // Extract shopName
+          final String shopName = data['shopName'] ?? '';
+          logger.i('SHOPNAME', shopName);
+          return shopName; // Return the shop name
+        } else {
+          logger.i('No profile data found for service provider: $serviceProviderUid');
+          return null; // Return null if no data found
+        }
+      } else {
+        logger.i('No profile found for service provider: $serviceProviderUid');
+        return null;
+      }
+    } catch (e) {
+      logger.e('Error fetching service provider shop name: $e');
+      return null;
+    }
+  }
+
+  // Fetch location of the service provider
+  Future<String?> fetchServiceProviderLocation(String serviceProviderUid) async {
+    try {
+      final doc = await firestore
+          .collection('automotiveShops_profile') // Adjust the collection name if necessary
+          .doc(serviceProviderUid)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>?;
+
+        if (data != null) {
+          // Extract location
+          final String location = data['location'] ?? '';
+          return location; // Return the location
+        } else {
+          logger.i('No profile data found for service provider: $serviceProviderUid');
+          return null; // Return null if no data found
+        }
+      } else {
+        logger.i('No profile found for service provider: $serviceProviderUid');
+        return null;
+      }
+    } catch (e) {
+      logger.e('Error fetching service provider location: $e');
+      return null;
+    }
+  }
+
+
   // Create a booking request
   Future<String> createBookingRequest({
     required String carOwnerUid,
@@ -141,7 +201,9 @@ class BookingService {
     required String status,
     required String? phoneNumber,
     required String fullName,
-    required double totalPrice
+    required double totalPrice,
+    required String shopName,
+    required String shopAddress,
   }) async {
     try {
       // Create a booking ID using Firestore's document ID generation
@@ -165,7 +227,9 @@ class BookingService {
         phoneNumber: phoneNumber,
         fullName: fullName,
         totalPrice: totalPrice,
-        status: status
+        status: status,
+        shopName: shopName,
+        shopAddress: shopAddress
       );
 
       // Store the booking in Firestore
