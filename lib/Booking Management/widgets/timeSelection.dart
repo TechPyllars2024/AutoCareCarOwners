@@ -141,7 +141,7 @@ class HourlyTimePicker extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
                       timeOptions[index],
-                      style: TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 18),
                     ),
                   ),
                 );
