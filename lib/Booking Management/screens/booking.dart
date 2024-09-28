@@ -212,7 +212,7 @@ class _BookingState extends State<Booking> {
                   buildShopName(providerData), // Pass provider data
                   const Padding(
                     padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 10),
+                        EdgeInsets.only(right: 16.0,left: 16, top: 20,),
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -258,12 +258,12 @@ class _BookingState extends State<Booking> {
                 rate: rating,
                 items: List.generate(
                   5,
-                  (index) => const RatingWidget(
-                    selectedColor: Colors.orange,
+                  (index) => RatingWidget(
+                    selectedColor: Colors.orange.shade900,
                     unSelectedColor: Colors.grey,
-                    child: Icon(
+                    child: const Icon(
                       Icons.star,
-                      size: 20,
+                      size: 15,
                     ),
                   ),
                 ),
@@ -272,7 +272,7 @@ class _BookingState extends State<Booking> {
               Text(
                 '$numberOfRating ratings',
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ],
           ),
@@ -293,10 +293,10 @@ class _BookingState extends State<Booking> {
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(height: 5),
+              const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.location_on, color: Colors.orange),
+                   Icon(Icons.location_on, color: Colors.orange.shade900, size: 15,),
                   const SizedBox(width: 4),
                   Text(
                     providerData['location'],
@@ -304,9 +304,10 @@ class _BookingState extends State<Booking> {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.calendar_month, color: Colors.orange),
+                   Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
                   const SizedBox(width: 4),
                   Text(
                     providerData['daysOfTheWeek'].join(', ') ??
@@ -315,9 +316,10 @@ class _BookingState extends State<Booking> {
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(Icons.check, color: Colors.orange),
+                   Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
                   const SizedBox(width: 4),
                   Text(
                     providerData['serviceSpecialization'].join(', ') ??
@@ -359,7 +361,7 @@ class _BookingState extends State<Booking> {
               'Select Service',
               style: TextStyle(
                 color: Colors.black,
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -412,7 +414,7 @@ class _BookingState extends State<Booking> {
                 'Car Details',
                 style: TextStyle(
                   color: Colors.black,
-                  fontSize: 20,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -476,7 +478,10 @@ class _BookingState extends State<Booking> {
 
   //Submit Button
   Widget submitButton(BuildContext context) {
-    return ElevatedButton(
+    return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
+      child:
+      ElevatedButton(
       onPressed: () async {
         // Collecting information from the input fields and selected services
         String brand = brandController.text;
@@ -519,10 +524,13 @@ class _BookingState extends State<Booking> {
               color: color,
               transmission: transmission,
               createdAt: DateTime.now(),
-              status: 'pending'
+              status: 'pending');
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Successfully Booked'),
+                backgroundColor: Colors.green,
+              ),
           );
-
-          Utils.showSnackBar('successful!');
           // Show a success message
           logger.i('Booking confirmed successfully!');
           // Optionally, you can navigate to another page or reset the form
@@ -533,12 +541,25 @@ class _BookingState extends State<Booking> {
           Utils.showSnackBar('Failed to confirm booking. Please try again');
         }
       },
-      child: const Text('Confirm Booking'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.orange.shade900,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15), // Set the border radius to 15
+          ),
+          minimumSize: const Size(400, 45),
+        ),
+        child: const Text('Submit',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),),
+      ),
     );
   }
 
   Widget timeSelection() => Padding(
-    padding: const EdgeInsets.all(8.0),
+    padding: const EdgeInsets.all(20.0),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -546,7 +567,7 @@ class _BookingState extends State<Booking> {
           'Select Date and Time',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -561,7 +582,7 @@ class _BookingState extends State<Booking> {
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 40),
+                            vertical: 15.0, horizontal: 35),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
@@ -570,7 +591,7 @@ class _BookingState extends State<Booking> {
                         child: DatePickerDisplay(
                           initialDate: selectedDate,
                           textStyle: const TextStyle(
-                              fontSize: 20, color: Colors.black),
+                              fontSize: 15, color: Colors.black),
                           onDateSelected: (date) {
                             setState(() {
                               selectedDate = date;
@@ -583,7 +604,7 @@ class _BookingState extends State<Booking> {
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 40),
+                            vertical: 15.0, horizontal: 35),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
@@ -591,6 +612,8 @@ class _BookingState extends State<Booking> {
                         ),
                         child: TimePickerDisplay(
                           initialTime: selectedTime,
+                          textStyle: const TextStyle(
+                              fontSize: 15, color: Colors.black),
                           startTime: startTime!,
                           endTime: endTime!,
                           onTimeSelected: (time) {
