@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class BookingModel {
   String carOwnerUid;
   String serviceProviderUid;
@@ -13,6 +15,9 @@ class BookingModel {
   String transmission;
   DateTime createdAt;
   String status;
+  String? phoneNumber;
+  String fullName;
+  double totalPrice;
 
   BookingModel({
     required this.carOwnerUid,
@@ -28,7 +33,10 @@ class BookingModel {
     required this.color,
     required this.transmission,
     required this.createdAt,
-    required this.status
+    required this.status,
+    required this.phoneNumber,
+    required this.fullName,
+    required this.totalPrice
   });
 
   // Converts a BookingModel instance to a Map for serialization
@@ -47,7 +55,10 @@ class BookingModel {
       'color': color,
       'transmission': transmission,
       'createdAt': createdAt.toIso8601String(),
-      'status': status
+      'status': status,
+      'phoneNumber': phoneNumber,
+      'totalPrice': totalPrice,
+      'fullName': fullName
     };
   }
 
@@ -58,7 +69,7 @@ class BookingModel {
       serviceProviderUid: map['serviceProviderUid'],
       bookingId: map['bookingId'] ?? '',
       selectedService: List<String>.from(map['selectedService'] ?? []),
-      bookingDate:map['bookingDate'],
+      bookingDate:map['bookingDahote'],
       bookingTime: map['bookingTime'] ?? '',
       carBrand: map['carBrand'] ?? '',
       carModel: map['carModel'] ?? '',
@@ -67,7 +78,10 @@ class BookingModel {
       color: map['color'] ?? '',
       transmission: map['transmission'] ?? '',
       createdAt: DateTime.parse(map['createdAt']),
-      status: map['status'] ?? 'pending'
+      status: map['status'] ?? 'pending',
+      phoneNumber: map['phoneNumber'] ?? '',
+      totalPrice: (map['totalPrice'] ?? 0).toDouble(),
+      fullName: map['fullName'] ?? '',
     );
   }
 }
