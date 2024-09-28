@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 class BookingModel {
   String carOwnerUid;
   String serviceProviderUid;
@@ -18,6 +16,8 @@ class BookingModel {
   String? phoneNumber;
   String fullName;
   double totalPrice;
+  String? shopName;
+  String? shopAddress;
 
   BookingModel({
     required this.carOwnerUid,
@@ -34,9 +34,11 @@ class BookingModel {
     required this.transmission,
     required this.createdAt,
     required this.status,
-    required this.phoneNumber,
+    this.phoneNumber,
     required this.fullName,
-    required this.totalPrice
+    required this.totalPrice,
+    this.shopName,
+    this.shopAddress
   });
 
   // Converts a BookingModel instance to a Map for serialization
@@ -58,7 +60,9 @@ class BookingModel {
       'status': status,
       'phoneNumber': phoneNumber,
       'totalPrice': totalPrice,
-      'fullName': fullName
+      'fullName': fullName,
+      'shopName': shopName,
+      'shopAddress': shopAddress
     };
   }
 
@@ -66,10 +70,10 @@ class BookingModel {
   factory BookingModel.fromMap(Map<String, dynamic> map) {
     return BookingModel(
       carOwnerUid: map['carOwnerUid'] ?? '',
-      serviceProviderUid: map['serviceProviderUid'],
+      serviceProviderUid: map['serviceProviderUid'] ?? '',
       bookingId: map['bookingId'] ?? '',
       selectedService: List<String>.from(map['selectedService'] ?? []),
-      bookingDate:map['bookingDahote'],
+      bookingDate: map['bookingDate'] ?? '',
       bookingTime: map['bookingTime'] ?? '',
       carBrand: map['carBrand'] ?? '',
       carModel: map['carModel'] ?? '',
@@ -77,11 +81,15 @@ class BookingModel {
       fuelType: map['fuelType'] ?? '',
       color: map['color'] ?? '',
       transmission: map['transmission'] ?? '',
-      createdAt: DateTime.parse(map['createdAt']),
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'])
+          : DateTime.now(),
       status: map['status'] ?? 'pending',
-      phoneNumber: map['phoneNumber'] ?? '',
+      phoneNumber: map['phoneNumber'],
       totalPrice: (map['totalPrice'] ?? 0).toDouble(),
       fullName: map['fullName'] ?? '',
+      shopAddress: map['shopAddress'] ?? '',
+      shopName: map['shopName'] ?? '',
     );
   }
 }
