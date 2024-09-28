@@ -635,6 +635,7 @@ class _BookingState extends State<Booking> {
                       ),
                     ),
                     const SizedBox(width: 10),
+
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(

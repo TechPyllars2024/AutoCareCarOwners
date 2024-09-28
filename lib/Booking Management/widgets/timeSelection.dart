@@ -32,7 +32,7 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _selectTime,
+      onTap: _showHourlyTimePicker,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,56 +55,126 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
     return '$hour:$minute $period';
   }
 
-  Future<void> _selectTime() async {
-    TimeOfDay? pickedTime = await showTimePicker(
-      initialTime: _timeOfDay,
+  Future<void> _showHourlyTimePicker() async {
+    final String? pickedTimeSlot = await showModalBottomSheet<String>(
       context: context,
-    );
-
-    if (pickedTime != null) {
-      // Check if the selected time is within the operating hours
-      if (_isTimeWithinOperatingHours(pickedTime, widget.startTime, widget.endTime)) {
-        setState(() {
-          _timeOfDay = pickedTime;
-        });
-        widget.onTimeSelected(pickedTime); // Notify the parent of the selected time
-      } else {
-        // Show a message if the selected time is outside operating hours
-        _showErrorDialog(
-          context,
-          "Invalid Time",
-          "Please select a time between ${_formatTime(widget.startTime)} and ${_formatTime(widget.endTime)}.",
-        );
-      }
-    }
-  }
-
-  bool _isTimeWithinOperatingHours(TimeOfDay selected, TimeOfDay start, TimeOfDay end) {
-    // Convert TimeOfDay to minutes since midnight for easier comparison
-    int selectedMinutes = selected.hour * 60 + selected.minute;
-    int startMinutes = start.hour * 60 + start.minute;
-    int endMinutes = end.hour * 60 + end.minute;
-
-    return selectedMinutes >= startMinutes && selectedMinutes <= endMinutes;
-  }
-
-  void _showErrorDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(title),
-          content: Text(message),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
+      builder: (context) {
+        return HourlyTimePicker(
+          startTime: widget.startTime,
+          endTime: widget.endTime,
+          onTimeSelected: (String selectedTime) {
+            Navigator.of(context).pop(selectedTime);
+          },
         );
       },
     );
+
+    if (pickedTimeSlot != null) {
+      // Parse the start time from the selected time slot
+      TimeOfDay selectedTime = _parseTimeSlot(pickedTimeSlot);
+      setState(() {
+        _timeOfDay = selectedTime;
+      });
+      widget.onTimeSelected(selectedTime); // Notify the parent of the selected time
+    }
+  }
+
+  TimeOfDay _parseTimeSlot(String timeSlot) {
+    // Extract the start time from the time slot string
+    String startTimeStr = timeSlot.split(' - ')[0];
+    return _convertStringToTimeOfDay(startTimeStr);
+  }
+
+  TimeOfDay _convertStringToTimeOfDay(String timeStr) {
+    List<String> parts = timeStr.split(' ');
+    String hourMinute = parts[0];
+    String period = parts[1];
+
+    int hour = int.parse(hourMinute.split(':')[0]);
+    if (period == 'PM' && hour != 12) {
+      hour += 12; // Convert PM hours
+    } else if (period == 'AM' && hour == 12) {
+      hour = 0; // Convert 12 AM to 0 hours
+    }
+    int minute = int.parse(hourMinute.split(':')[1]);
+
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+}
+
+class HourlyTimePicker extends StatelessWidget {
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
+  final Function(String) onTimeSelected;
+
+  const HourlyTimePicker({
+    Key? key,
+    required this.startTime,
+    required this.endTime,
+    required this.onTimeSelected,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> timeOptions = _generateTimeOptions(startTime, endTime);
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      height: 300, // Height of the modal
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Select a Time Slot',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          Expanded(
+            child: ListView.builder(
+              itemCount: timeOptions.length,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    onTimeSelected(timeOptions[index]);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Text(
+                      timeOptions[index],
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<String> _generateTimeOptions(TimeOfDay start, TimeOfDay end) {
+    List<String> options = [];
+    TimeOfDay current = start;
+
+    while (current.hour < end.hour || (current.hour == end.hour && current.minute < end.minute)) {
+      TimeOfDay next = current.minute == 30
+          ? TimeOfDay(hour: current.hour + 1, minute: 0)
+          : TimeOfDay(hour: current.hour, minute: 30);
+
+      options.add('${_formatTime(current)} - ${_formatTime(next)}');
+      current = next;
+    }
+
+    return options;
+  }
+
+  String _formatTime(TimeOfDay timeOfDay) {
+    final int hour = timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
+        ? 12
+        : timeOfDay.hourOfPeriod;
+    final String period = timeOfDay.period == DayPeriod.am ? 'AM' : 'PM';
+    final String minute = timeOfDay.minute.toString().padLeft(2, '0');
+    return '$hour:$minute $period';
   }
 }
