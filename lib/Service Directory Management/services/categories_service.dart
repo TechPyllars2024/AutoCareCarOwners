@@ -60,16 +60,26 @@ class CategoriesService {
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
 
+      // Asynchronously check verification status for each service
+      List<Map<String, dynamic>> verifiedServices = [];
+      for (var service in services) {
+        String uid = service['uid'];
+        bool isVerified = await isProviderVerified(uid);
+        if (isVerified) {
+          verifiedServices.add(service);
+        }
+      }
+
       // Update the last document for pagination
       if (querySnapshot.docs.isNotEmpty) {
         lastDocumentCache[category] = querySnapshot.docs.last;
       }
 
       // Cache the fetched services
-      if (services.isNotEmpty) {
-        serviceCache[category] = services;
+      if (verifiedServices.isNotEmpty) {
+        serviceCache[category] = verifiedServices;
       }
-      return services;
+      return verifiedServices;
     } catch (e) {
       logger.i('Error fetching services for category "$category": $e');
       return [];
@@ -97,11 +107,37 @@ class CategoriesService {
         .collection('services')
         .where('uid', isEqualTo: serviceProviderId)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => ServiceModel.fromMap(doc.data(), doc.id))
-            .toList())
-        .handleError((e) {
+        .asyncMap((snapshot) async {
+      List<ServiceModel> serviceList = snapshot.docs
+          .map((doc) => ServiceModel.fromMap(doc.data(), doc.id))
+          .toList();
+
+      // Filter services to ensure they are from verified providers
+      return Future.wait(serviceList.map((service) async {
+        String uid = service.uid;
+        bool isVerified = await isProviderVerified(uid);
+        return isVerified ? service : null;
+      })).then((filteredServices) => filteredServices.whereType<ServiceModel>().toList());
+    }).handleError((e) {
       logger.i('Error fetching services for provider ID $serviceProviderId: $e');
     });
+  }
+
+  // Helper function to check if a provider is verified
+  Future<bool> isProviderVerified(String uid) async {
+    try {
+      DocumentSnapshot providerSnapshot = await firestore
+          .collection('automotiveShops_profile')
+          .doc(uid)
+          .get();
+
+      if (providerSnapshot.exists) {
+        var providerData = providerSnapshot.data() as Map<String, dynamic>;
+        return providerData['verificationStatus'] == 'Verified';
+      }
+    } catch (e) {
+      logger.i('Error checking provider verification status for UID $uid: $e');
+    }
+    return false; // Return false if the provider does not exist or an error occurs
   }
 }
