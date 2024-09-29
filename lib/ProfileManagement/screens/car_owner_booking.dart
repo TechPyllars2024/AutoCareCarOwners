@@ -17,6 +17,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   final Logger logger = Logger();
   List<BookingModel> bookings = [];
   bool isLoading = true;
+  bool _isFeedbackSubmitted = false;
 
   @override
   void initState() {
@@ -257,7 +258,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                             .where((booking) => booking.status == 'pending')
                             .toList(),
                         emptyMessage: 'No pending bookings',
-                        color: Colors.orange.shade100,
+                        color: Colors.orange.shade200,
                       ),
                       const SizedBox(height: 16), // Space between sections
                       _buildOwnerBookingSection(
@@ -266,7 +267,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                             .where((booking) => booking.status == 'confirmed')
                             .toList(),
                         emptyMessage: 'No accepted bookings',
-                        color: Colors.blue.shade100,
+                        color: Colors.blue.shade200,
                       ),
                       const SizedBox(height: 16), // Space between sections
                       _buildOwnerBookingSection(
@@ -275,7 +276,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                             .where((booking) => booking.status == 'done')
                             .toList(),
                         emptyMessage: 'No completed bookings',
-                        color: Colors.green.shade100,
+                        color: Colors.green.shade200,
                       ),
                       const SizedBox(height: 16), // Space between sections
                       _buildOwnerBookingSection(
@@ -284,7 +285,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                             .where((booking) => booking.status == 'declined')
                             .toList(),
                         emptyMessage: 'No declined bookings',
-                        color: Colors.red.shade100,
+                        color: Colors.red.shade200,
                       ),
                     ],
                   ),
@@ -300,28 +301,34 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     required Color color,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Section header for each status
           Container(
             width: double.infinity,
-            color: color,
-            padding: const EdgeInsets.all(8.0),
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            padding: const EdgeInsets.all(12.0),
             child: Text(
               status,
               style: const TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
           ),
 
+          const SizedBox(height: 12.0), // Spacing between header and content
+
           // If there are no bookings, display a message
           bookings.isEmpty
               ? Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Text(
                     emptyMessage,
                     style: TextStyle(
@@ -341,7 +348,10 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 12.0),
-                      elevation: 2,
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
                       child: ListTile(
                         title: Text(
                           booking.selectedService.join(', ').toUpperCase(),
@@ -350,7 +360,59 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Other details as before...
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons
+                                      .calendar_today, // Calendar icon for booking date
+                                  color: Colors.blue,
+                                  size: 20,
+                                ),
+                                const SizedBox(
+                                    width:
+                                        5), // Space between the icon and text
+                                Text(
+                                  '${booking.bookingDate}, ${booking.bookingTime}',
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.php, // Money icon for total price
+                                  color: Colors.blue,
+                                  size: 20,
+                                ),
+                                const SizedBox(
+                                    width:
+                                        5), // Space between the icon and text
+                                Text(
+                                  booking.totalPrice.toStringAsFixed(
+                                      2), // Show price with currency
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.store,
+                                  color: Colors.blue,
+                                  size: 20,
+                                ),
+                                const SizedBox(
+                                    width:
+                                        5), // Space between the icon and text
+                                Text(
+                                  booking.shopName!, // Display the full name
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+                              ],
+                            ),
                             RichText(
                               text: TextSpan(
                                 children: [
@@ -373,25 +435,52 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                 ],
                               ),
                             ),
-                            // Add the button here
-                            if (booking.status ==
-                                'done') // Check if status is 'done'
-                              ElevatedButton(
-                                onPressed: () {
-                                  // Navigate to Feedback Form Screen
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => FeedbackFormScreen(
-                                          bookingId: booking.bookingId,
-                                          serviceProviderUid:
-                                              booking.serviceProviderUid,
-                                          carOwnerId: booking.carOwnerUid),
+                            const SizedBox(
+                                height: 8.0), // Spacing before the button
+                            // Align the button to the right side
+                            if (booking.status == 'done' &&
+                                !_isFeedbackSubmitted) // Check if status is 'done' and feedback not submitted
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () async {
+                                        // Navigate to Feedback Form Screen and await feedback submission
+                                        await Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                FeedbackFormScreen(
+                                              bookingId: booking.bookingId,
+                                              serviceProviderUid:
+                                                  booking.serviceProviderUid,
+                                              carOwnerId: booking.carOwnerUid,
+                                            ),
+                                          ),
+                                        );
+
+                                        // Once feedback is submitted, update the state
+                                        setState(() {
+                                          _isFeedbackSubmitted =
+                                              true; // Mark feedback as submitted
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 5.0, horizontal: 8.0),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8.0),
+                                        ),
+                                        backgroundColor:
+                                            Colors.white, // Button color
+                                      ),
+                                      child: const Text(
+                                        'Give Feedback',
+                                        style: TextStyle(color: Colors.orange),
+                                      ),
                                     ),
-                                  );
-                                },
-                                child: const Text('Give Feedback'),
-                              ),
+                                  ]),
                           ],
                         ),
                         onTap: () {
