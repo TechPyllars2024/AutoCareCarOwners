@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
+import '../../Ratings and Feedback Management/models/feedback_model.dart';
 import '../models/services_model.dart';
 
 class CategoriesService {
@@ -107,18 +108,10 @@ class CategoriesService {
         .collection('services')
         .where('uid', isEqualTo: serviceProviderId)
         .snapshots()
-        .asyncMap((snapshot) async {
-      List<ServiceModel> serviceList = snapshot.docs
-          .map((doc) => ServiceModel.fromMap(doc.data(), doc.id))
-          .toList();
-
-      // Filter services to ensure they are from verified providers
-      return Future.wait(serviceList.map((service) async {
-        String uid = service.uid;
-        bool isVerified = await isProviderVerified(uid);
-        return isVerified ? service : null;
-      })).then((filteredServices) => filteredServices.whereType<ServiceModel>().toList());
-    }).handleError((e) {
+        .map((snapshot) => snapshot.docs
+        .map((doc) => ServiceModel.fromMap(doc.data(), doc.id))
+        .toList())
+        .handleError((e) {
       logger.i('Error fetching services for provider ID $serviceProviderId: $e');
     });
   }
@@ -139,5 +132,18 @@ class CategoriesService {
       logger.i('Error checking provider verification status for UID $uid: $e');
     }
     return false; // Return false if the provider does not exist or an error occurs
+  }
+
+  Stream<List<FeedbackModel>> fetchFeedbacks(String serviceProviderUid) {
+    return firestore
+        .collection('feedback')
+        .where('serviceProviderUid', isEqualTo: serviceProviderUid)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => FeedbackModel.fromMap(doc.data(), doc.id))
+        .toList())
+        .handleError((e) {
+      logger.i('Error fetching feedbacks for provider ID $serviceProviderUid: $e');
+    });
   }
 }
