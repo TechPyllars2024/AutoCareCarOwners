@@ -23,9 +23,6 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
 
   Map<int, bool> isTextExpanded = {};
 
-
-  get rating => 5.0;
-
   @override
   void initState() {
     super.initState();
@@ -33,7 +30,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
   }
 
   void getServicesForCategory(String category, {bool refresh = false}) async {
-    if (isLoading || !hasMoreServices) return; // Prevent multiple calls
+    if (isLoading || !hasMoreServices) return;
     setState(() {
       isLoading = true;
     });
@@ -60,6 +57,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
           'coverImage': providerDetails['coverImage'],
           'serviceSpecialization': providerDetails['serviceSpecialization'],
           'daysOfTheWeek': providerDetails['daysOfTheWeek'],
+          'verificationStatus': providerDetails['verificationStatus'],
+          'totalRatings': providerDetails['totalRatings'],
+          'numberOfRatings': providerDetails['numberOfRatings'],
         });
       }
     }
@@ -276,18 +276,18 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                               bottom: 8,
                               right: 12,
                               child: PannableRatingBar(
-                                rate: rating,
+                                rate: (service['totalRatings'] != null) ? service['totalRatings'] as double : 0.0,
+                                direction: Axis.horizontal,
                                 items: List.generate(
                                     5,
                                     (index) => RatingWidget(
                                           selectedColor: Colors.orange.shade900,
                                           unSelectedColor: Colors.grey,
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.star,
                                             size: 14,
                                           ),
                                         )),
-                                // Removed the onChanged callback to make it non-adjustable
                               ),
                             ),
                           ],
@@ -299,8 +299,6 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
               : const Center(
                   child:
                     Text('No Shops Available')
-                  
-                  //CircularProgressIndicator(), // Show a loading indicator while fetching data
                 ),
         ),
       ),
