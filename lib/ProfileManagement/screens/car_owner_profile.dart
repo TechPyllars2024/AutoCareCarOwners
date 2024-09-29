@@ -208,10 +208,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         ),
                       );
                     }
-                    return const Padding(
-                      padding: EdgeInsets.only(top: 10.0, left: 20, bottom: 50),
-                      child: Text('No default address set.'),
-                    );
+                    return Text('');
                   },
                 ),
 

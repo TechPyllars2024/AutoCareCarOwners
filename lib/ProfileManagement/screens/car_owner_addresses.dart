@@ -277,12 +277,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                              'House Number / Street: ${address.houseNumberandStreet}'),
-                          Text('Phone: ${address.houseNumberandStreet}'),
-                          Text('City/Municipality: ${address.city}'),
-                          Text('Province: ${address.province}'),
-                          Text('Nearest Landmark: ${address.nearestLandmark}'),
+                          Text('${address.houseNumberandStreet}'),
+                          Text('${address.houseNumberandStreet}'),
+                          Text('${address.city}'),
+                          Text('${address.province}'),
+                          Text(' ${address.nearestLandmark}'),
                           if (address.isDefault)
                             Text('Default Address',
                                 style: TextStyle(
@@ -296,14 +295,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         children: [
                           IconButton(
                             icon: Icon(Icons.edit,
-                                color: Colors.grey.shade600, size: 20),
+                                color: Colors.grey.shade600, size: 18),
                             onPressed: () {
                               _showAddressDialog(address: address, index: index);
                             },
                           ),
                           IconButton(
                             icon: Icon(Icons.delete,
-                                color: Colors.grey.shade600, size: 20),
+                                color: Colors.grey.shade600, size: 18),
                             onPressed: () {
                               _showDeleteConfirmationDialog(index);
                             },
@@ -311,7 +310,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                           IconButton(
                             icon: Icon(
                               address.isDefault ? Icons.star : Icons.star_border,
-                              size: 20,
+                              size: 18,
                               color: address.isDefault
                                   ? Colors.orange.shade900
                                   : Colors.grey.shade600,
