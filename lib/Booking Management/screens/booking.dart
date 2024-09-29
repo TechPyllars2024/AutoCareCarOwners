@@ -403,7 +403,7 @@ class _BookingState extends State<Booking> {
         ),
       );
 
-  Widget pickService() => Padding(
+    Widget pickService() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
