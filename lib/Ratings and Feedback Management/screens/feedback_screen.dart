@@ -22,11 +22,13 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   int _rating = 0;
   String _comment = '';
   late final String fullName;
+  bool _isLoading = true; // Loading state
 
   Future<void> _fetchFullName() async {
-    final fetchedFullName = await FeedbackService().fetchFullName(widget.carOwnerId);
+    final fetchedFullName = await _feedbackService.fetchFullName(widget.carOwnerId);
     setState(() {
       fullName = fetchedFullName!;
+      _isLoading = false; // Update loading state
     });
   }
 
@@ -36,9 +38,12 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
     _fetchFullName();
   }
 
-
   void _submitFeedback() async {
-    if (_rating > 0) {
+    if (_rating > 0 && _comment.isNotEmpty) {
+      setState(() {
+        _isLoading = true; // Set loading state
+      });
+
       String result = await _feedbackService.submitFeedback(
         feedbackerName: fullName,
         bookingId: widget.bookingId,
@@ -49,18 +54,21 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
       );
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(result)), // Show feedback result
+        SnackBar(
+          content: Text(result),
+          duration: const Duration(seconds: 2),
+          backgroundColor: Colors.green,
+        ),
       );
 
       Navigator.pop(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please provide a rating.')),
+        const SnackBar(content: Text('Please provide a rating and comment')),
       );
     }
   }
 
-  // Method to build the star rating widget
   Widget buildStarRating() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -73,7 +81,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
           },
           child: Icon(
             Icons.star,
-            color: index < _rating ? Colors.amber : Colors.grey,
+            color: index < _rating ? Colors.orange : Colors.grey,
             size: 40, // Adjust size as needed
           ),
         );
@@ -85,16 +93,30 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Submit Feedback')),
-      body: Padding(
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator()) // Show loading indicator
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            const Text('Rate the service:'),
+            const SizedBox(height: 100),
+            const Text('Rate the service:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
             buildStarRating(), // Include the star rating widget
             const SizedBox(height: 20),
             TextField(
-              decoration: const InputDecoration(labelText: 'Comment'),
+              decoration: InputDecoration(
+                labelText: 'Comment',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                ),
+                hintText: 'Write your feedback here...',
+              ),
               maxLines: 3,
               onChanged: (value) {
                 _comment = value;
@@ -103,7 +125,15 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _submitFeedback,
-              child: const Text('Submit Feedback'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                backgroundColor: Colors.orange, // Button color
+                elevation: 5, // Add elevation for shadow effect
+              ),
+              child: const Text('Submit Feedback', style: TextStyle(fontSize: 16, color: Colors.white)),
             ),
           ],
         ),
