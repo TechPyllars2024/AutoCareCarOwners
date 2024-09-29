@@ -218,7 +218,7 @@ class _ShopProfileState extends State<ShopProfile> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            width: 70,
+            width: 60,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -238,8 +238,8 @@ class _ShopProfileState extends State<ShopProfile> {
               ],
             ),
           ),
-          Container(
-            width: 70,
+          SizedBox(
+            width: 50,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -259,8 +259,8 @@ class _ShopProfileState extends State<ShopProfile> {
               ],
             ),
           ),
-          Container(
-            width: 100,
+          SizedBox(
+            width: 120,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -280,7 +280,7 @@ class _ShopProfileState extends State<ShopProfile> {
               ],
             ),
           ),
-          Container(
+          SizedBox(
             width: 70,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -362,12 +362,12 @@ class _ShopProfileState extends State<ShopProfile> {
                               flex: 8,
 
                               child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15),
                                   ),
-                                  color: Colors.grey.shade300,
+                                  color: Colors.white,
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: service.servicePicture.isNotEmpty
@@ -387,9 +387,9 @@ class _ShopProfileState extends State<ShopProfile> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(service.name, style: TextStyle(fontWeight: FontWeight.bold),),
+                                    Text(service.name, style: const TextStyle(fontWeight: FontWeight.bold),),
 
-                                    Text('Starts at Php ${service.price}', style: TextStyle(fontSize: 13),),
+                                    Text('Starts at Php ${service.price}', style: const TextStyle(fontSize: 13),),
                                   ],
                                 ),
                               ),
@@ -451,7 +451,7 @@ class _ShopProfileState extends State<ShopProfile> {
                   itemBuilder: (context, index) {
                     final feedback = feedbacks[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
                       child: PhysicalModel(
                         color: Colors.white,
                         elevation: 5,
