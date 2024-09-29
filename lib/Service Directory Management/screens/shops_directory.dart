@@ -298,7 +298,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                 )
               : const Center(
                   child:
-                      CircularProgressIndicator(), // Show a loading indicator while fetching data
+                    Text('No Shops Available')
+                  
+                  //CircularProgressIndicator(), // Show a loading indicator while fetching data
                 ),
         ),
       ),
