@@ -3,6 +3,7 @@ import 'package:autocare_carowners/Booking%20Management/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 
+import '../../Ratings and Feedback Management/models/feedback_model.dart';
 import '../models/services_model.dart';
 import '../services/categories_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -70,11 +71,11 @@ class _ShopProfileState extends State<ShopProfile> {
                     shopInformation(data),
                     const Padding(
                       padding:
-                          EdgeInsets.only(right: 16.0,left: 16, top: 20,),
+                      EdgeInsets.only(right: 16.0,left: 16, top: 20,),
                       child: Divider(thickness: 1, color: Colors.grey),
                     ),
                     servicesCarousel(),
-                    feedbackSection(),
+                    feedbackSection(widget.serviceProviderUid),
                     bookingButton(),
                   ],
                 ),
@@ -87,15 +88,15 @@ class _ShopProfileState extends State<ShopProfile> {
   }
 
   Widget bookingButton() => WideButtons(
-        onTap: bookingRoute,
-        text: 'Book Now!',
-      );
+    onTap: bookingRoute,
+    text: 'Book Now!',
+  );
 
   Widget buildTopSection(Map<String, dynamic> data, double top) {
     double rating =
-        data['rating'] ?? 3.0;
+        data['totalRatings'] ?? 0;
     int numberOfRating =
-        data['numberOfRating'] ?? 0;
+        data['numberOfRatings'] ?? 0;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -119,7 +120,7 @@ class _ShopProfileState extends State<ShopProfile> {
                 rate: rating,
                 items: List.generate(
                   5,
-                  (index) =>  RatingWidget(
+                      (index) =>  RatingWidget(
                     selectedColor: Colors.orange.shade900,
                     unSelectedColor: Colors.grey,
                     child: const Icon(
@@ -133,7 +134,7 @@ class _ShopProfileState extends State<ShopProfile> {
               Text(
                 '$numberOfRating ratings',
                 style:
-                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ],
           ),
@@ -143,72 +144,72 @@ class _ShopProfileState extends State<ShopProfile> {
   }
 
   Widget buildCoverImage(Map<String, dynamic> data) => Container(
-        color: Colors.grey,
-        child: Image.network(
-          data['coverImage'] ?? 'default_cover_image_url',
-          width: double.infinity,
-          height: coverHeight,
-          fit: BoxFit.cover,
-        ),
-      );
+    color: Colors.grey,
+    child: Image.network(
+      data['coverImage'] ?? 'default_cover_image_url',
+      width: double.infinity,
+      height: coverHeight,
+      fit: BoxFit.cover,
+    ),
+  );
 
   Widget buildProfileImage(Map<String, dynamic> data) => CircleAvatar(
-        radius: profileHeight / 2,
-        backgroundColor: Colors.grey.shade800,
-        backgroundImage:
-            NetworkImage(data['profileImage'] ?? 'default_profile_image_url'),
-      );
+    radius: profileHeight / 2,
+    backgroundColor: Colors.grey.shade800,
+    backgroundImage:
+    NetworkImage(data['profileImage'] ?? 'default_profile_image_url'),
+  );
 
   Widget buildShopName(Map<String, dynamic> data) => Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    padding: const EdgeInsets.all(16.0),
+    child: Align(
+      alignment: Alignment.centerLeft,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            data['shopName'] ?? 'Unknown Shop',
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Row(
             children: [
+              Icon(Icons.location_on, color: Colors.orange.shade900, size: 15,),
+              const SizedBox(width: 4),
               Text(
-                data['shopName'] ?? 'Unknown Shop',
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                   Icon(Icons.location_on, color: Colors.orange.shade900, size: 15,),
-                  const SizedBox(width: 4),
-                  Text(
-                    data['location'] ?? 'Location details',
-                  //  style: const TextStyle(fontSize: 13),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                   Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
-                  const SizedBox(width: 4),
-                  Text(
-                    data['daysOfTheWeek'].join(', ') ?? 'Operating Days',
-                    //style: const TextStyle(fontSize: 13),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                   Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
-                  const SizedBox(width: 4),
-                  Text(
-                    data['serviceSpecialization'].join(', ') ??
-                        'Specialization',
-                   // style: const TextStyle(fontSize: 13),
-                  ),
-                ],
+                data['location'] ?? 'Location details',
+                //  style: const TextStyle(fontSize: 13),
               ),
             ],
           ),
-        ),
-      );
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
+              const SizedBox(width: 4),
+              Text(
+                data['daysOfTheWeek'].join(', ') ?? 'Operating Days',
+                //style: const TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 5),
+          Row(
+            children: [
+              Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
+              const SizedBox(width: 4),
+              Text(
+                data['serviceSpecialization'].join(', ') ??
+                    'Specialization',
+                // style: const TextStyle(fontSize: 13),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 
   Widget shopInformation(Map<String, dynamic> data) {
     return Padding(
@@ -216,14 +217,14 @@ class _ShopProfileState extends State<ShopProfile> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-           Container(
-             width: 70,
-             child: Column(
+          Container(
+            width: 60,
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.message, color: Colors.orange.shade900, size: 25),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
                     'Message',
@@ -235,16 +236,16 @@ class _ShopProfileState extends State<ShopProfile> {
                   ),
                 ),
               ],
-                       ),
-           ),
-           Container(
-             width: 70,
-             child: Column(
+            ),
+          ),
+          SizedBox(
+            width: 50,
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.call, color: Colors.orange.shade900, size: 25),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
                     'Call',
@@ -256,15 +257,15 @@ class _ShopProfileState extends State<ShopProfile> {
                   ),
                 ),
               ],
-                       ),
-           ),
-          Container(
-            width: 100,
+            ),
+          ),
+          SizedBox(
+            width: 120,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                 Icon(Icons.access_time_filled, color: Colors.orange.shade900, size: 25),
+                Icon(Icons.access_time_filled, color: Colors.orange.shade900, size: 25),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
@@ -279,14 +280,14 @@ class _ShopProfileState extends State<ShopProfile> {
               ],
             ),
           ),
-           Container(
-             width: 70,
-             child: Column(
+          SizedBox(
+            width: 70,
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.location_on, color: Colors.orange.shade900, size: 25),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
                     "Direction",
@@ -298,8 +299,8 @@ class _ShopProfileState extends State<ShopProfile> {
                   ),
                 ),
               ],
-                       ),
-           ),
+            ),
+          ),
         ],
       ),
     );
@@ -309,7 +310,7 @@ class _ShopProfileState extends State<ShopProfile> {
     final serviceProviderId = widget.serviceProviderUid;
     Future<List<ServiceModel>> fetchServices() async {
       final servicesStream =
-          CategoriesService().fetchServices(serviceProviderId);
+      CategoriesService().fetchServices(serviceProviderId);
       final snapshot = await servicesStream.first;
       return snapshot;
     }
@@ -335,7 +336,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     Text(
                       'Other Services',
                       style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Spacer(),
                   ],
@@ -361,18 +362,18 @@ class _ShopProfileState extends State<ShopProfile> {
                               flex: 8,
 
                               child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
+                                decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15),
                                   ),
-                                  color: Colors.grey.shade300,
+                                  color: Colors.white,
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: service.servicePicture.isNotEmpty
                                     ? Image.network(
-                                        service.servicePicture,
-                                        height: 100,
+                                  service.servicePicture,
+                                  height: 100,
                                   width: double.infinity,  // Ensure the image fills the container's width
                                   fit: BoxFit.cover,
                                 )
@@ -386,9 +387,9 @@ class _ShopProfileState extends State<ShopProfile> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(service.name, style: TextStyle(fontWeight: FontWeight.bold),),
+                                    Text(service.name, style: const TextStyle(fontWeight: FontWeight.bold),),
 
-                                    Text('Starts at Php ${service.price}', style: TextStyle(fontSize: 13),),
+                                    Text('Starts at Php ${service.price}', style: const TextStyle(fontSize: 13),),
                                   ],
                                 ),
                               ),
@@ -416,52 +417,135 @@ class _ShopProfileState extends State<ShopProfile> {
     );
   }
 
-  Widget feedbackSection() => Column(
-        children: [
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text('Feedbacks',
-              
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-          ),
+  Widget feedbackSection(String serviceProviderUid) {
+    return StreamBuilder<List<FeedbackModel>>(
+      stream: CategoriesService().fetchFeedbacks(serviceProviderUid),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No feedbacks available.'));
+        } else {
+          final feedbacks = snapshot.data!;
 
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: PhysicalModel(
-              color: Colors.white,
-              elevation: 4, // Adds elevation to the container
-              borderRadius: BorderRadius.circular(16), // Matches the container's borderRadius
-              shadowColor: Colors.grey,
-              child: Container(
-
-                margin: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Paul Vincent Lerado',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 15.0, vertical: 10),
-                        child: Text(
-                            'I was impressed with the professionalism and efficiency of your team during my recent oil change and brake inspection. '
-                            'However, the service took longer than expected, so providing more accurate time estimates would be helpful.'),
-                      ),
-                    ],
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Feedback',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
-            ),
-          ),
-        ],
-      );
+              SizedBox(
+                height: 150,
+                child: PageView.builder(
+                  controller: PageController(viewportFraction: 0.85),
+                  itemCount: feedbacks.length,
+                  itemBuilder: (context, index) {
+                    final feedback = feedbacks[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: PhysicalModel(
+                        color: Colors.white,
+                        elevation: 5,
+                        shadowColor: Colors.grey,
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.blueGrey[50],
+                                      child: Text(
+                                        feedback.feedbackerName[0], // First letter of the feedbacker's name
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
+                                        feedback.feedbackerName,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  feedback.comment,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.star, color: Colors.amber, size: 20),
+                                        const SizedBox(width: 5),
+                                        Text(
+                                          feedback.rating.toString(),
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      _formatTimestamp(feedback.timestamp), // Function to format timestamp
+                                      style: const TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.black45,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+// Helper function to format the timestamp
+  String _formatTimestamp(DateTime timestamp) {
+    return '${timestamp.day}/${timestamp.month}/${timestamp.year}';
+  }
 }
