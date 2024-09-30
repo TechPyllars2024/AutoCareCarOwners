@@ -30,6 +30,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
   bool isLoading = false;
+  bool isLoadingGoogle = false;
 
   @override
   void dispose() {
@@ -104,14 +105,14 @@ class _SignupScreenState extends State<SignupScreen> {
 
   Future<void> signInWithGoogle() async {
     setState(() {
-      isLoading = true;
+      isLoadingGoogle = true;
     });
 
     String res = await AuthenticationMethod().signInWithGoogleForCarOwner();
 
     if (res == "SUCCESS") {
       setState(() {
-        isLoading = false;
+        isLoadingGoogle = false;
       });
 
       Navigator.of(context).pushReplacement(
@@ -261,10 +262,11 @@ class _SignupScreenState extends State<SignupScreen> {
                       GoogleButton(
                         onTap: signInWithGoogle,
                         hintText: 'Sign Up with Google',
+                        isGoogleLoading: isLoadingGoogle,
                       ),
                 
                       // Already have an account? Log In
-                      SizedBox(height: size.height * 0.04),
+                      SizedBox(height: size.height * 0.03),
                       TextButton(
                         onPressed: () {
                           Navigator.push(

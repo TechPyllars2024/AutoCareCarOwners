@@ -28,6 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool isLoading = false;
+  bool isLoadingGoogle = false;
 
   @override
   void dispose() {
@@ -73,13 +74,13 @@ class _LoginScreenState extends State<LoginScreen> {
   /// Handles Google Log-In in the UI for Car Owners
   Future<void> logInWithGoogleForCarOwners() async {
     setState(() {
-      isLoading = true;
+      isLoadingGoogle = true;
     });
 
     String res = await AuthenticationMethod().logInWithGoogleForCarOwners();
 
     setState(() {
-      isLoading = false;
+      isLoadingGoogle = false;
     });
 
     if (res == "Car Owner") {
@@ -222,11 +223,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       GoogleButton(
                         onTap: logInWithGoogleForCarOwners, // Google button is always enabled
                         hintText: 'Log In with Google',
+                        isGoogleLoading: isLoadingGoogle,
                       ),
 
                       // Already have an account? Log In
 
-                      SizedBox(height: size.height * 0.04),
+                      SizedBox(height: size.height * 0.035),
 
                       Padding(
                         padding: const EdgeInsets.only(top: 8),

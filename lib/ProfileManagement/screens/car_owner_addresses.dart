@@ -277,11 +277,12 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text('${address.nearestLandmark}'),
                           Text('${address.houseNumberandStreet}'),
-                          Text('${address.houseNumberandStreet}'),
+                          Text('${address.baranggay}'),
                           Text('${address.city}'),
                           Text('${address.province}'),
-                          Text(' ${address.nearestLandmark}'),
+
                           if (address.isDefault)
                             Text('Default Address',
                                 style: TextStyle(
