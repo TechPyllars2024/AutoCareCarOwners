@@ -25,7 +25,7 @@ class WideButtons extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 25),
           decoration: ShapeDecoration(
-            shape:  RoundedRectangleBorder(
+            shape:  const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(15),
               ),

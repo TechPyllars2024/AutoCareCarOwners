@@ -125,18 +125,18 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
                     child: TextField(
                       controller: firstNameController,
                       decoration:  InputDecoration(
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(color: Colors.orange
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderRadius: const BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
                         ),
 
                         hintText: 'First Name',
-                        contentPadding: EdgeInsets.all(10),
+                        contentPadding: const EdgeInsets.all(10),
                       ),
                     ),
                   ),
@@ -146,17 +146,17 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
                       controller: lastNameController,
                       decoration:  InputDecoration(
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderRadius: const BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(color: Colors.orange.shade900
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderRadius: const BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
                         ),
 
                         hintText: 'Last Name',
-                        contentPadding: EdgeInsets.all(10),
+                        contentPadding: const EdgeInsets.all(10),
                       ),
                     ),
                   ),
@@ -165,18 +165,18 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
                     child: TextField(
                       controller: phoneNumberController,
                       decoration:  InputDecoration(
-                        border: OutlineInputBorder(
+                        border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(color: Colors.orange
                           ),
                         ),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
+                          borderRadius: const BorderRadius.all(Radius.circular(15)),
                           borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
                         ),
 
                         hintText: 'Phone Number',
-                        contentPadding: EdgeInsets.all(10),
+                        contentPadding: const EdgeInsets.all(10),
                       ),
                       keyboardType: TextInputType.phone,
                       inputFormatters: [

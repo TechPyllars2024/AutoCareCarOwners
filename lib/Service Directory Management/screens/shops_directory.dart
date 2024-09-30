@@ -20,7 +20,8 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
   int limit = 10;
   bool hasMoreServices = true;
 
-  get rating => 5.0;
+
+  Map<int, bool> isTextExpanded = {};
 
   @override
   void initState() {
@@ -29,7 +30,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
   }
 
   void getServicesForCategory(String category, {bool refresh = false}) async {
-    if (isLoading || !hasMoreServices) return; // Prevent multiple calls
+    if (isLoading || !hasMoreServices) return;
     setState(() {
       isLoading = true;
     });
@@ -56,6 +57,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
           'coverImage': providerDetails['coverImage'],
           'serviceSpecialization': providerDetails['serviceSpecialization'],
           'daysOfTheWeek': providerDetails['daysOfTheWeek'],
+          'verificationStatus': providerDetails['verificationStatus'],
+          'totalRatings': providerDetails['totalRatings'],
+          'numberOfRatings': providerDetails['numberOfRatings'],
         });
       }
     }
@@ -98,6 +102,8 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                   itemCount: services.length,
                   itemBuilder: (context, index) {
                     final service = services[index]; // Get the service details
+
+                    bool isExpanded = isTextExpanded[index] ?? false;
 
                     return GestureDetector(
                       onTap: () {
@@ -151,12 +157,28 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                 size: 15,
                                                 color: Colors.grey[800]),
                                             const SizedBox(width: 4),
-                                            Text(
-                                              service['name'],
-                                              style: TextStyle(
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.grey[800],
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    // Toggle expand/collapse state
+                                                    isTextExpanded[index] =
+                                                    !(isTextExpanded[index] ??
+                                                        false);
+                                                  });
+                                                },
+                                                child: Text(
+                                                  service['name'] ?? '',
+                                                  style: TextStyle(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.grey[800],
+                                                  ),
+                                                  maxLines: isExpanded ? null : 1, // If expanded, show full text
+                                                  overflow: isExpanded
+                                                      ? TextOverflow.visible
+                                                      : TextOverflow.ellipsis, // If collapsed, show ellipsis
+                                                ),
                                               ),
                                             ),
                                           ],
@@ -169,11 +191,29 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                 size: 15,
                                                 color: Colors.grey[600]),
                                             const SizedBox(width: 4),
-                                            Text(
-                                              service['shopName'] ?? '',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey[600],
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    // Toggle expand/collapse state
+                                                    isTextExpanded[index] =
+                                                    !(isTextExpanded[index] ??
+                                                        false);
+                                                  });
+                                                },
+
+                                              child: Text(
+                                                service['shopName'] ?? '',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey[600],
+                                                ),
+
+                                                maxLines: isExpanded ? null : 1, // If expanded, show full text
+                                                overflow: isExpanded
+                                                    ? TextOverflow.visible
+                                                    : TextOverflow.ellipsis, // If collapsed, show ellipsis
+                                              ),
                                               ),
                                             ),
                                           ],
@@ -186,11 +226,27 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                 size: 15,
                                                 color: Colors.grey[600]),
                                             const SizedBox(width: 4),
-                                            Text(
-                                              service['location'] ?? '',
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey[600],
+                                            Expanded(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    // Toggle expand/collapse state
+                                                    isTextExpanded[index] =
+                                                    !(isTextExpanded[index] ??
+                                                        false);
+                                                  });
+                                                },
+                                              child: Text(
+                                                service['location'] ?? '',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.grey[600],
+                                                ),
+                                                maxLines: isExpanded ? null : 1, // If expanded, show full text
+                                                overflow: isExpanded
+                                                    ? TextOverflow.visible
+                                                    : TextOverflow.ellipsis, // If collapsed, show ellipsis
+                                              ),
                                               ),
                                             ),
                                           ],
@@ -199,12 +255,11 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                         // Price with icon
                                         Row(
                                           children: [
-
                                             const SizedBox(width: 4),
                                             Text(
                                               'Starts at: Php ${service['price']}',
                                               style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 color: Colors.grey[600],
                                               ),
                                             ),
@@ -221,18 +276,18 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                               bottom: 8,
                               right: 12,
                               child: PannableRatingBar(
-                                rate: rating,
+                                rate: (service['totalRatings'] != null) ? service['totalRatings'] as double : 0.0,
+                                direction: Axis.horizontal,
                                 items: List.generate(
                                     5,
-                                    (index) =>  RatingWidget(
+                                    (index) => RatingWidget(
                                           selectedColor: Colors.orange.shade900,
                                           unSelectedColor: Colors.grey,
-                                          child: Icon(
+                                          child: const Icon(
                                             Icons.star,
                                             size: 14,
                                           ),
                                         )),
-                                // Removed the onChanged callback to make it non-adjustable
                               ),
                             ),
                           ],
@@ -243,7 +298,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                 )
               : const Center(
                   child:
-                      CircularProgressIndicator(), // Show a loading indicator while fetching data
+                    Text('No Shops Available')
                 ),
         ),
       ),

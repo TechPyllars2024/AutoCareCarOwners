@@ -124,6 +124,56 @@ class BookingService {
     return null; // Return null if user is not logged in
   }
 
+// Fetch shop name of the service provider
+  Future<List<String>?> fetchAllowedDaysOfWeek(String serviceProviderUid) async {
+    try {
+      final doc = await firestore
+          .collection('automotiveShops_profile') // Adjust the collection name if necessary
+          .doc(serviceProviderUid)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data();
+
+        if (data != null) {
+          // Extract daysOfTheWeek as a List<String>
+          final List<String>? allowedDaysOfTheWeek = List<String>.from(data['daysOfTheWeek'] ?? []);
+
+          // Convert allowed days to the desired format
+          return convertToFullWeekDays(allowedDaysOfTheWeek);
+        } else {
+          logger.i('No profile data found for service provider: $serviceProviderUid');
+          return null; // Return null if no data found
+        }
+      } else {
+        logger.i('No profile found for service provider: $serviceProviderUid');
+        return null;
+      }
+    } catch (e) {
+      logger.e('Error fetching service provider days of the week: $e');
+      return null;
+    }
+  }
+
+// Convert the allowed days of the week to full week format
+  List<String> convertToFullWeekDays(List<String>? allowedDays) {
+    // Define the full week days
+    List<String> fullWeekDays = [
+      'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+    ];
+
+    // If allowedDays is null or empty, return an empty list
+    if (allowedDays == null || allowedDays.isEmpty) {
+      return []; // Return an empty list if none are allowed
+    }
+
+    // Filter to include only the allowed days in the full week
+    return fullWeekDays.where((day) => allowedDays.contains(day)).toList();
+  }
+
+
+
+
   // Fetch shop name of the service provider
   Future<String?> fetchServiceProviderShopName(String serviceProviderUid) async {
     try {

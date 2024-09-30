@@ -66,8 +66,8 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
                 crossAxisSpacing: 5,
-                mainAxisSpacing: 8,
-                childAspectRatio: 2 / 1,
+                mainAxisSpacing: 2,
+                childAspectRatio: 2 / .8,
               ),
               itemCount: services.length,
               itemBuilder: (context, index) => GestureDetector(
@@ -85,16 +85,16 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                   color: Colors.white,
                   elevation: 8,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16.0),
+                    borderRadius: BorderRadius.circular(15.0),
                   ),
-                  child: Column(
+                  child: Row(
                     children: [
                       Expanded(
-                        flex: 3,
+                        flex: 1,
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(16.0),
-                            topRight: Radius.circular(16.0),
+                            topLeft: Radius.circular(15.0),
+                            bottomLeft: Radius.circular(15.0),
                           ),
                           child: Image.network(
                             services[index].imageUrl,
@@ -112,7 +112,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                             services[index].name,
                             textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: Colors.grey[800],
                             ),

@@ -37,6 +37,7 @@ class _BookingState extends State<Booking> {
   late String phoneNumber;
   late final String shopName;
   late final String shopAddress;
+  late final List<String> allowedDaysOfWeek;
 
   Future<void> fetchTimeData() async {
     try {
@@ -139,6 +140,7 @@ class _BookingState extends State<Booking> {
     _fetchPhoneNumber();
     _fetchShopName();
     _fetchShopAddress();
+    _fetchDaysOfTheWeek();
   }
 
   Future<Map<String, dynamic>> fetchCarDetails() async {
@@ -172,6 +174,13 @@ class _BookingState extends State<Booking> {
     final fetchedShopName = await BookingService().fetchServiceProviderShopName(widget.serviceProviderUid);
     setState(() {
       shopName = fetchedShopName!;
+    });
+  }
+
+  Future<void> _fetchDaysOfTheWeek() async {
+    final fetchedDaysOfTheweek = await BookingService().fetchAllowedDaysOfWeek(widget.serviceProviderUid);
+    setState(() {
+      allowedDaysOfWeek = fetchedDaysOfTheweek!;
     });
   }
 
@@ -273,9 +282,10 @@ class _BookingState extends State<Booking> {
   }
 
   Widget buildTopSection(Map<String, dynamic> providerData, double top) {
-    // Assuming buildTopSection uses serviceName and shopName
-    double rating = 3;
-    int numberOfRating = 33;
+    double rating =
+        providerData['totalRatings'] ?? 0;
+    int numberOfRating =
+        providerData['numberOfRatings'] ?? 0;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -393,7 +403,7 @@ class _BookingState extends State<Booking> {
         ),
       );
 
-  Widget pickService() => Padding(
+    Widget pickService() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -649,7 +659,7 @@ class _BookingState extends State<Booking> {
                             setState(() {
                               selectedDate = date;
                             });
-                          },
+                          }, allowedDaysOfWeek: allowedDaysOfWeek,
                         ),
                       ),
                     ),
