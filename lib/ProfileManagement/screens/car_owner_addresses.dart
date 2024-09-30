@@ -119,7 +119,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your house number and street';
-                        } else if (value.length < 5 || value.length > 30) {
+                        } else if (value.length < 2 || value.length > 30) {
                           return 'Not a valid house number and street';
                         }
                         return null;
@@ -141,7 +141,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a barangay';
-                        } else if (value.length < 3 || value.length > 30) {
+                        } else if (value.length < 2 || value.length > 30) {
                           return 'Not a valid barangay';
                         }
                         return null;
@@ -163,7 +163,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a city/municipality';
-                        } else if (value.length < 3 || value.length > 30) {
+                        } else if (value.length < 2 || value.length > 30) {
                           return 'Not a valid city/municipality';
                         }
                         return null;
@@ -185,7 +185,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a province';
-                        }else if (value.length < 3 || value.length > 30) {
+                        }else if (value.length < 2 || value.length > 30) {
                           return 'Not a valid province';
                         }
                         return null;
@@ -207,7 +207,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a nearest landmark';
-                        } else if (value.length < 3 || value.length > 50) {
+                        } else if (value.length < 2 || value.length > 50) {
                           return 'Not a valid nearest landmark';
                         }
                         return null;
