@@ -84,7 +84,7 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
         title: const Text(
-          'COMPLETE YOUR PROFILE',
+          'Edit Profile',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
