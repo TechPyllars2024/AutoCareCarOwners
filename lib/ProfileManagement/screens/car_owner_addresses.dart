@@ -186,7 +186,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a province';
                         }else if (value.length < 3 || value.length > 30) {
-                          return 'Not a valid city/municipality';
+                          return 'Not a valid province';
                         }
                         return null;
                       },
@@ -208,7 +208,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a nearest landmark';
                         } else if (value.length < 3 || value.length > 50) {
-                          return 'Not a valid city/municipality';
+                          return 'Not a valid nearest landmark';
                         }
                         return null;
                       },
