@@ -226,7 +226,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       // Already have an account? Log In
 
-                      SizedBox(height: size.height * 0.07),
+                      SizedBox(height: size.height * 0.04),
 
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
