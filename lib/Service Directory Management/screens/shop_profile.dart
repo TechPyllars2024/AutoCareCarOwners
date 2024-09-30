@@ -21,6 +21,7 @@ class ShopProfile extends StatefulWidget {
 class _ShopProfileState extends State<ShopProfile> {
   final double coverHeight = 160;
   final double profileHeight = 100;
+  bool isExpanded = false;
 
   late Future<Map<String, dynamic>> _providerData;
 
@@ -41,8 +42,6 @@ class _ShopProfileState extends State<ShopProfile> {
       ),
     );
   }
-
-  bool isExpanded = false;
 
   @override
   Widget build(BuildContext context) {
@@ -93,11 +92,6 @@ class _ShopProfileState extends State<ShopProfile> {
     onTap: bookingRoute,
     text: 'Book Now!',
   );
-
-
-
-
-
 
   Widget buildTopSection(Map<String, dynamic> data, double top) {
     double rating =
