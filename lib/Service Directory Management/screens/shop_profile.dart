@@ -191,11 +191,13 @@ class _ShopProfileState extends State<ShopProfile> {
           ),
           const SizedBox(height: 5),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
               const SizedBox(width: 4),
               Expanded(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       data['daysOfTheWeek'].join(', ') ?? 'Operating Days',

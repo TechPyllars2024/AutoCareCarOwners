@@ -378,6 +378,7 @@ class _BookingState extends State<Booking> {
                       const SizedBox(width: 4),
                       Expanded(
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
                               providerData['serviceSpecialization'].join(', ') ??
