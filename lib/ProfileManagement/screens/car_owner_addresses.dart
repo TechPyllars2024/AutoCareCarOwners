@@ -119,14 +119,19 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your house number and street';
+                        } else if (value.length < 2 || value.length > 30) {
+                          return 'Not a valid house number and street';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(30),
+                      ],
                     ),
                     TextFormField(
                       controller: baranggayController,
                       decoration: const InputDecoration(
-                        labelText: 'Baranggay',
+                        labelText: 'Barangay',
                         labelStyle: TextStyle(color: Colors.black),
                         floatingLabelStyle: TextStyle(color: Colors.black54),
                         focusedBorder: UnderlineInputBorder(
@@ -135,10 +140,15 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a baranggay';
+                          return 'Please enter a barangay';
+                        } else if (value.length < 2 || value.length > 30) {
+                          return 'Not a valid barangay';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(30),
+                      ],
                     ),
                     TextFormField(
                       controller: cityController,
@@ -153,9 +163,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a city/municipality';
+                        } else if (value.length < 2 || value.length > 30) {
+                          return 'Not a valid city/municipality';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(30),
+                      ],
                     ),
                     TextFormField(
                       controller: provinceController,
@@ -170,9 +185,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a province';
+                        }else if (value.length < 2 || value.length > 30) {
+                          return 'Not a valid province';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(30),
+                      ],
                     ),
                     TextFormField(
                       controller: nearestLandmarkController,
@@ -187,9 +207,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a nearest landmark';
+                        } else if (value.length < 2 || value.length > 50) {
+                          return 'Not a valid nearest landmark';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(50),
+                      ],
                     ),
                   ],
                 ),
@@ -277,11 +302,12 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Text('${address.nearestLandmark}'),
                           Text('${address.houseNumberandStreet}'),
-                          Text('${address.houseNumberandStreet}'),
+                          Text('${address.baranggay}'),
                           Text('${address.city}'),
                           Text('${address.province}'),
-                          Text(' ${address.nearestLandmark}'),
+
                           if (address.isDefault)
                             Text('Default Address',
                                 style: TextStyle(

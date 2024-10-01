@@ -98,9 +98,14 @@ class _CarDetailsState extends State<CarDetails> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter the brand';
+                        } else if (value.length < 2 || value.length > 20) {
+                          return 'Not a valid brand';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(20),
+                      ],
                     ),
                     TextFormField(
                       controller: modelController,
@@ -108,9 +113,14 @@ class _CarDetailsState extends State<CarDetails> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter the model';
+                        } else if (value.length < 2 || value.length > 20) {
+                          return 'Not a valid model';
                         }
                         return null;
                       },
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(20),
+                      ],
                     ),
                     TextFormField(
                       controller: yearController,
@@ -123,6 +133,13 @@ class _CarDetailsState extends State<CarDetails> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please fill this section';
+                        } else {
+                          final year = int.tryParse(value);
+                          if (year == null || year < 2000) {
+                            return 'Year must be in 20XX';
+                          } else if (year > 2025) {
+                            return 'No cars beyond this year are available';
+                          }
                         }
                         return null;
                       },

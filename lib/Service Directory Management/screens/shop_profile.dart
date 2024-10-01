@@ -19,8 +19,9 @@ class ShopProfile extends StatefulWidget {
 }
 
 class _ShopProfileState extends State<ShopProfile> {
-  final double coverHeight = 220;
-  final double profileHeight = 130;
+  final double coverHeight = 160;
+  final double profileHeight = 100;
+  bool isExpanded = false;
 
   late Future<Map<String, dynamic>> _providerData;
 
@@ -184,25 +185,52 @@ class _ShopProfileState extends State<ShopProfile> {
           ),
           const SizedBox(height: 5),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
               const SizedBox(width: 4),
-              Text(
-                data['daysOfTheWeek'].join(', ') ?? 'Operating Days',
-                //style: const TextStyle(fontSize: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      data['daysOfTheWeek'].join(', ') ?? 'Operating Days',
+                      style: const TextStyle(fontSize: 15),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      softWrap: true,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
 
           const SizedBox(height: 5),
-          Row(
+          Column(
             children: [
-              Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
-              const SizedBox(width: 4),
-              Text(
-                data['serviceSpecialization'].join(', ') ??
-                    'Specialization',
-                // style: const TextStyle(fontSize: 13),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
+                  const SizedBox(width: 4),
+                  Expanded(
+
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          data['serviceSpecialization'].join(', ') ??
+                              'Specialization',
+                          style: const TextStyle(fontSize: 15),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 2,
+                          softWrap: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
@@ -439,44 +467,45 @@ class _ShopProfileState extends State<ShopProfile> {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Feedback',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
               SizedBox(
                 height: 150,
+
                 child: PageView.builder(
                   controller: PageController(viewportFraction: 0.85),
                   itemCount: feedbacks.length,
                   itemBuilder: (context, index) {
                     final feedback = feedbacks[index];
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: PhysicalModel(
                         color: Colors.white,
                         elevation: 5,
                         shadowColor: Colors.grey,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(15),
                         child: Container(
                           decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(15),
                             color: Colors.white,
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: const EdgeInsets.all(12.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   children: [
                                     CircleAvatar(
-                                      radius: 20,
+                                      radius: 16,
                                       backgroundColor: Colors.blueGrey[50],
                                       child: Text(
                                         feedback.feedbackerName[0], // First letter of the feedbacker's name
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 20,
+                                          fontSize: 16,
                                           color: Colors.black87,
                                         ),
                                       ),
@@ -487,28 +516,45 @@ class _ShopProfileState extends State<ShopProfile> {
                                         feedback.feedbackerName,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 16,
+                                          fontSize: 15,
                                           color: Colors.black87,
                                         ),
                                       ),
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 10),
-                                Text(
-                                  feedback.comment,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black54,
-                                  ),
+                                const SizedBox(height: 8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          isExpanded = !isExpanded;
+                                        });
+                                      },
+                                      child: Text(
+                                        feedback.comment,
+                                        style: TextStyle(
+                                          fontSize: isExpanded ? 12 : 13, // Decrease font size if expanded
+                                          color: Colors.black54,
+                                        ),
+                                        overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                                        maxLines: isExpanded ? null : 2, // Show all lines if expanded
+                                        softWrap: true,
+                                      ),
+                                    ),
+                                  ],
                                 ),
+
+
                                 const Spacer(),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
-                                        const Icon(Icons.star, color: Colors.amber, size: 20),
+                                         Icon(Icons.star, color: Colors.orange.shade900, size: 16),
                                         const SizedBox(width: 5),
                                         Text(
                                           feedback.rating.toString(),

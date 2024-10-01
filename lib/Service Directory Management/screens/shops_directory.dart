@@ -85,7 +85,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
         title: Text(
           widget.serviceName,
           style:
-              TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
+              TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 20),
         ),
       ),
       body: SafeArea(
@@ -153,9 +153,6 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                         // Service name with icon
                                         Row(
                                           children: [
-                                            Icon(Icons.miscellaneous_services_outlined,
-                                                size: 15,
-                                                color: Colors.grey[800]),
                                             const SizedBox(width: 4),
                                             Expanded(
                                               child: GestureDetector(
@@ -170,7 +167,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                 child: Text(
                                                   service['name'] ?? '',
                                                   style: TextStyle(
-                                                    fontSize: 16,
+                                                    fontSize: 18,
                                                     fontWeight: FontWeight.bold,
                                                     color: Colors.grey[800],
                                                   ),

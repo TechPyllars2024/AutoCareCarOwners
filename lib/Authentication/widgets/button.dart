@@ -39,9 +39,14 @@ class MyButtons extends StatelessWidget {
             children: [
               // Display text or loading indicator based on isLoading
               if (isLoading)
-                const CircularProgressIndicator(
-                  color: Colors.white,
+                const SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child:  CircularProgressIndicator(
+                    color: Colors.white,
 
+
+                  ),
                 )
               else
                 Text(

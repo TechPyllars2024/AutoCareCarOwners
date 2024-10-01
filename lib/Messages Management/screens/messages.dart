@@ -15,9 +15,10 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey.shade100,
         title: const Text(
-          'Car Owner Messages',
+          'Messages',
           style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
 

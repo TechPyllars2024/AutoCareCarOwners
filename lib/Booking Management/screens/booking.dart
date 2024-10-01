@@ -20,8 +20,8 @@ class Booking extends StatefulWidget {
 }
 
 class _BookingState extends State<Booking> {
-  final double coverHeight = 220;
-  final double profileHeight = 130;
+  final double coverHeight = 160;
+  final double profileHeight = 100;
   final DropdownController dropdownController = Get.put(DropdownController());
   final user = FirebaseAuth.instance.currentUser;
   late Future<Map<String, dynamic>> _providerData;
@@ -368,14 +368,30 @@ class _BookingState extends State<Booking> {
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                   Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
-                  const SizedBox(width: 4),
-                  Text(
-                    providerData['serviceSpecialization'].join(', ') ??
-                        'Specialization',
-                    style: const TextStyle(fontSize: 15),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                       Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              providerData['serviceSpecialization'].join(', ') ??
+                                  'Specialization',
+                              style: const TextStyle(fontSize: 15),
+                              overflow: TextOverflow.visible,
+                              maxLines: 2,
+                              softWrap: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

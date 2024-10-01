@@ -32,20 +32,24 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
                 TextField(
                   controller: carBrandController,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'Brand'),
+                      border: OutlineInputBorder(),
+                      hintText: 'Brand'),
+
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: TextField(
                     controller: carModelController,
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Model'),
+                        border: OutlineInputBorder(),
+                        hintText: 'Model'),
                   ),
                 ),
                 TextField(
                   controller: carYearController,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(), hintText: 'Year'),
+                      border: OutlineInputBorder(),
+                      hintText: 'Year'),
                 ),
               ],
             ),
