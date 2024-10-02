@@ -15,6 +15,7 @@ class MyButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+
       onTap: isLoading ? null : onTap, // Disable tap when loading
       child: Padding(
         padding: const EdgeInsets.only(top: 0.0),
@@ -22,27 +23,36 @@ class MyButtons extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(vertical: 10),
           width: double.infinity,
+
           decoration: ShapeDecoration(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.all(
                 Radius.circular(15),
               ),
+
             ),
-            color: Colors.orange, // Keep the button color consistent
+
+            color: Colors.orange.shade900, // Keep the button color consistent
           ),
           child: Stack(
             alignment: Alignment.center,
             children: [
               // Display text or loading indicator based on isLoading
               if (isLoading)
-                const CircularProgressIndicator(
-                  color: Colors.white,
+                const SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child:  CircularProgressIndicator(
+                    color: Colors.white,
+
+
+                  ),
                 )
               else
                 Text(
                   text,
                   style: const TextStyle(
-                    fontSize: 20,
+                    fontSize: 18,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),

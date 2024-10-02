@@ -13,13 +13,15 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.grey.shade100,
         title: const Text(
-          'Car Owner Messages',
-          style: TextStyle(fontWeight: FontWeight.w900),
+          'Messages',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
-        backgroundColor: Colors.grey.shade300,
+
       ),
     );
   }

@@ -1,14 +1,18 @@
 class CarOwnerProfileModel {
   final String uid;
   final String profileId;
-  final String name;
+  final String firstName;
+  final String lastName;
+  final String phoneNumber;
   final String email;
   final String profileImage;
 
   CarOwnerProfileModel({
     required this.uid,
     required this.profileId,
-    required this.name,
+    required this.firstName,
+    required this.lastName,
+    required this.phoneNumber,
     required this.email,
     required this.profileImage,
   });
@@ -18,7 +22,9 @@ class CarOwnerProfileModel {
     return CarOwnerProfileModel(
       uid: uid,
       profileId: doc['profileId'] ?? '',
-      name: doc['name'] ?? 'Unnamed',
+      firstName: doc['firstName'] ?? '',
+      lastName: doc['lastName'] ?? '',
+      phoneNumber: doc['phoneNumber'] ?? '',
       email: doc['email'] ?? 'No Email',
       profileImage: doc['profileImage'] ?? '',
     );
@@ -29,7 +35,9 @@ class CarOwnerProfileModel {
     return {
       'uid': uid,
       'profileId': profileId,
-      'name': name,
+      'firstName': firstName,
+      'lastName': lastName,
+      'phoneNumber': phoneNumber,
       'email': email,
       'profileImage': profileImage,
     };

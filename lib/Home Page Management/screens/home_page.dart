@@ -13,13 +13,22 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text(
-          'Home Page',
-          style: TextStyle(fontWeight: FontWeight.w900),
+        automaticallyImplyLeading: false,
+        title:  Row(
+          children: [
+             const Text(
+              'Auto',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30, color: Colors.black),
+            ),
+            Text(
+              'Care',
+              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30, color: Colors.orange.shade900),
+            ),
+          ],
         ),
-        backgroundColor: Colors.grey.shade300,
+        backgroundColor: Colors.grey.shade100,
       ),
     );
   }

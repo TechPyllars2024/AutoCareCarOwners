@@ -63,7 +63,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: const Text("Reset Password"),
+        title: const Text("Reset Password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -82,11 +82,11 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
             children: [
               Image.asset(
                 'lib/Authentication/assets/images/forgotpassword.png',
-                width: 300,
-                height: 300,
+                width: 200,
+                height: 200,
               ).animate().fadeIn(duration: const Duration(seconds: 1)),
 
-              const SizedBox(height: 80),
+              const SizedBox(height: 30),
 
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -106,7 +106,10 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
                 textInputAction: TextInputAction.done,
                 decoration: const InputDecoration(
                   labelText: 'Email',
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15.0)),
+                  ),
+                  contentPadding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 15.0),
                 ),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) {
