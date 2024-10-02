@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:autocare_carowners/Authentication/screens/login.dart';
+import 'package:autocare_carowners/Authentication/services/authentication_resetpassword.dart';
 import 'package:flutter/material.dart';
 
 import 'package:autocare_carowners/Authentication/Services/authentication.dart';
@@ -36,7 +37,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
         isLoading = true;
       });
 
-      String res = await AuthenticationMethod().resetPassword(
+      String res = await AuthenticationMethodResetPassword().resetPassword(
         email: emailController.text,
       );
 

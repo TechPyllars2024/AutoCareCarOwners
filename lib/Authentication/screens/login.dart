@@ -1,3 +1,4 @@
+import 'package:autocare_carowners/Authentication/services/authentication_login.dart';
 import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -43,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
 
-    String res = await AuthenticationMethod().loginUser(
+    String res = await AuthenticationMethodLogIn().loginUser(
       email: emailController.text,
       password: passwordController.text,
     );
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
       isLoadingGoogle = true;
     });
 
-    String res = await AuthenticationMethod().logInWithGoogleForCarOwners();
+    String res = await AuthenticationMethodLogIn().logInWithGoogleForCarOwners();
 
     setState(() {
       isLoadingGoogle = false;
