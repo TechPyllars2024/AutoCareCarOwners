@@ -24,7 +24,7 @@ class AuthenticationMethod {
        // Check if the user already exists as a service provider
       QuerySnapshot existingServiceProvider = await firestore
           .collection("users")
-          .where('email', isEqualTo: user?.email)
+          .where('email', isEqualTo: email)
           .where('roles', arrayContains: 'service_provider')
           .get();
 
@@ -37,7 +37,7 @@ class AuthenticationMethod {
       // Check if the user already exists as a car owner
       QuerySnapshot existingCarOwner = await firestore
           .collection("users")
-          .where('email', isEqualTo: user?.email)
+          .where('email', isEqualTo: email)
           .where('roles', arrayContains: 'car_owner')
           .get();
 
@@ -88,7 +88,6 @@ class AuthenticationMethod {
     if (email.isEmpty || password.isEmpty) {
       return "Please enter both your email and password.";
     }
-
     try {
       // Logging in user with email and password
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
@@ -108,7 +107,7 @@ class AuthenticationMethod {
         // Check for "roles" field and if "car_owner" is present
         List<dynamic>? roles = userData['roles'];
         if (roles?.contains('car_owner') ?? false) {
-          return "Car Owner";
+          return "SUCCESS";
         } else {
           return "You are not registered as a car owner. Please use the appropriate account.";
         }
