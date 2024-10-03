@@ -13,7 +13,6 @@ import '../widgets/validator.dart';
 import 'login.dart';
 import 'package:autocare_carowners/Authentication/widgets/carImage.dart';
 import 'package:autocare_carowners/Authentication/widgets/or.dart';
-import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
 import 'package:autocare_carowners/Authentication/widgets/googleButton.dart';
 

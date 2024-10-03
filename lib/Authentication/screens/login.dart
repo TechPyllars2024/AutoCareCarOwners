@@ -13,7 +13,6 @@ import 'package:autocare_carowners/Authentication/widgets/or.dart';
 import 'package:autocare_carowners/Authentication/widgets/textfieldPassword.dart';
 import 'package:autocare_carowners/Authentication/screens/forgotPassword.dart';
 import 'package:autocare_carowners/Authentication/screens/signup.dart';
-import 'package:autocare_carowners/Authentication/Services/authentication.dart';
 import 'package:autocare_carowners/Authentication/Widgets/snackBar.dart';
 
 class LoginScreen extends StatefulWidget {
