@@ -48,7 +48,9 @@ class _ShopProfileState extends State<ShopProfile> {
     final double top = coverHeight - profileHeight / 2;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Shop Profile'),
+        title: Text('Shop Profile',
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 20),
+        )
       ),
       body: SafeArea(
         child: FutureBuilder<Map<String, dynamic>>(
@@ -546,8 +548,6 @@ class _ShopProfileState extends State<ShopProfile> {
                                     ),
                                   ],
                                 ),
-
-
                                 const Spacer(),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
