@@ -24,6 +24,9 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
   File? _image;
   bool _isLoading = false;
   final CarOwnerProfileService _profileService = CarOwnerProfileService();
+  String? phoneErrorMessage;
+  String? firstNameErrorMessage;
+  String? lastNameErrorMessage;
 
   @override
   void initState() {
@@ -46,6 +49,12 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
   }
 
   Future<void> _saveProfile() async {
+    if (validatePhoneNumber(phoneNumberController.text) != null ||
+        validateName(firstNameController.text) != null ||
+        validateName(lastNameController.text) != null) {
+      return; // Stop saving if the phone number is invalid
+    }
+
     setState(() {
       _isLoading = true;
     });
@@ -75,6 +84,28 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
     setState(() {
       _isLoading = false;
     });
+  }
+
+  // Your phone number validation function
+  String? validatePhoneNumber(String phoneNumber) {
+    // Regular expression for Philippine phone number validation
+    final phoneRegExp = RegExp(r'^(09\d{9})$|^(\+639\d{9})$');
+
+    // Check if the number matches the regex
+    if (!phoneRegExp.hasMatch(phoneNumber)) {
+      return 'Please enter a valid Philippine phone number';
+    }
+
+    return null; // Return null if valid
+  }
+
+  // Name validation function
+  String? validateName(String name) {
+    final nameRegExp = RegExp(r"^[A-Za-z\s]{2,50}$");
+    if (!nameRegExp.hasMatch(name)) {
+      return 'Please enter a valid name';
+    }
+    return null;
   }
 
   @override
@@ -137,7 +168,16 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
 
                         hintText: 'First Name',
                         contentPadding: const EdgeInsets.all(10),
+                        errorText: firstNameErrorMessage,// Display name validation error
                       ),
+                      inputFormatters: [
+                        CapitalizeEachWordFormatter(),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          firstNameErrorMessage = validateName(value);
+                        });
+                      },
                     ),
                   ),
                   Padding(
@@ -157,34 +197,48 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
 
                         hintText: 'Last Name',
                         contentPadding: const EdgeInsets.all(10),
+                        errorText: lastNameErrorMessage,
                       ),
+                      inputFormatters: [
+                        CapitalizeEachWordFormatter(),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          lastNameErrorMessage = validateName(value);
+                        });
+                      },
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                     child: TextField(
                       controller: phoneNumberController,
-                      decoration:  InputDecoration(
+                      decoration: InputDecoration(
                         border: const OutlineInputBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange
-                          ),
+                          borderSide: BorderSide(color: Colors.orange),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: const BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                          borderSide: BorderSide(color: Colors.orange.shade900),
                         ),
-
                         hintText: 'Phone Number',
                         contentPadding: const EdgeInsets.all(10),
+                        errorText: phoneErrorMessage, // Display phone validation error
                       ),
                       keyboardType: TextInputType.phone,
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(11)
+                        LengthLimitingTextInputFormatter(13),
                       ],
+                      onChanged: (value) {
+                        setState(() {
+                          phoneErrorMessage = validatePhoneNumber(value);
+                        });
+                      },
                     ),
                   ),
+
                   const SizedBox(height: 20),
                   WideButtons(
                       onTap: _saveProfile,

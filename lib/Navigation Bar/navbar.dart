@@ -1,10 +1,11 @@
 import 'package:autocare_carowners/Home%20Page%20Management/screens/home_page.dart';
 import 'package:autocare_carowners/Messages%20Management/screens/messages.dart';
 import 'package:autocare_carowners/Service%20Directory%20Management/screens/service_directory.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_profile.dart';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../ProfileManagement/screens/car_owner_profile.dart';
 
 class NavBar extends StatefulWidget {
   const NavBar({super.key, this.child});
