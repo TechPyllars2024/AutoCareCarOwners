@@ -15,6 +15,7 @@ class CarOwnerAddress extends StatefulWidget {
 class _CarOwnerAddressState extends State<CarOwnerAddress> {
   List<CarOwnerAddressModel> addresses = [];
   late AddressService addressService;
+  bool _isLoading = false; // Loading state variable
 
   @override
   void initState() {
@@ -24,11 +25,16 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
   }
 
   Future<void> _fetchAddresses() async {
+    setState(() {
+      _isLoading = true; // Start loading
+    });
     final fetchedAddresses = await addressService.fetchAddresses();
     setState(() {
       addresses = fetchedAddresses;
+      _isLoading = false; // Stop loading
     });
   }
+
 
   void _showDeleteConfirmationDialog(int index) {
     showDialog(
@@ -126,6 +132,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
+                        CapitalizeEachWordFormatter(),
                       ],
                     ),
                     TextFormField(
@@ -148,6 +155,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
+                        CapitalizeEachWordFormatter()
                       ],
                     ),
                     TextFormField(
@@ -170,6 +178,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
+                        CapitalizeEachWordFormatter()
                       ],
                     ),
                     TextFormField(
@@ -192,6 +201,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(30),
+                        CapitalizeEachWordFormatter()
                       ],
                     ),
                     TextFormField(
@@ -214,6 +224,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(50),
+                        CapitalizeEachWordFormatter()
                       ],
                     ),
                   ],
@@ -302,11 +313,11 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('${address.nearestLandmark}'),
-                          Text('${address.houseNumberandStreet}'),
-                          Text('${address.baranggay}'),
-                          Text('${address.city}'),
-                          Text('${address.province}'),
+                          Text(address.nearestLandmark),
+                          Text(address.houseNumberandStreet),
+                          Text(address.baranggay),
+                          Text(address.city),
+                          Text(address.province),
 
                           if (address.isDefault)
                             Text('Default Address',
