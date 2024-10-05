@@ -83,7 +83,7 @@ class _CarDetailsState extends State<CarDetails> {
           backgroundColor: Colors.white,
           title: Text(car == null ? 'Add Car Details' : 'Edit Car Details'),
           content: SingleChildScrollView(
-            child: Container(
+            child: SizedBox(
               width: MediaQuery
                   .of(context)
                   .size
@@ -105,6 +105,7 @@ class _CarDetailsState extends State<CarDetails> {
                       },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(20),
+                        CapitalizeEachWordFormatter()
                       ],
                     ),
                     TextFormField(
@@ -120,6 +121,7 @@ class _CarDetailsState extends State<CarDetails> {
                       },
                       inputFormatters: [
                         LengthLimitingTextInputFormatter(20),
+                        CapitalizeEachWordFormatter()
                       ],
                     ),
                     TextFormField(
@@ -288,6 +290,13 @@ class _CarDetailsState extends State<CarDetails> {
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Card(
                     color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        color: Colors.orange.shade900,
+                        width: 2, // Optional: Set the border width
+                      ),
+                      borderRadius: BorderRadius.circular(8), // Optional: Add rounded corners
+                    ),
                     elevation: 8,
                     child: ListTile(
                       title: Text('${car.brand} ${car.model}'),

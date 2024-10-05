@@ -1,6 +1,7 @@
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 
 class AddressService {
@@ -86,3 +87,25 @@ class AddressService {
     }
   }
 }
+
+class CapitalizeEachWordFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    // Capitalize the first letter of each word
+    String text = newValue.text
+        .split(' ') // Split the input text by spaces to get individual words
+        .map((word) => word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
+        .join(' '); // Rejoin the words with spaces
+
+    return newValue.copyWith(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}
+

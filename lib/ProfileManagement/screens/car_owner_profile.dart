@@ -1,7 +1,7 @@
 import 'package:autocare_carowners/Authentication/services/authentication_signout.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_model.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/carDetails.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_details.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_addresses.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_booking.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
@@ -82,7 +82,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 color: Colors.orange.shade900, // Set the background color to orange
                 borderRadius: BorderRadius.circular(12.0), // Rounded edges
               ),
-              padding: EdgeInsets.all(6.0), // Optional: Add some padding for better aesthetics
+              padding: const EdgeInsets.all(6.0), // Optional: Add some padding for better aesthetics
               child: const Center( // Center the icon
                 child: Icon(
                   Icons.edit,
@@ -99,15 +99,26 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
         child: Column(
           children: [
             Center(
-              child: CircleAvatar(
-                radius: 100,
-                backgroundColor: Colors.white,
-                backgroundImage: profile?.profileImage.isNotEmpty == true
-                    ? NetworkImage(profile!.profileImage)
-                    : null,
-                child: profile?.profileImage.isEmpty == true
-                    ? const Icon(Icons.person, size: 100, color: Colors.black)
-                    : null,
+              child: Container(
+                width: 180, // Adjust width for border thickness
+                height: 180, // Adjust height for border thickness
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.orange.shade900, // Border color
+                    width: 1, // Border width
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 80,
+                  backgroundColor: Colors.white,
+                  backgroundImage: profile?.profileImage.isNotEmpty == true
+                      ? NetworkImage(profile!.profileImage)
+                      : null,
+                  child: profile?.profileImage.isEmpty == true
+                      ? const Icon(Icons.person, size: 80, color: Colors.black)
+                      : null,
+                ),
               ),
             ),
             Column(
@@ -127,16 +138,16 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0, left: 25),
-                  child: Row(
+                  child: profile?.phoneNumber != null && profile!.phoneNumber.isNotEmpty
+                      ? Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                       Icon(
+                      Icon(
                         Icons.phone, // Phone icon
                         size: 20,
                         color: Colors.orange.shade900,
                       ),
-                      const SizedBox(
-                          width: 10), // Adds space between the icon and text
+                      const SizedBox(width: 10), // Adds space between the icon and text
                       Text(
                         profile?.phoneNumber ?? 'No phone number available',
                         style: const TextStyle(
@@ -145,7 +156,8 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         ),
                       ),
                     ],
-                  ),
+                  )
+                      : Container(), // If phone number is null, display an empty container
                 ),
 
                 Padding(
@@ -209,7 +221,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         ),
                       );
                     }
-                    return Text('');
+                    return const Text('');
                   },
                 ),
 

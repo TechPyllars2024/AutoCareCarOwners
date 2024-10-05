@@ -1,4 +1,6 @@
+import 'package:autocare_carowners/ProfileManagement/services/addresses_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CarOwnerCarProfileScreen extends StatefulWidget {
   const CarOwnerCarProfileScreen({super.key, this.child});
@@ -34,7 +36,10 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Brand'),
-
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                    CapitalizeEachWordFormatter()
+                  ],
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -43,6 +48,10 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: 'Model'),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
+                      CapitalizeEachWordFormatter()
+                    ],
                   ),
                 ),
                 TextField(
@@ -50,6 +59,9 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: 'Year'),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                  ],
                 ),
               ],
             ),
