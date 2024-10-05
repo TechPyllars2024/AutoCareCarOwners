@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import '../models/car_owner_address_model.dart';
 import '../models/car_owner_profile_model.dart';
@@ -106,3 +107,25 @@ class CarOwnerProfileService {
     }
   }
 }
+
+class CapitalizeEachWordFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    // Capitalize the first letter of each word
+    String text = newValue.text
+        .split(' ') // Split the input text by spaces to get individual words
+        .map((word) => word.isNotEmpty ? word[0].toUpperCase() + word.substring(1) : '')
+        .join(' '); // Rejoin the words with spaces
+
+    return newValue.copyWith(
+      text: text,
+      selection: TextSelection.collapsed(offset: text.length),
+    );
+  }
+}
+
