@@ -167,11 +167,17 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
                         ),
 
                         hintText: 'First Name',
-                        contentPadding: const EdgeInsets.all(10), // Display name validation error
+                        contentPadding: const EdgeInsets.all(10),
+                        errorText: firstNameErrorMessage,// Display name validation error
                       ),
                       inputFormatters: [
                         CapitalizeEachWordFormatter(),
                       ],
+                      onChanged: (value) {
+                        setState(() {
+                          firstNameErrorMessage = validateName(value);
+                        });
+                      },
                     ),
                   ),
                   Padding(
@@ -191,10 +197,16 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
 
                         hintText: 'Last Name',
                         contentPadding: const EdgeInsets.all(10),
+                        errorText: lastNameErrorMessage,
                       ),
                       inputFormatters: [
                         CapitalizeEachWordFormatter(),
                       ],
+                      onChanged: (value) {
+                        setState(() {
+                          lastNameErrorMessage = validateName(value);
+                        });
+                      },
                     ),
                   ),
                   Padding(
