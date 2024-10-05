@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'shops_directory.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'shops_directory.dart'; // Ensure this is correctly imported
 
 class Service {
   final String name;
@@ -36,11 +37,11 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
     Service('Installation of Accessories Services',
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRwwc4VlJ71PGy6Fjn9EadMvMN30F4f5OuL3R_QWXdnQ-Va0yDHBOzGQDVEYu106ZTimg&usqp=CAU')
   ];
-  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    // You can implement any initialization logic here if needed
   }
 
   @override
@@ -50,10 +51,9 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.grey.shade100,
-        title: Text(
+        title: const Text(
           'Services',
-          style:
-          TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
         ),
         elevation: 0,
         actions: const [],
@@ -97,11 +97,15 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                             topLeft: Radius.circular(15.0),
                             bottomLeft: Radius.circular(15.0),
                           ),
-                          child: Image.network(
-                            services[index].imageUrl,
+                          child: CachedNetworkImage(
+                            imageUrl: services[index].imageUrl,
+                            placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                            errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                            fit: BoxFit.cover,
                             width: double.infinity,
                             height: double.infinity,
-                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
