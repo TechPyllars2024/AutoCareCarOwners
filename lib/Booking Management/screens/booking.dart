@@ -405,14 +405,14 @@ class _BookingState extends State<Booking> {
         radius: profileHeight / 2,
         backgroundColor: Colors.grey.shade800,
         backgroundImage:
-            NetworkImage(data['profileImage'] ?? 'default_profile_image_url'),
+            NetworkImage(data['profileImage'] ?? 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
       );
 
   //Cover Image
   Widget buildCoverImage(Map<String, dynamic> data) => Container(
         color: Colors.grey,
         child: Image.network(
-          data['coverImage'] ?? 'default_cover_image_url',
+          data['coverImage'] ?? 'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
           width: double.infinity,
           height: coverHeight,
           fit: BoxFit.cover,
