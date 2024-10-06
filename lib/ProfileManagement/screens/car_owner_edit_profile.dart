@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../Authentication/screens/onboardingPage3.dart';
 import '../services/profile_service.dart';
 
 class CarOwnerEditProfileScreen extends StatefulWidget {
@@ -49,10 +50,11 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
   }
 
   Future<void> _saveProfile() async {
+    // Validate inputs
     if (validatePhoneNumber(phoneNumberController.text) != null ||
         validateName(firstNameController.text) != null ||
         validateName(lastNameController.text) != null) {
-      return; // Stop saving if the phone number is invalid
+      return; // Stop saving if validation fails
     }
 
     setState(() {
@@ -61,8 +63,7 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
 
     // Upload the image if selected
     if (_image != null) {
-      final downloadUrl = await _profileService.uploadProfileImage(
-          _image!, widget.currentUser.uid);
+      final downloadUrl = await _profileService.uploadProfileImage(_image!, widget.currentUser.uid);
       profileImageController.text = downloadUrl;
     }
 
@@ -77,9 +78,25 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
       profileImage: profileImageController.text,
     );
 
+    // Check if this is the first time saving
+    bool isFirstTime = widget.currentUser.firstName.isEmpty &&
+        widget.currentUser.lastName.isEmpty &&
+        widget.currentUser.phoneNumber.isEmpty;
+
     // Save profile using the service
     await _profileService.saveUserProfile(updatedProfile);
-    Navigator.pop(context, updatedProfile);
+
+    // Redirect based on whether it's the first time or just an edit
+    if (isFirstTime) {
+      // First time: Navigate to next page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => Onboardingpage3()),
+      );
+    } else {
+      // Editing: Pop the current page and pass the updated profile back
+      Navigator.pop(context, updatedProfile);
+    }
 
     setState(() {
       _isLoading = false;
@@ -122,131 +139,127 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              child: Column(
-                children: [
-                  GestureDetector(
-                    child: CircleAvatar(
-                      radius: 100,
-                      backgroundColor: Colors.white,
-                      backgroundImage: _image != null
-                          ? FileImage(_image!)
-                          : (profileImageController.text.isNotEmpty
-                              ? NetworkImage(profileImageController.text)
-                              : null),
-                      child:
-                          _image == null && profileImageController.text.isEmpty
-                              ? const Icon(Icons.person,
-                                  size: 100, color: Colors.black)
-                              : null,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          WidgetStateProperty.all(Colors.orange.shade900),
-                    ),
-                    onPressed: () => _pickImage(ImageSource.gallery),
-                    child: const Text('Change Photo',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                    child: TextField(
-                      controller: firstNameController,
-                      decoration:  InputDecoration(
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
-                        ),
-
-                        hintText: 'First Name',
-                        contentPadding: const EdgeInsets.all(10),
-                        errorText: firstNameErrorMessage,// Display name validation error
-                      ),
-                      inputFormatters: [
-                        CapitalizeEachWordFormatter(),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          firstNameErrorMessage = validateName(value);
-                        });
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                    child: TextField(
-                      controller: lastNameController,
-                      decoration:  InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange.shade900
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
-                        ),
-
-                        hintText: 'Last Name',
-                        contentPadding: const EdgeInsets.all(10),
-                        errorText: lastNameErrorMessage,
-                      ),
-                      inputFormatters: [
-                        CapitalizeEachWordFormatter(),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          lastNameErrorMessage = validateName(value);
-                        });
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                    child: TextField(
-                      controller: phoneNumberController,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide(color: Colors.orange.shade900),
-                        ),
-                        hintText: 'Phone Number',
-                        contentPadding: const EdgeInsets.all(10),
-                        errorText: phoneErrorMessage, // Display phone validation error
-                      ),
-                      keyboardType: TextInputType.phone,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(13),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          phoneErrorMessage = validatePhoneNumber(value);
-                        });
-                      },
-                    ),
-                  ),
-
-                  const SizedBox(height: 20),
-                  WideButtons(
-                      onTap: _saveProfile,
-                      text: "Save"
-                  ),
-                ],
+        child: Column(
+          children: [
+            GestureDetector(
+              child: CircleAvatar(
+                radius: 100,
+                backgroundColor: Colors.white,
+                backgroundImage: _image != null
+                    ? FileImage(_image!)
+                    : (profileImageController.text.isNotEmpty
+                    ? NetworkImage(profileImageController.text)
+                    : null),
+                child:
+                _image == null && profileImageController.text.isEmpty
+                    ? const Icon(Icons.person,
+                    size: 100, color: Colors.black)
+                    : null,
               ),
             ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor:
+                WidgetStateProperty.all(Colors.orange.shade900),
+              ),
+              onPressed: () => _pickImage(ImageSource.gallery),
+              child: const Text('Change Photo',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+              child: TextField(
+                controller: firstNameController,
+                decoration:  InputDecoration(
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                  ),
+                  hintText: 'First Name',
+                  contentPadding: const EdgeInsets.all(10),
+                  errorText: firstNameErrorMessage, // Display name validation error
+                ),
+                inputFormatters: [
+                  CapitalizeEachWordFormatter(),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    firstNameErrorMessage = validateName(value);
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              child: TextField(
+                controller: lastNameController,
+                decoration:  InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.orange.shade900),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                  ),
+                  hintText: 'Last Name',
+                  contentPadding: const EdgeInsets.all(10),
+                  errorText: lastNameErrorMessage,
+                ),
+                inputFormatters: [
+                  CapitalizeEachWordFormatter(),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    lastNameErrorMessage = validateName(value);
+                  });
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              child: TextField(
+                controller: phoneNumberController,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                    borderSide: BorderSide(color: Colors.orange.shade900),
+                  ),
+                  hintText: 'Phone Number',
+                  contentPadding: const EdgeInsets.all(10),
+                  errorText: phoneErrorMessage, // Display phone validation error
+                ),
+                keyboardType: TextInputType.phone,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(13),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    phoneErrorMessage = validatePhoneNumber(value);
+                  });
+                },
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            WideButtons(
+              onTap: _saveProfile,
+              text: "Save",
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -23,12 +23,12 @@ class _Onboardingpage2State extends State<Onboardingpage2> {
               height: 400,
               fit: BoxFit.cover,
             ),
-            SizedBox(height: 20),
+           const SizedBox(height: 20),
             Container(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+              child: const Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 50.0),
                 child: Text(
-                  'Accelerate Your Service: Where Every Connection Counts!',
+                  'Fuel your journey with a well-maintained vehicle!',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), // Customize your text style
                   textAlign: TextAlign.center, // Center align the text
                 ),

@@ -16,9 +16,9 @@ class _Onboardingpage3State extends State<Onboardingpage3> {
   void initState() {
     super.initState();
     // Navigate to Navbar after 5 seconds
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => NavBar()));
+          context, MaterialPageRoute(builder: (context) => const NavBar()));
     });
   }
 
