@@ -285,7 +285,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                         bottom: 8,
                         right: 12,
                         child: PannableRatingBar(
-                          rate: (service['totalRatings'] != null) ? service['totalRatings'] as double : 0.0,
+                          rate: (service['totalRatings'] != null && service['numberOfRatings'] != null && service['numberOfRatings'] > 0)
+                              ? (service['totalRatings'] as double) / (service['numberOfRatings'] as int) // Calculate the average rating
+                              : 0.0,
                           direction: Axis.horizontal,
                           items: List.generate(
                               5,
