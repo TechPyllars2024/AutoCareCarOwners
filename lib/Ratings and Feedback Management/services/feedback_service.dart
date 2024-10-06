@@ -15,10 +15,10 @@ class FeedbackService {
     required String feedbackerName,
   }) async {
     try {
-      // Step 1: Generate feedback ID
+      //Generate feedback ID
       String feedbackId = _firestore.collection("feedback").doc().id;
 
-      // Step 2: Create a new feedback object
+      //Create a new feedback object
       FeedbackModel newFeedback = FeedbackModel(
           feedbackId: feedbackId,
           bookingId: bookingId,
@@ -30,16 +30,16 @@ class FeedbackService {
           feedbackerName: feedbackerName,
       );
 
-      // Step 3: Store the feedback in the "feedback" collection
+      //Store the feedback in the "feedback" collection
       await _firestore.collection("feedback").doc(feedbackId).set(newFeedback.toMap());
 
-      // Step 4: Get current total rating and number of ratings for the service provider
+      //Get current total rating and number of ratings for the service provider
       DocumentSnapshot serviceProviderSnapshot = await _firestore
           .collection('automotiveShops_profile')
           .doc(serviceProviderUid)
           .get();
 
-// Ensure the document exists and cast the data to a Map<String, dynamic>
+      // Ensure the document exists and cast the data to a Map<String, dynamic>
       if (!serviceProviderSnapshot.exists) {
         throw Exception('Service provider not found');
       }
@@ -50,15 +50,15 @@ class FeedbackService {
       double currentTotalRating = serviceProviderData['totalRatings'] ?? 0.0;
       int currentNumberOfRatings = serviceProviderData['numberOfRatings'] ?? 0;
 
-      // Step 5: Calculate new total rating and number of ratings
+      //Calculate new total rating and number of ratings
       double newTotalRating = currentTotalRating + rating;
       int newNumberOfRatings = currentNumberOfRatings + 1;
 
-      double newAverageRating = newTotalRating / newNumberOfRatings;
+      // double newAverageRating = newTotalRating / newNumberOfRatings;
 
       // Step 6: Update the service provider's rating and number of ratings
       await _firestore.collection('automotiveShops_profile').doc(serviceProviderUid).update({
-        'totalRatings': newAverageRating,
+        'totalRatings': newTotalRating,
         'numberOfRatings': newNumberOfRatings,
       });
       return 'Feedback submitted successfully and ratings updated';
