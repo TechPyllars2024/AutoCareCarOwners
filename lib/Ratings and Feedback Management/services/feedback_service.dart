@@ -61,10 +61,36 @@ class FeedbackService {
         'totalRatings': newTotalRating,
         'numberOfRatings': newNumberOfRatings,
       });
+
+      // Update the booking document to set isFeedbackSubmitted to true
+      await _firestore.collection('bookings').doc(bookingId).update({
+        'isFeedbackSubmitted': true,
+      });
+
       return 'Feedback submitted successfully and ratings updated';
     } catch (e) {
       logger.e('Error submitting feedback: $e');
       return 'Failed to submit feedback: $e';
+    }
+  }
+
+  // Check if feedback has already been submitted
+  Future<bool> isFeedbackSubmitted(String bookingId, String carOwnerId) async {
+    try {
+      QuerySnapshot feedbackSnapshot = await _firestore
+          .collection('feedback')
+          .where('bookingId', isEqualTo: bookingId)
+          .where('carOwnerId', isEqualTo: carOwnerId)
+          .get();
+
+      if (feedbackSnapshot.docs.isNotEmpty) {
+        var feedback = feedbackSnapshot.docs.first;
+        return (feedback['isSubmitted'] ?? false) == true;  // Check if feedback was submitted
+      }
+      return false;
+    } catch (e) {
+      logger.i('Error checking feedback: $e');
+      return false;
     }
   }
 

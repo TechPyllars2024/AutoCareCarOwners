@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:autocare_carowners/ProfileManagement/services/car_owner_bookings_service.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -17,13 +19,14 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   final Logger logger = Logger();
   List<BookingModel> bookings = [];
   bool isLoading = true;
-  bool _isFeedbackSubmitted = false;
+  Timer? _timer; // Timer for auto-refresh
 
   @override
   void initState() {
     super.initState();
-    _loadBookings();
-    logger.i(bookings);
+    _timer = Timer.periodic(const Duration(seconds: 2), (Timer t) {
+      _loadBookings();
+    });
   }
 
   Future<void> _loadBookings() async {
@@ -41,6 +44,12 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
         isLoading = false;
       });
     }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
   }
 
   void _showBookingDetailsModal(List<BookingModel> bookings) {
@@ -195,7 +204,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                               ),
                               TextSpan(
                                 text:
-                                    '${booking.status?.toUpperCase()}', // Capitalized status
+                                    booking.status.toUpperCase(), // Capitalized status
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -344,7 +353,6 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                   itemCount: bookings.length,
                   itemBuilder: (context, index) {
                     BookingModel booking = bookings[index];
-
                     return Card(
                       margin: const EdgeInsets.symmetric(
                           vertical: 8.0, horizontal: 12.0),
@@ -425,7 +433,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: '${booking.status?.toUpperCase()}',
+                                    text: booking.status.toUpperCase(),
                                     style: const TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
@@ -438,8 +446,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                             const SizedBox(
                                 height: 8.0), // Spacing before the button
                             // Align the button to the right side
-                            if (booking.status == 'done' &&
-                                !_isFeedbackSubmitted) // Check if status is 'done' and feedback not submitted
+                            if (booking.status == 'done' && booking.isFeedbackSubmitted == false) // Check if status is 'done' and feedback not submitted
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
@@ -458,12 +465,6 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                             ),
                                           ),
                                         );
-
-                                        // Once feedback is submitted, update the state
-                                        setState(() {
-                                          _isFeedbackSubmitted =
-                                              true; // Mark feedback as submitted
-                                        });
                                       },
                                       style: ElevatedButton.styleFrom(
                                         padding: const EdgeInsets.symmetric(

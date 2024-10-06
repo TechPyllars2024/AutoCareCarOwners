@@ -18,6 +18,7 @@ class BookingModel {
   double totalPrice;
   String? shopName;
   String? shopAddress;
+  bool isFeedbackSubmitted;
 
   BookingModel({
     required this.carOwnerUid,
@@ -38,7 +39,8 @@ class BookingModel {
     required this.fullName,
     required this.totalPrice,
     this.shopName,
-    this.shopAddress
+    this.shopAddress,
+    required this.isFeedbackSubmitted
   });
 
   // Converts a BookingModel instance to a Map for serialization
@@ -62,7 +64,8 @@ class BookingModel {
       'totalPrice': totalPrice,
       'fullName': fullName,
       'shopName': shopName,
-      'shopAddress': shopAddress
+      'shopAddress': shopAddress,
+      'isFeedbackSubmitted': isFeedbackSubmitted
     };
   }
 
@@ -90,6 +93,7 @@ class BookingModel {
       fullName: map['fullName'] ?? '',
       shopAddress: map['shopAddress'] ?? '',
       shopName: map['shopName'] ?? '',
+      isFeedbackSubmitted: map['isFeedbackSubmitted'] ?? false
     );
   }
 }
