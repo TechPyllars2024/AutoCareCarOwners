@@ -2,6 +2,7 @@ import 'package:autocare_carowners/Booking%20Management/screens/booking.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
+import 'package:logger/logger.dart';
 
 import '../../Ratings and Feedback Management/models/feedback_model.dart';
 import '../models/services_model.dart';
@@ -19,6 +20,7 @@ class ShopProfile extends StatefulWidget {
 }
 
 class _ShopProfileState extends State<ShopProfile> {
+  final Logger logger = Logger();
   final double coverHeight = 160;
   final double profileHeight = 100;
   bool isExpanded = false;
@@ -101,6 +103,10 @@ class _ShopProfileState extends State<ShopProfile> {
     int numberOfRating =
         data['numberOfRatings'] ?? 0;
 
+    double normalizedRating = numberOfRating > 0 ? (rating / numberOfRating) : 0;
+
+    logger.i('Rating: $rating');
+
     return Stack(
       clipBehavior: Clip.none,
       alignment: Alignment.center,
@@ -120,7 +126,7 @@ class _ShopProfileState extends State<ShopProfile> {
           child: Row(
             children: [
               PannableRatingBar(
-                rate: rating,
+                rate: normalizedRating,
                 items: List.generate(
                   5,
                       (index) =>  RatingWidget(
