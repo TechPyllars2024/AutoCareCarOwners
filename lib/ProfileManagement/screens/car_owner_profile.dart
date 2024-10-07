@@ -1,7 +1,7 @@
 import 'package:autocare_carowners/Authentication/services/authentication_signout.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_address_model.dart';
 import 'package:autocare_carowners/ProfileManagement/models/car_owner_profile_model.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/carDetails.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_car_details.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_addresses.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_booking.dart';
 import 'package:autocare_carowners/ProfileManagement/screens/car_owner_edit_profile.dart';
@@ -82,7 +82,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 color: Colors.orange.shade900, // Set the background color to orange
                 borderRadius: BorderRadius.circular(12.0), // Rounded edges
               ),
-              padding: EdgeInsets.all(6.0), // Optional: Add some padding for better aesthetics
+              padding: const EdgeInsets.all(6.0), // Optional: Add some padding for better aesthetics
               child: const Center( // Center the icon
                 child: Icon(
                   Icons.edit,
@@ -99,15 +99,26 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
         child: Column(
           children: [
             Center(
-              child: CircleAvatar(
-                radius: 100,
-                backgroundColor: Colors.white,
-                backgroundImage: profile?.profileImage.isNotEmpty == true
-                    ? NetworkImage(profile!.profileImage)
-                    : null,
-                child: profile?.profileImage.isEmpty == true
-                    ? const Icon(Icons.person, size: 100, color: Colors.black)
-                    : null,
+              child: Container(
+                width: 180, // Adjust width for border thickness
+                height: 180, // Adjust height for border thickness
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.orange.shade900, // Border color
+                    width: 1, // Border width
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 80,
+                  backgroundColor: Colors.white,
+                  backgroundImage: profile?.profileImage.isNotEmpty == true
+                      ? NetworkImage(profile!.profileImage)
+                      : null,
+                  child: profile?.profileImage.isEmpty == true
+                      ? const Icon(Icons.person, size: 80, color: Colors.black)
+                      : null,
+                ),
               ),
             ),
             Column(
@@ -116,9 +127,9 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                   padding: const EdgeInsets.only(top: 15.0),
                   child: Center(
                     child: Text(
-                      '${profile?.firstName} ${profile?.lastName}' ?? '',
+                      '${profile?.firstName} ${profile?.lastName}',
                       style: const TextStyle(
-                        fontSize: 35,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -127,16 +138,16 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0, left: 25),
-                  child: Row(
+                  child: profile?.phoneNumber != null && profile!.phoneNumber.isNotEmpty
+                      ? Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                       Icon(
+                      Icon(
                         Icons.phone, // Phone icon
                         size: 20,
                         color: Colors.orange.shade900,
                       ),
-                      const SizedBox(
-                          width: 10), // Adds space between the icon and text
+                      const SizedBox(width: 10), // Adds space between the icon and text
                       Text(
                         profile?.phoneNumber ?? 'No phone number available',
                         style: const TextStyle(
@@ -145,7 +156,8 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         ),
                       ),
                     ],
-                  ),
+                  )
+                      : Container(), // If phone number is null, display an empty container
                 ),
 
                 Padding(
@@ -184,7 +196,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                     if (snapshot.hasData && snapshot.data != null) {
                       final defaultAddress = snapshot.data!;
                       return Padding(
-                        padding: const EdgeInsets.only(top: 10, left: 25, right: 25, bottom: 50),
+                        padding: const EdgeInsets.only(top: 10, left: 25, right: 25, bottom: 25),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,123 +221,78 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                         ),
                       );
                     }
-                    return Text('');
+                    return const Text('');
                   },
                 ),
 
-
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(color: Colors.orange.shade900), // Set the border color to orange
-                      ),
-                      minimumSize: const Size(400, 45),
-                      backgroundColor: Colors.transparent, // Make the background transparent
-                      elevation: 0, // Remove shadow for better transparency effect
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const CarOwnerAddress(),
-                        ),
-                      );
-                    },
-                    child:  Text(
-                      'ADDRESS',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.orange.shade900,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
+                const Divider(
+                  color: Colors.grey,
+                  thickness: 1,
+                  indent: 20,
+                  endIndent: 20,
                 ),
-                const SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(color: Colors.orange.shade900), // Set the border color to orange
-                      ),
-                      minimumSize: const Size(400, 45),
-                      backgroundColor: Colors.transparent, // Make the background transparent
-                      elevation: 0, // Remove shadow for better transparency effect
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          //pushReplacement if you don't want to go back
-                          MaterialPageRoute(
-                              builder: (context) => const CarDetails()));
-                    },
-                    child:  Text('CAR PROFILE',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade900,
-                            fontSize: 15)),
-                  ),
-                ),
-                const SizedBox(height: 8),
 
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        side: BorderSide(color: Colors.orange.shade900), // Set the border color to orange
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: ProfileMenuWidget(
+                            title: "Address",
+                            icon: Icons.location_on,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const CarOwnerAddress()),
+                              );
+                            },
+                          )
                       ),
-                      minimumSize: const Size(400, 45),
-                      backgroundColor: Colors.transparent, // Make the background transparent
-                      elevation: 0, // Remove shadow for better transparency effect
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          //pushReplacement if you don't want to go back
-                          MaterialPageRoute(
-                              builder: (context) => const MyBookingsScreen()));
-                    },
-                    child:  Text('MY BOOKINGS',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange.shade900,
-                            fontSize: 15)),
-                  ),
-                ),
-                const SizedBox(height: 8),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      minimumSize: const Size(400, 45),
-                      backgroundColor: Colors.deepOrange.shade700,
-                    ),
-                    onPressed: () async {
-                      try {
-                        await AuthenticationMethodSignOut().signOut();
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
-                        );
-                      } catch (e) {
-                        Utils.showSnackBar('Error Signing Out: $e');
-                      }
-                    },
-                    child: const Text('LOG OUT',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 15)),
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: ProfileMenuWidget(
+                            title: "Car Details",
+                            icon: Icons.directions_car,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const CarDetails()),
+                              );
+                            },
+                          )
+                      ),
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: ProfileMenuWidget(
+                            title: "My Bookings",
+                            icon: Icons.event_note,
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const MyBookingsScreen()),
+                              );
+                            },
+                          )
+                      ),
+                      Container(
+                          margin: const EdgeInsets.only(bottom: 10),
+                          child: ProfileMenuWidget(
+                            title: "Logout",
+                            icon: Icons.logout,
+                            onPressed: () async {
+                              try {
+                                await AuthenticationMethodSignOut().signOut();
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                                );
+                              } catch (e) {
+                                Utils.showSnackBar('Error Signing Out: $e');
+                              }
+                            },
+                          )
+                      ), //
+                    ],
                   ),
                 ),
               ],
@@ -333,6 +300,49 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProfileMenuWidget extends StatelessWidget {
+  const ProfileMenuWidget({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.onPressed,
+    this.endIcon = true,
+    this.color,
+  });
+
+  final String title;
+  final IconData icon;
+  final VoidCallback onPressed;
+  final bool endIcon;
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: onPressed,
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: Colors.orange.shade900.withOpacity(0.1),
+        ),
+        child: Icon(icon, color: Colors.orange.shade900),
+      ),
+      title: Text(title, style: TextStyle(color: color ?? Colors.black)),
+      trailing: endIcon? Container(
+        width: 30,
+        height: 30,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: Colors.grey.withOpacity(0.1),
+        ),
+        child: const Icon(Icons.arrow_forward_ios, size: 18.0, color: Colors.grey),
+      ) : null,
     );
   }
 }

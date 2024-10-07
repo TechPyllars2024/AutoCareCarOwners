@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:logger/logger.dart';
 import '../../Ratings and Feedback Management/models/feedback_model.dart';
@@ -87,6 +89,7 @@ class CategoriesService {
     }
   }
 
+  // Fetch service provider by UID with caching
   // Fetch service provider by uid
   Future<Map<String, dynamic>> fetchProviderByUid(String uid) async {
     try {
@@ -101,6 +104,7 @@ class CategoriesService {
       return {};
     }
   }
+
 
   // Fetch all services for a particular service provider
   Stream<List<ServiceModel>> fetchServices(String serviceProviderId) {

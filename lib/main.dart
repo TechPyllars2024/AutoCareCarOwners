@@ -1,3 +1,5 @@
+import 'package:autocare_carowners/Authentication/screens/onboarding.dart';
+import 'package:autocare_carowners/Authentication/screens/signup.dart';
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
 //import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

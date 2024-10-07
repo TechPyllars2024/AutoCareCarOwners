@@ -279,7 +279,8 @@ class BookingService {
         totalPrice: totalPrice,
         status: status,
         shopName: shopName,
-        shopAddress: shopAddress
+        shopAddress: shopAddress,
+        isFeedbackSubmitted: false,
       );
 
       // Store the booking in Firestore

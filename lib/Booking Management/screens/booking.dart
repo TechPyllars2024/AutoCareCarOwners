@@ -1,4 +1,6 @@
 import 'package:autocare_carowners/Booking%20Management/services/booking_service.dart';
+import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
+import 'package:autocare_carowners/ProfileManagement/screens/car_owner_booking.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
@@ -405,14 +407,14 @@ class _BookingState extends State<Booking> {
         radius: profileHeight / 2,
         backgroundColor: Colors.grey.shade800,
         backgroundImage:
-            NetworkImage(data['profileImage'] ?? 'default_profile_image_url'),
+            NetworkImage(data['profileImage'] ?? 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
       );
 
   //Cover Image
   Widget buildCoverImage(Map<String, dynamic> data) => Container(
         color: Colors.grey,
         child: Image.network(
-          data['coverImage'] ?? 'default_cover_image_url',
+          data['coverImage'] ?? 'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
           width: double.infinity,
           height: coverHeight,
           fit: BoxFit.cover,
@@ -613,7 +615,12 @@ class _BookingState extends State<Booking> {
           // Show a success message
           logger.i('Booking confirmed successfully!');
           // Optionally, you can navigate to another page or reset the form
-          Navigator.pop(context); // This will go back to the previous page
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const NavBar(),
+            ),
+          );
         } catch (e) {
           // Handle any errors during booking submission
           logger.e('Error confirming booking: $e');

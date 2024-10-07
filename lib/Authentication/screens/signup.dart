@@ -1,3 +1,4 @@
+import 'package:autocare_carowners/Authentication/screens/onboarding.dart';
 import 'package:autocare_carowners/Authentication/services/authentication_signin.dart';
 import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -117,7 +118,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const NavBar(),
+          builder: (context) => const Onboarding(),
         ),
       );
     } else {
