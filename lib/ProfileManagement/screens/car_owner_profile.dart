@@ -127,9 +127,9 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                   padding: const EdgeInsets.only(top: 15.0),
                   child: Center(
                     child: Text(
-                      '${profile?.firstName} ${profile?.lastName}' ?? '',
+                      '${profile?.firstName} ${profile?.lastName}',
                       style: const TextStyle(
-                        fontSize: 35,
+                        fontSize: 30,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -265,7 +265,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                       Container(
                           margin: const EdgeInsets.only(bottom: 10),
                           child: ProfileMenuWidget(
-                            title: "Bookings",
+                            title: "My Bookings",
                             icon: Icons.event_note,
                             onPressed: () {
                               Navigator.push(

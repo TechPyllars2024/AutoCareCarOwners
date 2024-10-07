@@ -8,16 +8,16 @@ import 'package:image_picker/image_picker.dart';
 import '../../Authentication/screens/onboardingPage3.dart';
 import '../services/profile_service.dart';
 
-class CarOwnerEditProfileScreen extends StatefulWidget {
+class CarOwnerCompleteProfileScreen extends StatefulWidget {
   final CarOwnerProfileModel currentUser;
 
-  const CarOwnerEditProfileScreen({super.key, required this.currentUser});
+  const CarOwnerCompleteProfileScreen({super.key, required this.currentUser});
 
   @override
-  State<CarOwnerEditProfileScreen> createState() => _CarOwnerEditProfileScreenState();
+  State<CarOwnerCompleteProfileScreen> createState() => _CarOwnerCompleteProfileScreenState();
 }
 
-class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
+class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileScreen> {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   late TextEditingController phoneNumberController;
@@ -129,13 +129,6 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        backgroundColor: Colors.grey.shade100,
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

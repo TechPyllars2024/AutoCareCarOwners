@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../ProfileManagement/screens/car_owner_complete_profile.dart';
 import '../../ProfileManagement/screens/car_owner_edit_profile.dart';
 
 class Onboarding extends StatefulWidget {
@@ -65,7 +66,7 @@ class _OnboardingState extends State<Onboarding> {
               const Onboardingpage2(),
               isLoading
                   ? const Center(child: CircularProgressIndicator())  // Show loading spinner
-                  : CarOwnerEditProfileScreen(currentUser: profile!),  // Only load this when profile is not null
+                  : CarOwnerCompleteProfileScreen(currentUser: profile!),  // Only load this when profile is not null
               const Onboardingpage3(),
             ],
           ),
@@ -99,10 +100,10 @@ class _OnboardingState extends State<Onboarding> {
                     : GestureDetector(
                   onTap: () {
                     _controller.nextPage(
-                        duration: Duration(milliseconds: 500),
+                        duration: const Duration(milliseconds: 500),
                         curve: Curves.easeIn);
                   },
-                  child: Icon(Icons.navigate_next),
+                  child: const Icon(Icons.navigate_next),
                 ),
               ],
             ),

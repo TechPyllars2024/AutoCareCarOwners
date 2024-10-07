@@ -29,7 +29,7 @@ class _Onboardingpage3State extends State<Onboardingpage3> {
       body: const Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Expanded(
+          Expanded(
             child: Center(
               child: Text(
                 'You are all set!',
