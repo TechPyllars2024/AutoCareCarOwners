@@ -25,7 +25,7 @@ class _Onboardingpage1State extends State<Onboardingpage1> {
               ),
               const SizedBox(height: 20),
              const Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                padding: EdgeInsets.symmetric(horizontal: 50.0),
                 child: Text('Experience hassle-free connections to the car services you need!', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), // Customize your text style
                   textAlign: TextAlign.center,),
               ),
