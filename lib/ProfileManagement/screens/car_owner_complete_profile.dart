@@ -129,6 +129,15 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
+      appBar: AppBar(
+        backgroundColor: Colors.grey.shade100,
+        title: const Text(
+          'Complete Profile',
+          style: TextStyle(fontWeight: FontWeight.w900),
+        ),
+        elevation: 0,
+        actions: const [],
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
