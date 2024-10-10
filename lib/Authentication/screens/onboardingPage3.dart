@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:async';
 
 import '../../Navigation Bar/navbar.dart';
@@ -16,7 +17,7 @@ class _Onboardingpage3State extends State<Onboardingpage3> {
   void initState() {
     super.initState();
     // Navigate to Navbar after 5 seconds
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 5), () {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const NavBar()));
     });
@@ -31,7 +32,9 @@ class _Onboardingpage3State extends State<Onboardingpage3> {
         children: [
           Image.asset(
             'lib/Authentication/assets/images/autocareLogo.png',
-          ),
+          ).animate()
+              .shimmer(delay: 500.ms, duration: 1000.ms) // Shimmer effect
+              .fadeIn(duration: 500.ms),
           const SizedBox(height: 80),
           const Text(
             'You are all set.',
