@@ -1,6 +1,5 @@
 import 'package:autocare_carowners/Authentication/screens/onboarding.dart';
 import 'package:autocare_carowners/Authentication/services/authentication_signin.dart';
-import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
