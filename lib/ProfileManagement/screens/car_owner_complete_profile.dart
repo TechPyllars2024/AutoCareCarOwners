@@ -131,6 +131,7 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.grey.shade100,
         title: const Text(
           'Complete Your Profile',
