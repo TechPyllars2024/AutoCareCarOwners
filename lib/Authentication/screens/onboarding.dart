@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../ProfileManagement/screens/car_owner_complete_profile.dart';
-import '../../ProfileManagement/screens/car_owner_edit_profile.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
@@ -52,6 +51,7 @@ class _OnboardingState extends State<Onboarding> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           PageView(
