@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../ProfileManagement/screens/car_owner_complete_profile.dart';
-import '../../ProfileManagement/screens/car_owner_edit_profile.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});
