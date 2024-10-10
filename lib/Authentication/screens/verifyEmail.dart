@@ -135,8 +135,8 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 children: [
                   Image.asset(
                     'lib/Authentication/assets/images/verifyemail.png',
-                    width: 300,
-                    height: 300,
+                    width: 200,
+                    height: 200,
                   ),
                   const SizedBox(height: 80),
                   const Text(
