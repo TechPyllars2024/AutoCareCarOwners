@@ -281,11 +281,12 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 10),
                 WideButtons(
                   onTap: _saveProfile,
                   text: "Save",
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
