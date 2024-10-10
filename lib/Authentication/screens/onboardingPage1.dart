@@ -13,7 +13,14 @@ class _Onboardingpage1State extends State<Onboardingpage1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.orange.shade800,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(1.0), // Set the height of the AppBar
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.orange.shade900,
+        ),
+      ),
+      backgroundColor: Colors.orange.shade900,
       body: Center(
         child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -25,7 +32,7 @@ class _Onboardingpage1State extends State<Onboardingpage1> {
                 fit: BoxFit.cover,
               ).animate(onPlay: (controller) => controller.repeat())
                   .shimmer(delay: 1000.ms, duration: 1400.ms),
-              const SizedBox(height: 100),
+              const SizedBox(height: 30),
               const Positioned(
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 50.0),
