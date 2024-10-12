@@ -158,9 +158,7 @@ class HourlyTimePicker extends StatelessWidget {
     TimeOfDay current = start;
 
     while (current.hour < end.hour || (current.hour == end.hour && current.minute < end.minute)) {
-      TimeOfDay next = current.minute == 30
-          ? TimeOfDay(hour: current.hour + 1, minute: 0)
-          : TimeOfDay(hour: current.hour, minute: 30);
+      TimeOfDay next = TimeOfDay(hour: current.hour + 1, minute: 0);  // Increment by 1 hour
 
       options.add('${_formatTime(current)} - ${_formatTime(next)}');
       current = next;
