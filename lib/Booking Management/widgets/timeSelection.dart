@@ -108,11 +108,11 @@ class HourlyTimePicker extends StatelessWidget {
   final Function(String) onTimeSelected;
 
   const HourlyTimePicker({
-    Key? key,
+    super.key,
     required this.startTime,
     required this.endTime,
     required this.onTimeSelected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
