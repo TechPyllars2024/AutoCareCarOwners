@@ -1,11 +1,10 @@
 import 'package:autocare_carowners/Booking%20Management/services/booking_service.dart';
 import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_booking.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/checklist.dart';
-import 'package:autocare_carowners/Booking%20Management/widgets/timeSelection.dart';
+import 'package:autocare_carowners/Booking%20Management/widgets/time_selection.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/date_selection.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
@@ -40,6 +39,8 @@ class _BookingState extends State<Booking> {
   late final String shopName;
   late final String shopAddress;
   late final List<String> allowedDaysOfWeek;
+  late final standardBookingsPerHour;
+  Map<String, int> availableSlotsPerHour = {};
 
   Future<void> fetchTimeData() async {
     try {
@@ -56,7 +57,8 @@ class _BookingState extends State<Booking> {
       logger.e('Error fetching or converting time data: $e');
     }
   }
- Future<String> fetchStartTime() async {
+
+  Future<String> fetchStartTime() async {
     // Assuming _providerData is a Future<Map<String, dynamic>>
     Map<String, dynamic> providerData = await _providerData;
 
@@ -85,16 +87,20 @@ class _BookingState extends State<Booking> {
       final timeParts = timeString.trim().split(' ');
 
       if (timeParts.length != 2) {
-        logger.i("Time string format should include both time and AM/PM, but found: $timeString");
-        throw const FormatException("Invalid time format: missing AM/PM or improper spacing.");
+        logger.i(
+            "Time string format should include both time and AM/PM, but found: $timeString");
+        throw const FormatException(
+            "Invalid time format: missing AM/PM or improper spacing.");
       }
 
       final hourMinute = timeParts[0].split(':');
 
       // Ensure both hour and minute are present
       if (hourMinute.length != 2) {
-        logger.i("Hour and minute should be separated by ':', but found: ${timeParts[0]}");
-        throw const FormatException("Invalid time format: missing ':' or incorrect hour/minute values.");
+        logger.i(
+            "Hour and minute should be separated by ':', but found: ${timeParts[0]}");
+        throw const FormatException(
+            "Invalid time format: missing ':' or incorrect hour/minute values.");
       }
 
       int hour = int.parse(hourMinute[0]);
@@ -124,8 +130,10 @@ class _BookingState extends State<Booking> {
   }
 
   String formatBookingTime(TimeOfDay time) {
-    final hours = time.hour % 12 == 0 ? 12 : time.hour % 12; // Convert 0 and 12 to 12
-    final minutes = time.minute.toString().padLeft(2, '0'); // Ensure two-digit minutes
+    final hours =
+        time.hour % 12 == 0 ? 12 : time.hour % 12; // Convert 0 and 12 to 12
+    final minutes =
+        time.minute.toString().padLeft(2, '0'); // Ensure two-digit minutes
     final period = time.hour >= 12 ? 'PM' : 'AM'; // Determine AM/PM
     return "$hours:$minutes $period"; // Format as needed
   }
@@ -143,11 +151,20 @@ class _BookingState extends State<Booking> {
     _fetchShopName();
     _fetchShopAddress();
     _fetchDaysOfTheWeek();
+    _fetchNumberOfBookingsPerHour();
+    fetchBookingsForDate(selectedDate);
+    brandController = TextEditingController();
+    modelController = TextEditingController();
+    yearController = TextEditingController();
+    fuelTypeController = TextEditingController();
+    colorController = TextEditingController();
+    transmissionController = TextEditingController();
   }
 
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
-      Map<String, dynamic> fetchedCarDetails = await BookingService().fetchCarOwnerDetails(user!.uid);
+      Map<String, dynamic> fetchedCarDetails =
+          await BookingService().fetchCarOwnerDetails(user!.uid);
 
       logger.i('Car Owner Data: $fetchedCarDetails');
       return fetchedCarDetails;
@@ -159,7 +176,8 @@ class _BookingState extends State<Booking> {
 
   // Load services and calculate total price
   void loadServices() async {
-    List<Map<String, dynamic>> fetchedServices = await BookingService().fetchServices(widget.serviceProviderUid);
+    List<Map<String, dynamic>> fetchedServices =
+        await BookingService().fetchServices(widget.serviceProviderUid);
     setState(() {
       services = fetchedServices;
     });
@@ -173,21 +191,24 @@ class _BookingState extends State<Booking> {
   }
 
   Future<void> _fetchShopName() async {
-    final fetchedShopName = await BookingService().fetchServiceProviderShopName(widget.serviceProviderUid);
+    final fetchedShopName = await BookingService()
+        .fetchServiceProviderShopName(widget.serviceProviderUid);
     setState(() {
       shopName = fetchedShopName!;
     });
   }
 
   Future<void> _fetchDaysOfTheWeek() async {
-    final fetchedDaysOfTheweek = await BookingService().fetchAllowedDaysOfWeek(widget.serviceProviderUid);
+    final fetchedDaysOfTheweek = await BookingService()
+        .fetchAllowedDaysOfWeek(widget.serviceProviderUid);
     setState(() {
       allowedDaysOfWeek = fetchedDaysOfTheweek!;
     });
   }
 
   Future<void> _fetchShopAddress() async {
-    final fetchedShopAddress = await BookingService().fetchServiceProviderLocation(widget.serviceProviderUid);
+    final fetchedShopAddress = await BookingService()
+        .fetchServiceProviderLocation(widget.serviceProviderUid);
     setState(() {
       shopAddress = fetchedShopAddress!;
       logger.i("ADDRESS", shopAddress);
@@ -205,13 +226,32 @@ class _BookingState extends State<Booking> {
     double total = 0.0;
     for (var service in selectedServices) {
       // Find the service in the list and add its price to the total
-      var matchingService = services.firstWhere((services) => services['name'] == service, orElse: () => {});
+      var matchingService = services.firstWhere(
+          (services) => services['name'] == service,
+          orElse: () => {});
       if (matchingService.isNotEmpty) {
         total += matchingService['price'] ?? 0.0;
       }
     }
     return total;
   }
+
+  Future<void> _fetchNumberOfBookingsPerHour() async {
+    final fetchedNumberOfBookingsPerHour = await BookingService()
+        .fetchServiceProviderNumberOfBookings(widget.serviceProviderUid);
+    setState(() {
+      standardBookingsPerHour = fetchedNumberOfBookingsPerHour!;
+    });
+  }
+
+  Future<void> fetchBookingsForDate(DateTime date) async {
+    Map<String, int> fetchedBookings = await BookingService()
+        .fetchBookingsForDate(widget.serviceProviderUid, date);
+    setState(() {
+      availableSlotsPerHour = fetchedBookings;
+    });
+  }
+
 
   @override
   void dispose() {
@@ -263,8 +303,11 @@ class _BookingState extends State<Booking> {
                   buildTopSection(providerData, top), // Pass provider data
                   buildShopName(providerData), // Pass provider data
                   const Padding(
-                    padding:
-                        EdgeInsets.only(right: 16.0,left: 16, top: 20,),
+                    padding: EdgeInsets.only(
+                      right: 16.0,
+                      left: 16,
+                      top: 20,
+                    ),
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -284,10 +327,8 @@ class _BookingState extends State<Booking> {
   }
 
   Widget buildTopSection(Map<String, dynamic> providerData, double top) {
-    double rating =
-        providerData['totalRatings'] ?? 0;
-    int numberOfRating =
-        providerData['numberOfRatings'] ?? 0;
+    double rating = providerData['totalRatings'] ?? 0;
+    int numberOfRating = providerData['numberOfRatings'] ?? 0;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -349,7 +390,11 @@ class _BookingState extends State<Booking> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                   Icon(Icons.location_on, color: Colors.orange.shade900, size: 15,),
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.orange.shade900,
+                    size: 15,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     providerData['location'],
@@ -360,7 +405,11 @@ class _BookingState extends State<Booking> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                   Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
+                  Icon(
+                    Icons.calendar_month,
+                    color: Colors.orange.shade900,
+                    size: 15,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     providerData['daysOfTheWeek'].join(', ') ??
@@ -376,14 +425,19 @@ class _BookingState extends State<Booking> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
+                      Icon(
+                        Icons.check,
+                        color: Colors.orange.shade900,
+                        size: 15,
+                      ),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              providerData['serviceSpecialization'].join(', ') ??
+                              providerData['serviceSpecialization']
+                                      .join(', ') ??
                                   'Specialization',
                               style: const TextStyle(fontSize: 15),
                               overflow: TextOverflow.visible,
@@ -406,22 +460,23 @@ class _BookingState extends State<Booking> {
   Widget buildProfileImage(Map<String, dynamic> data) => CircleAvatar(
         radius: profileHeight / 2,
         backgroundColor: Colors.grey.shade800,
-        backgroundImage:
-            NetworkImage(data['profileImage'] ?? 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
+        backgroundImage: NetworkImage(data['profileImage'] ??
+            'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
       );
 
   //Cover Image
   Widget buildCoverImage(Map<String, dynamic> data) => Container(
         color: Colors.grey,
         child: Image.network(
-          data['coverImage'] ?? 'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
+          data['coverImage'] ??
+              'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
           width: double.infinity,
           height: coverHeight,
           fit: BoxFit.cover,
         ),
       );
 
-    Widget pickService() => Padding(
+  Widget pickService() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,16 +516,16 @@ class _BookingState extends State<Booking> {
         final carDetails = carData.entries.first.value as Map<String, dynamic>;
 
         // Initialize controllers with current car data
-        brandController = TextEditingController(
-            text: carDetails['brand'] as String? ?? '');
-        modelController = TextEditingController(
-            text: carDetails['model'] as String? ?? '');
-        yearController = TextEditingController(
-            text: carDetails['year']?.toString() ?? '');
+        brandController =
+            TextEditingController(text: carDetails['brand'] as String? ?? '');
+        modelController =
+            TextEditingController(text: carDetails['model'] as String? ?? '');
+        yearController =
+            TextEditingController(text: carDetails['year']?.toString() ?? '');
         fuelTypeController = TextEditingController(
             text: carDetails['fuelType'] as String? ?? '');
-        colorController = TextEditingController(
-            text: carDetails['color'] as String? ?? '');
+        colorController =
+            TextEditingController(text: carDetails['color'] as String? ?? '');
         transmissionController = TextEditingController(
             text: carDetails['transmissionType'] as String? ?? '');
 
@@ -548,98 +603,100 @@ class _BookingState extends State<Booking> {
   //Submit Button
   Widget submitButton(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
-      child:
-      ElevatedButton(
-      onPressed: () async {
-        // Collecting information from the input fields and selected services
-        String brand = brandController.text;
-        String model = modelController.text;
-        String year = yearController.text;
-        String fuelType = fuelTypeController.text;
-        String color = colorController.text;
-        String transmission = transmissionController.text;
-        String bookingDate = formatBookingDate(selectedDate.toString()); // Adjust as needed
-        String bookingTime = formatBookingTime(selectedTime);
+      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
+      child: ElevatedButton(
+        onPressed: () async {
+          // Collecting information from the input fields and selected services
+          String brand = brandController.text;
+          String model = modelController.text;
+          String year = yearController.text;
+          String fuelType = fuelTypeController.text;
+          String color = colorController.text;
+          String transmission = transmissionController.text;
+          String bookingDate =
+              formatBookingDate(selectedDate.toString());
+          String bookingTime = formatBookingTime(selectedTime);
 
-        // Assuming dropdownController.selectedOptions is a list of selected services
-        List<String> selectedServices = dropdownController.selectedOptionList;
+          // Assuming dropdownController.selectedOptions is a list of selected services
+          List<String> selectedServices = dropdownController.selectedOptionList;
 
-        // Validate the input
-        if (brand.isEmpty ||
-            model.isEmpty ||
-            year.isEmpty ||
-            fuelType.isEmpty ||
-            color.isEmpty ||
-            transmission.isEmpty ||
-            selectedServices.isEmpty) {
-          // Show an error message if validation fails
-          Utils.showSnackBar('Please complete the details');
-          return; // Exit the method
-        }
+          // Validate the input
+          if (brand.isEmpty ||
+              model.isEmpty ||
+              year.isEmpty ||
+              fuelType.isEmpty ||
+              color.isEmpty ||
+              transmission.isEmpty ||
+              selectedServices.isEmpty) {
+            // Show an error message if validation fails
+            Utils.showSnackBar('Please complete the details');
+            return; // Exit the method
+          }
 
-        // Update the total price
-        setState(() {
-          totalPrice = calculateTotalPrice(selectedServices);
-        });
+          // Update the total price
+          setState(() {
+            totalPrice = calculateTotalPrice(selectedServices);
+          });
 
-        try {
-          // Call your booking service to save the booking
-          await BookingService().createBookingRequest(
-              carOwnerUid: user!.uid,
-              serviceProviderUid: widget.serviceProviderUid,
-              selectedService: selectedServices.join(', '),
-              bookingDate: bookingDate,
-              bookingTime: bookingTime,
-              carBrand: brand,
-              carModel: model,
-              carYear: year,
-              fuelType: fuelType,
-              color: color,
-              transmission: transmission,
-              createdAt: DateTime.now(),
-              status: 'pending',
-              phoneNumber: phoneNumber,
-              fullName: fullName,
-              totalPrice: totalPrice,
-              shopAddress: shopAddress,
-              shopName: shopName
-          );
+          try {
+            // Call your booking service to save the booking
+            await BookingService().createBookingRequest(
+                carOwnerUid: user!.uid,
+                serviceProviderUid: widget.serviceProviderUid,
+                selectedService: selectedServices.join(', '),
+                bookingDate: bookingDate,
+                bookingTime: bookingTime,
+                carBrand: brand,
+                carModel: model,
+                carYear: year,
+                fuelType: fuelType,
+                color: color,
+                transmission: transmission,
+                createdAt: DateTime.now(),
+                status: 'pending',
+                phoneNumber: phoneNumber,
+                fullName: fullName,
+                totalPrice: totalPrice,
+                shopAddress: shopAddress,
+                shopName: shopName);
 
-          ScaffoldMessenger.of(context).showSnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Text('Successfully Booked'),
                 backgroundColor: Colors.green,
               ),
-          );
-          // Show a success message
-          logger.i('Booking confirmed successfully!');
-          // Optionally, you can navigate to another page or reset the form
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const NavBar(),
-            ),
-          );
-        } catch (e) {
-          // Handle any errors during booking submission
-          logger.e('Error confirming booking: $e');
-          Utils.showSnackBar('Failed to confirm booking. Please try again');
-        }
-      },
+            );
+            // Show a success message
+            logger.i('Booking confirmed successfully!');
+            // Optionally, you can navigate to another page or reset the form
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NavBar(),
+              ),
+            );
+          } catch (e) {
+            // Handle any errors during booking submission
+            logger.e('Error confirming booking: $e');
+            Utils.showSnackBar('Failed to confirm booking. Please try again');
+          }
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange.shade900,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15), // Set the border radius to 15
+            borderRadius:
+                BorderRadius.circular(15), // Set the border radius to 15
           ),
           minimumSize: const Size(400, 45),
         ),
-        child: const Text('Submit',
+        child: const Text(
+          'Submit',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-          ),),
+          ),
+        ),
       ),
     );
   }
@@ -662,60 +719,69 @@ class _BookingState extends State<Booking> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 35),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: DatePickerDisplay(
-                          initialDate: selectedDate,
-                          textStyle: const TextStyle(
-                              fontSize: 15, color: Colors.black),
-                          onDateSelected: (date) {
-                            setState(() {
-                              selectedDate = date;
-                            });
-                          }, allowedDaysOfWeek: allowedDaysOfWeek,
-                        ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 35),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: DatePickerDisplay(
+                        initialDate: selectedDate,
+                        textStyle: const TextStyle(
+                            fontSize: 15, color: Colors.black),
+                        onDateSelected: (date) {
+                          setState(() {
+                            selectedDate = date;
+                          });
+                        },
+                        allowedDaysOfWeek: allowedDaysOfWeek,
                       ),
                     ),
-                    const SizedBox(width: 10),
-
-                    Expanded(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 35),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(color: Colors.grey),
-                        ),
-                        child: TimePickerDisplay(
-                          initialTime: selectedTime,
-                          textStyle: const TextStyle(
-                              fontSize: 15, color: Colors.black),
-                          startTime: startTime!,
-                          endTime: endTime!,
-                          onTimeSelected: (time) {
-                            setState(() {
-                              selectedTime = time;
-                            });
-                          },
-                        ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 35),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        border: Border.all(color: Colors.grey),
+                      ),
+                      child: TimePickerDisplay(
+                        initialTime: selectedTime,
+                        textStyle: const TextStyle(
+                            fontSize: 15, color: Colors.black),
+                        startTime: startTime!,
+                        endTime: endTime!,
+                        onTimeSelected: (time) {
+                          setState(() {
+                            // Apply snapping to the nearest hour
+                            selectedTime = _snapToNearestHour(time);
+                          });
+                        },
+                        maxBookingsPerHour: standardBookingsPerHour,
                       ),
                     ),
-                  ],
-                )),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ],
     ),
   );
+
+// Function to snap TimeOfDay to the nearest hour
+  TimeOfDay _snapToNearestHour(TimeOfDay time) {
+    int roundedHour = time.minute >= 30 ? time.hour + 1 : time.hour;
+    return TimeOfDay(hour: roundedHour % 24, minute: 0); // Ensure hour is valid
+  }
 }

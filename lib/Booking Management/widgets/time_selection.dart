@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class TimePickerDisplay extends StatefulWidget {
   final TimeOfDay initialTime;
   final TimeOfDay startTime; // Opening time
-  final TimeOfDay endTime;   // Closing time
+  final TimeOfDay endTime; // Closing time
   final TextStyle textStyle;
   final Function(TimeOfDay) onTimeSelected;
+  final int maxBookingsPerHour;
 
   const TimePickerDisplay({
     super.key,
@@ -13,6 +14,7 @@ class TimePickerDisplay extends StatefulWidget {
     required this.startTime,
     required this.endTime,
     required this.onTimeSelected,
+    required this.maxBookingsPerHour, // Accept bookings data
     this.textStyle = const TextStyle(fontSize: 20),
   });
 
@@ -47,9 +49,10 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
   }
 
   String _formatTime(TimeOfDay timeOfDay) {
-    final int hour = timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
-        ? 12
-        : timeOfDay.hourOfPeriod;
+    final int hour =
+        timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
+            ? 12
+            : timeOfDay.hourOfPeriod;
     final String period = timeOfDay.period == DayPeriod.am ? 'AM' : 'PM';
     final String minute = timeOfDay.minute.toString().padLeft(2, '0');
     return '$hour:$minute $period';
@@ -65,6 +68,8 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
           onTimeSelected: (String selectedTime) {
             Navigator.of(context).pop(selectedTime);
           },
+          standardBookingsPerHour:
+              widget.maxBookingsPerHour, // Pass booking data
         );
       },
     );
@@ -75,7 +80,8 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
       setState(() {
         _timeOfDay = selectedTime;
       });
-      widget.onTimeSelected(selectedTime); // Notify the parent of the selected time
+      widget.onTimeSelected(
+          selectedTime);
     }
   }
 
@@ -106,12 +112,14 @@ class HourlyTimePicker extends StatelessWidget {
   final TimeOfDay startTime;
   final TimeOfDay endTime;
   final Function(String) onTimeSelected;
+  final int standardBookingsPerHour; // New parameter to hold booking counts
 
   const HourlyTimePicker({
     super.key,
     required this.startTime,
     required this.endTime,
     required this.onTimeSelected,
+    required this.standardBookingsPerHour, // Accepting the booking data
   });
 
   @override
@@ -140,7 +148,7 @@ class HourlyTimePicker extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
-                      timeOptions[index],
+                      _formatTimeWithBookings(timeOptions[index]),
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
@@ -157,9 +165,10 @@ class HourlyTimePicker extends StatelessWidget {
     List<String> options = [];
     TimeOfDay current = start;
 
-    while (current.hour < end.hour || (current.hour == end.hour && current.minute < end.minute)) {
-      TimeOfDay next = TimeOfDay(hour: current.hour + 1, minute: 0);  // Increment by 1 hour
-
+    while (current.hour < end.hour ||
+        (current.hour == end.hour && current.minute < end.minute)) {
+      TimeOfDay next =
+          TimeOfDay(hour: current.hour + 1, minute: 0); // Increment by 1 hour
       options.add('${_formatTime(current)} - ${_formatTime(next)}');
       current = next;
     }
@@ -168,11 +177,17 @@ class HourlyTimePicker extends StatelessWidget {
   }
 
   String _formatTime(TimeOfDay timeOfDay) {
-    final int hour = timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
-        ? 12
-        : timeOfDay.hourOfPeriod;
+    final int hour =
+        timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
+            ? 12
+            : timeOfDay.hourOfPeriod;
     final String period = timeOfDay.period == DayPeriod.am ? 'AM' : 'PM';
     final String minute = timeOfDay.minute.toString().padLeft(2, '0');
     return '$hour:$minute $period';
+  }
+
+  String _formatTimeWithBookings(String timeSlot) {
+    // Use the standard bookings per hour for each time slot
+    return '$timeSlot | Bookings Left: $standardBookingsPerHour';
   }
 }
