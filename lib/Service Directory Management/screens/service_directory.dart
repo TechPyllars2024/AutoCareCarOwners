@@ -53,7 +53,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
         backgroundColor: Colors.grey.shade100,
         title: const Text(
           'Services',
-          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
+          style: TextStyle(fontWeight: FontWeight.w900),
         ),
         elevation: 0,
         actions: const [],
