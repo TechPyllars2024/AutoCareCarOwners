@@ -86,8 +86,8 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
         title: const Text(
-          'CAR PROFILES',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          'Car Profiles',
+          style: TextStyle(fontWeight: FontWeight.w900),
         ),
       ),
       body: Padding(
