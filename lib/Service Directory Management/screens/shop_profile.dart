@@ -49,6 +49,7 @@ class _ShopProfileState extends State<ShopProfile> {
   Widget build(BuildContext context) {
     final double top = coverHeight - profileHeight / 2;
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: Text('Shop Profile',
           style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 20),
