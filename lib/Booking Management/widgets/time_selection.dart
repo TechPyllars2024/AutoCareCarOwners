@@ -3,11 +3,12 @@ import 'package:logger/logger.dart';
 
 class TimePickerDisplay extends StatefulWidget {
   final TimeOfDay initialTime;
-  final TimeOfDay startTime; // Opening time
-  final TimeOfDay endTime; // Closing time
+  final TimeOfDay startTime;
+  final TimeOfDay endTime;
   final TextStyle textStyle;
   final Function(TimeOfDay) onTimeSelected;
   final Map<String, int> availableSlots;
+  final int standardBookingsPerHour;
 
   const TimePickerDisplay({
     super.key,
@@ -17,6 +18,7 @@ class TimePickerDisplay extends StatefulWidget {
     required this.onTimeSelected,
     required this.availableSlots,
     this.textStyle = const TextStyle(fontSize: 20),
+    required this.standardBookingsPerHour,
   });
 
   @override
@@ -69,6 +71,7 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
           startTime: widget.startTime,
           endTime: widget.endTime,
           availableSlots: widget.availableSlots,
+          standardBookingsPerHour: widget.standardBookingsPerHour,
           onTimeSelected: (String selectedTime) {
             Navigator.of(context).pop(selectedTime);
           },
@@ -113,6 +116,7 @@ class HourlyTimePicker extends StatelessWidget {
   final TimeOfDay endTime;
   final Function(String) onTimeSelected;
   final Map<String, int> availableSlots;
+  final int standardBookingsPerHour;
 
   HourlyTimePicker({
     super.key,
@@ -120,6 +124,7 @@ class HourlyTimePicker extends StatelessWidget {
     required this.endTime,
     required this.onTimeSelected,
     required this.availableSlots,
+    required this.standardBookingsPerHour,
   });
 
   final Logger logger = Logger();
@@ -146,15 +151,24 @@ class HourlyTimePicker extends StatelessWidget {
               itemCount: timeOptions.length,
               itemBuilder: (context, index) {
                 String timeSlot = timeOptions[index];
+
+                // Get the bookings left for this time slot
+                String startTimeKey = timeSlot.split(' - ')[0];
+                String formattedKey = _convertTimeToKeyFormat(startTimeKey);
+                int bookingsLeft = int.tryParse(_getNormalizedAvailableSlots(formattedKey)?.toString() ?? standardBookingsPerHour.toString()) ?? standardBookingsPerHour;
+
+                // Disable the time slot if no bookings are left
+                bool isSlotAvailable = bookingsLeft > 0;
+
                 return GestureDetector(
-                  onTap: () {
-                    onTimeSelected(timeSlot);
-                  },
+                  onTap: isSlotAvailable ? () { onTimeSelected(timeSlot); } : null,
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
                       _formatTimeWithBookings(timeSlot),
-                      style: const TextStyle(fontSize: 18),
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: isSlotAvailable ? Colors.black : Colors.red,),
                     ),
                   ),
                 );
@@ -200,9 +214,10 @@ class HourlyTimePicker extends StatelessWidget {
     logger.i('Time slot is: $timeSlot');
     logger.i('Formatted Key: $formattedKey');
     logger.i('Available Slots Keys: $availableSlots');
+    logger.i('Booking Per Hour: $standardBookingsPerHour');
 
     // Fetch the available slots, normalizing both formattedKey and availableSlots keys
-    String bookingsLeft = _getNormalizedAvailableSlots(formattedKey)?.toString() ?? '0';
+    String bookingsLeft = _getNormalizedAvailableSlots(formattedKey)?.toString() ?? standardBookingsPerHour.toString();
 
     return '$timeSlot | Bookings Left: $bookingsLeft';
   }
@@ -221,7 +236,7 @@ class HourlyTimePicker extends StatelessWidget {
       // Normalize the key by replacing non-breaking spaces and regularizing spaces
       String normalizedKey = key.replaceAll('\u202F', ' ').replaceAll('\u00A0', ' ');
       if (normalizedKey == formattedKey) {
-        return availableSlots[key].toString(); // Return the bookings left for this slot
+        return availableSlots[key].toString();
       }
     }
     return null; // Return null if no match found
