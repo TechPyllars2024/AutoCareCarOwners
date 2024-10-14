@@ -20,11 +20,11 @@ class _HomePageScreenState extends State<HomePageScreen> {
           children: [
              const Text(
               'Auto',
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30, color: Colors.black),
+              style: TextStyle(fontWeight: FontWeight.w900,color: Colors.black),
             ),
             Text(
               'Care',
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30, color: Colors.orange.shade900),
+              style: TextStyle(fontWeight: FontWeight.w900,color: Colors.orange.shade900),
             ),
           ],
         ),
