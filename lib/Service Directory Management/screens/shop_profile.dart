@@ -52,7 +52,7 @@ class _ShopProfileState extends State<ShopProfile> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: Text('Shop Profile',
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 20),
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
         )
       ),
       body: SafeArea(
