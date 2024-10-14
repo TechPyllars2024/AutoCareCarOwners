@@ -1,13 +1,14 @@
 import 'package:autocare_carowners/Booking%20Management/services/booking_service.dart';
 import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
-import 'package:autocare_carowners/ProfileManagement/screens/car_owner_booking.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/checklist.dart';
-import 'package:autocare_carowners/Booking%20Management/widgets/timeSelection.dart';
+import 'package:autocare_carowners/Booking%20Management/widgets/time_selection.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/date_selection.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import '../../Authentication/Widgets/snackBar.dart';
 import '../../Service Directory Management/services/categories_service.dart';
@@ -40,6 +41,9 @@ class _BookingState extends State<Booking> {
   late final String shopName;
   late final String shopAddress;
   late final List<String> allowedDaysOfWeek;
+  late final int standardBookingsPerHour;
+  Map<String, int> availableSlotsPerHour = {};
+  Map<String, int> remainingSlots = {};
 
   Future<void> fetchTimeData() async {
     try {
@@ -56,7 +60,8 @@ class _BookingState extends State<Booking> {
       logger.e('Error fetching or converting time data: $e');
     }
   }
- Future<String> fetchStartTime() async {
+
+  Future<String> fetchStartTime() async {
     // Assuming _providerData is a Future<Map<String, dynamic>>
     Map<String, dynamic> providerData = await _providerData;
 
@@ -85,16 +90,20 @@ class _BookingState extends State<Booking> {
       final timeParts = timeString.trim().split(' ');
 
       if (timeParts.length != 2) {
-        logger.i("Time string format should include both time and AM/PM, but found: $timeString");
-        throw const FormatException("Invalid time format: missing AM/PM or improper spacing.");
+        logger.i(
+            "Time string format should include both time and AM/PM, but found: $timeString");
+        throw const FormatException(
+            "Invalid time format: missing AM/PM or improper spacing.");
       }
 
       final hourMinute = timeParts[0].split(':');
 
       // Ensure both hour and minute are present
       if (hourMinute.length != 2) {
-        logger.i("Hour and minute should be separated by ':', but found: ${timeParts[0]}");
-        throw const FormatException("Invalid time format: missing ':' or incorrect hour/minute values.");
+        logger.i(
+            "Hour and minute should be separated by ':', but found: ${timeParts[0]}");
+        throw const FormatException(
+            "Invalid time format: missing ':' or incorrect hour/minute values.");
       }
 
       int hour = int.parse(hourMinute[0]);
@@ -123,11 +132,12 @@ class _BookingState extends State<Booking> {
     return "${parsedDate.day}/${parsedDate.month}/${parsedDate.year}"; // Change format as needed
   }
 
-  String formatBookingTime(TimeOfDay time) {
-    final hours = time.hour % 12 == 0 ? 12 : time.hour % 12; // Convert 0 and 12 to 12
-    final minutes = time.minute.toString().padLeft(2, '0'); // Ensure two-digit minutes
-    final period = time.hour >= 12 ? 'PM' : 'AM'; // Determine AM/PM
-    return "$hours:$minutes $period"; // Format as needed
+  // Convert TimeOfDay to formatted time string (e.g., "9:00 AM")
+  String formatTimeOfDay(TimeOfDay timeOfDay) {
+    final now = DateTime.now();
+    final time = DateTime(
+        now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    return DateFormat.jm().format(time); // 'jm' gives the '9:00 AM' format
   }
 
   @override
@@ -143,11 +153,20 @@ class _BookingState extends State<Booking> {
     _fetchShopName();
     _fetchShopAddress();
     _fetchDaysOfTheWeek();
+    _fetchNumberOfBookingsPerHour();
+    fetchBookingsForDate(selectedDate);
+    brandController = TextEditingController();
+    modelController = TextEditingController();
+    yearController = TextEditingController();
+    fuelTypeController = TextEditingController();
+    colorController = TextEditingController();
+    transmissionController = TextEditingController();
   }
 
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
-      Map<String, dynamic> fetchedCarDetails = await BookingService().fetchCarOwnerDetails(user!.uid);
+      Map<String, dynamic> fetchedCarDetails =
+          await BookingService().fetchCarOwnerDetails(user!.uid);
 
       logger.i('Car Owner Data: $fetchedCarDetails');
       return fetchedCarDetails;
@@ -159,7 +178,8 @@ class _BookingState extends State<Booking> {
 
   // Load services and calculate total price
   void loadServices() async {
-    List<Map<String, dynamic>> fetchedServices = await BookingService().fetchServices(widget.serviceProviderUid);
+    List<Map<String, dynamic>> fetchedServices =
+        await BookingService().fetchServices(widget.serviceProviderUid);
     setState(() {
       services = fetchedServices;
     });
@@ -173,21 +193,24 @@ class _BookingState extends State<Booking> {
   }
 
   Future<void> _fetchShopName() async {
-    final fetchedShopName = await BookingService().fetchServiceProviderShopName(widget.serviceProviderUid);
+    final fetchedShopName = await BookingService()
+        .fetchServiceProviderShopName(widget.serviceProviderUid);
     setState(() {
       shopName = fetchedShopName!;
     });
   }
 
   Future<void> _fetchDaysOfTheWeek() async {
-    final fetchedDaysOfTheweek = await BookingService().fetchAllowedDaysOfWeek(widget.serviceProviderUid);
+    final fetchedDaysOfTheweek = await BookingService()
+        .fetchAllowedDaysOfWeek(widget.serviceProviderUid);
     setState(() {
       allowedDaysOfWeek = fetchedDaysOfTheweek!;
     });
   }
 
   Future<void> _fetchShopAddress() async {
-    final fetchedShopAddress = await BookingService().fetchServiceProviderLocation(widget.serviceProviderUid);
+    final fetchedShopAddress = await BookingService()
+        .fetchServiceProviderLocation(widget.serviceProviderUid);
     setState(() {
       shopAddress = fetchedShopAddress!;
       logger.i("ADDRESS", shopAddress);
@@ -205,12 +228,30 @@ class _BookingState extends State<Booking> {
     double total = 0.0;
     for (var service in selectedServices) {
       // Find the service in the list and add its price to the total
-      var matchingService = services.firstWhere((services) => services['name'] == service, orElse: () => {});
+      var matchingService = services.firstWhere(
+          (services) => services['name'] == service,
+          orElse: () => {});
       if (matchingService.isNotEmpty) {
         total += matchingService['price'] ?? 0.0;
       }
     }
     return total;
+  }
+
+  Future<void> _fetchNumberOfBookingsPerHour() async {
+    final fetchedNumberOfBookingsPerHour = await BookingService()
+        .fetchServiceProviderNumberOfBookings(widget.serviceProviderUid);
+    setState(() {
+      standardBookingsPerHour = fetchedNumberOfBookingsPerHour!;
+    });
+  }
+
+  Future<void> fetchBookingsForDate(DateTime date) async {
+    Map<String, int> fetchedBookings = await BookingService()
+        .fetchBookingsForDate(widget.serviceProviderUid, date);
+    setState(() {
+      availableSlotsPerHour = fetchedBookings;
+    });
   }
 
   @override
@@ -263,8 +304,11 @@ class _BookingState extends State<Booking> {
                   buildTopSection(providerData, top), // Pass provider data
                   buildShopName(providerData), // Pass provider data
                   const Padding(
-                    padding:
-                        EdgeInsets.only(right: 16.0,left: 16, top: 20,),
+                    padding: EdgeInsets.only(
+                      right: 16.0,
+                      left: 16,
+                      top: 20,
+                    ),
                     child: Divider(
                       thickness: 1,
                       color: Colors.grey,
@@ -284,10 +328,8 @@ class _BookingState extends State<Booking> {
   }
 
   Widget buildTopSection(Map<String, dynamic> providerData, double top) {
-    double rating =
-        providerData['totalRatings'] ?? 0;
-    int numberOfRating =
-        providerData['numberOfRatings'] ?? 0;
+    double rating = providerData['totalRatings'] ?? 0;
+    int numberOfRating = providerData['numberOfRatings'] ?? 0;
 
     return Stack(
       clipBehavior: Clip.none,
@@ -349,7 +391,11 @@ class _BookingState extends State<Booking> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                   Icon(Icons.location_on, color: Colors.orange.shade900, size: 15,),
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.orange.shade900,
+                    size: 15,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     providerData['location'],
@@ -360,7 +406,11 @@ class _BookingState extends State<Booking> {
               const SizedBox(height: 8),
               Row(
                 children: [
-                   Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
+                  Icon(
+                    Icons.calendar_month,
+                    color: Colors.orange.shade900,
+                    size: 15,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     providerData['daysOfTheWeek'].join(', ') ??
@@ -376,14 +426,19 @@ class _BookingState extends State<Booking> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                       Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
+                      Icon(
+                        Icons.check,
+                        color: Colors.orange.shade900,
+                        size: 15,
+                      ),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              providerData['serviceSpecialization'].join(', ') ??
+                              providerData['serviceSpecialization']
+                                      .join(', ') ??
                                   'Specialization',
                               style: const TextStyle(fontSize: 15),
                               overflow: TextOverflow.visible,
@@ -406,22 +461,23 @@ class _BookingState extends State<Booking> {
   Widget buildProfileImage(Map<String, dynamic> data) => CircleAvatar(
         radius: profileHeight / 2,
         backgroundColor: Colors.grey.shade800,
-        backgroundImage:
-            NetworkImage(data['profileImage'] ?? 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
+        backgroundImage: NetworkImage(data['profileImage'] ??
+            'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
       );
 
   //Cover Image
   Widget buildCoverImage(Map<String, dynamic> data) => Container(
         color: Colors.grey,
         child: Image.network(
-          data['coverImage'] ?? 'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
+          data['coverImage'] ??
+              'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
           width: double.infinity,
           height: coverHeight,
           fit: BoxFit.cover,
         ),
       );
 
-    Widget pickService() => Padding(
+  Widget pickService() => Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -461,16 +517,16 @@ class _BookingState extends State<Booking> {
         final carDetails = carData.entries.first.value as Map<String, dynamic>;
 
         // Initialize controllers with current car data
-        brandController = TextEditingController(
-            text: carDetails['brand'] as String? ?? '');
-        modelController = TextEditingController(
-            text: carDetails['model'] as String? ?? '');
-        yearController = TextEditingController(
-            text: carDetails['year']?.toString() ?? '');
+        brandController =
+            TextEditingController(text: carDetails['brand'] as String? ?? '');
+        modelController =
+            TextEditingController(text: carDetails['model'] as String? ?? '');
+        yearController =
+            TextEditingController(text: carDetails['year']?.toString() ?? '');
         fuelTypeController = TextEditingController(
             text: carDetails['fuelType'] as String? ?? '');
-        colorController = TextEditingController(
-            text: carDetails['color'] as String? ?? '');
+        colorController =
+            TextEditingController(text: carDetails['color'] as String? ?? '');
         transmissionController = TextEditingController(
             text: carDetails['transmissionType'] as String? ?? '');
 
@@ -545,130 +601,222 @@ class _BookingState extends State<Booking> {
     );
   }
 
-  //Submit Button
+// Submit Button
   Widget submitButton(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
-      child:
-      ElevatedButton(
-      onPressed: () async {
-        // Collecting information from the input fields and selected services
-        String brand = brandController.text;
-        String model = modelController.text;
-        String year = yearController.text;
-        String fuelType = fuelTypeController.text;
-        String color = colorController.text;
-        String transmission = transmissionController.text;
-        String bookingDate = formatBookingDate(selectedDate.toString()); // Adjust as needed
-        String bookingTime = formatBookingTime(selectedTime);
+      padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
+      child: ElevatedButton(
+        onPressed: () async {
+          // Collecting information from the input fields and selected services
+          String brand = brandController.text;
+          String model = modelController.text;
+          String year = yearController.text;
+          String fuelType = fuelTypeController.text;
+          String color = colorController.text;
+          String transmission = transmissionController.text;
+          String bookingDate = formatBookingDate(selectedDate.toString());
+          String bookingTime = formatTimeOfDay(selectedTime);
 
-        // Assuming dropdownController.selectedOptions is a list of selected services
-        List<String> selectedServices = dropdownController.selectedOptionList;
+          // Assuming dropdownController.selectedOptions is a list of selected services
+          List<String> selectedServices = dropdownController.selectedOptionList;
 
-        // Validate the input
-        if (brand.isEmpty ||
-            model.isEmpty ||
-            year.isEmpty ||
-            fuelType.isEmpty ||
-            color.isEmpty ||
-            transmission.isEmpty ||
-            selectedServices.isEmpty) {
-          // Show an error message if validation fails
-          Utils.showSnackBar('Please complete the details');
-          return; // Exit the method
-        }
+          // Validate the input
+          if (brand.isEmpty ||
+              model.isEmpty ||
+              year.isEmpty ||
+              fuelType.isEmpty ||
+              color.isEmpty ||
+              transmission.isEmpty ||
+              selectedServices.isEmpty) {
+            // Show an error message if validation fails
+            Utils.showSnackBar('Please complete the details');
+            return; // Exit the method
+          }
 
-        // Update the total price
-        setState(() {
-          totalPrice = calculateTotalPrice(selectedServices);
-        });
+          // Update the total price
+          setState(() {
+            totalPrice = calculateTotalPrice(selectedServices);
+          });
 
-        try {
-          // Call your booking service to save the booking
-          await BookingService().createBookingRequest(
-              carOwnerUid: user!.uid,
-              serviceProviderUid: widget.serviceProviderUid,
-              selectedService: selectedServices.join(', '),
-              bookingDate: bookingDate,
-              bookingTime: bookingTime,
-              carBrand: brand,
-              carModel: model,
-              carYear: year,
-              fuelType: fuelType,
-              color: color,
-              transmission: transmission,
-              createdAt: DateTime.now(),
-              status: 'pending',
-              phoneNumber: phoneNumber,
-              fullName: fullName,
-              totalPrice: totalPrice,
-              shopAddress: shopAddress,
-              shopName: shopName
-          );
+          try {
+            // Fetch the service provider's existing remainingSlots from Firestore
+            var docSnapshot = await FirebaseFirestore.instance
+                .collection('automotiveShops_profile')
+                .doc(widget.serviceProviderUid)
+                .get();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Successfully Booked'),
-                backgroundColor: Colors.green,
-              ),
-          );
-          // Show a success message
-          logger.i('Booking confirmed successfully!');
-          // Optionally, you can navigate to another page or reset the form
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const NavBar(),
-            ),
-          );
-        } catch (e) {
-          // Handle any errors during booking submission
-          logger.e('Error confirming booking: $e');
-          Utils.showSnackBar('Failed to confirm booking. Please try again');
-        }
-      },
+            Map<String, dynamic>? data = docSnapshot.data();
+            Map<String, Map<String, dynamic>> remainingSlots =
+                Map<String, Map<String, dynamic>>.from(
+                    data?['remainingSlots'] ?? {});
+
+            // Fetch startTime, endTime, and numberOfBookingsPerHour from data
+            String finalStartTime = formatTimeOfDay(startTime!);
+            String finalEndTime = formatTimeOfDay(endTime!);
+            int numberOfBookingsPerHour = data?['numberOfBookingsPerHour'] ?? 1;
+
+            // Check if the booking date exists in remainingSlots
+            if (!remainingSlots.containsKey(bookingDate)) {
+              // If no slots for this date, generate the time slots for this day
+              remainingSlots[bookingDate] = generateTimeSlots(
+                  finalStartTime, finalEndTime, numberOfBookingsPerHour);
+            }
+
+            // Decrement the slot for the specific booking time
+            if (remainingSlots[bookingDate]!.containsKey(bookingTime)) {
+              if (remainingSlots[bookingDate]![bookingTime]! > 0) {
+                remainingSlots[bookingDate]![bookingTime] =
+                    remainingSlots[bookingDate]![bookingTime]! - 1;
+
+                // Call your booking service to save the booking
+                await BookingService().createBookingRequest(
+                  carOwnerUid: user!.uid,
+                  serviceProviderUid: widget.serviceProviderUid,
+                  selectedService: selectedServices.join(', '),
+                  bookingDate: bookingDate,
+                  bookingTime: bookingTime,
+                  carBrand: brand,
+                  carModel: model,
+                  carYear: year,
+                  fuelType: fuelType,
+                  color: color,
+                  transmission: transmission,
+                  createdAt: DateTime.now(),
+                  status: 'pending',
+                  phoneNumber: phoneNumber,
+                  fullName: fullName,
+                  totalPrice: totalPrice,
+                  shopAddress: shopAddress,
+                  shopName: shopName,
+                );
+
+                // Update the service provider's remainingSlots in Firestore
+                await FirebaseFirestore.instance
+                    .collection('automotiveShops_profile')
+                    .doc(widget.serviceProviderUid)
+                    .update({'remainingSlots': remainingSlots});
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Successfully Booked'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                // Show a success message
+                logger.i('Booking confirmed successfully!');
+
+                // Navigate to another page or reset the form
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NavBar(),
+                  ),
+                );
+              } else {
+                // If no slots are available for the selected time, show an error
+                Utils.showSnackBar(
+                    'Selected time is fully booked. Please choose another time.');
+                return;
+              }
+            } else {
+              Utils.showSnackBar(
+                  'Selected time is not available. Please choose another time.');
+              return;
+            }
+          } catch (e) {
+            // Handle any errors during booking submission
+            logger.e('Error confirming booking: $e');
+            Utils.showSnackBar('Failed to confirm booking. Please try again');
+          }
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange.shade900,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15), // Set the border radius to 15
+            borderRadius:
+                BorderRadius.circular(15), // Set the border radius to 15
           ),
           minimumSize: const Size(400, 45),
         ),
-        child: const Text('Submit',
+        child: const Text(
+          'Submit',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.bold,
-          ),),
+          ),
+        ),
       ),
     );
   }
 
-  Widget timeSelection() => Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Select Date and Time',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+// Helper function to generate time slots based on start and end times
+  Map<String, int> generateTimeSlots(
+      String startTime, String endTime, int standardBookingsPerHour) {
+    Map<String, int> timeSlots = {};
+
+    // Parse startTime and endTime into DateTime objects
+    DateTime start = _parseTime(startTime);
+    DateTime end = _parseTime(endTime);
+
+    // Generate time slots in hourly intervals
+    while (start.isBefore(end)) {
+      String formattedTime = _formatTime(start);
+      timeSlots[formattedTime] =
+          standardBookingsPerHour; // Assign the standard bookings per hour
+
+      // Increment the time by 1 hour
+      start = start.add(const Duration(hours: 1));
+    }
+
+    // Ensure the last time slot (if endTime is exactly at the hour) is included
+    if (start.isAtSameMomentAs(end)) {
+      String formattedTime = _formatTime(start);
+      timeSlots[formattedTime] = standardBookingsPerHour;
+    }
+
+    return timeSlots;
+  }
+
+// Helper function to parse time string into DateTime
+  DateTime _parseTime(String time) {
+    // Example format: '9:00 AM' or '4:00 PM'
+    final format = DateFormat.jm(); // 'jm' stands for 'hour:minute AM/PM'
+    return format.parse(time);
+  }
+
+// Helper function to format DateTime object to '9:00 AM' format
+  String _formatTime(DateTime time) {
+    return DateFormat.jm().format(time);
+  }
+
+  Widget timeSelection() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Select Date and Time',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 35),
+                          vertical: 15.0,
+                          horizontal: 35,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
@@ -677,21 +825,35 @@ class _BookingState extends State<Booking> {
                         child: DatePickerDisplay(
                           initialDate: selectedDate,
                           textStyle: const TextStyle(
-                              fontSize: 15, color: Colors.black),
-                          onDateSelected: (date) {
+                            fontSize: 15,
+                            color: Colors.black,
+                          ),
+                          onDateSelected: (date) async {
                             setState(() {
                               selectedDate = date;
                             });
-                          }, allowedDaysOfWeek: allowedDaysOfWeek,
+                            // Fetch remaining slots for the selected date
+                            try {
+                              remainingSlots = await fetchRemainingSlots(
+                                selectedDate,
+                                widget.serviceProviderUid,
+                              );
+                              logger.i('Remaining slots fetched: $remainingSlots');
+                            } catch (e) {
+                              logger.e('Error fetching slots: $e');
+                            }
+                          },
+                          allowedDaysOfWeek: allowedDaysOfWeek,
                         ),
                       ),
                     ),
                     const SizedBox(width: 10),
-
                     Expanded(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            vertical: 15.0, horizontal: 35),
+                          vertical: 15.0,
+                          horizontal: 35,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(15),
@@ -700,22 +862,75 @@ class _BookingState extends State<Booking> {
                         child: TimePickerDisplay(
                           initialTime: selectedTime,
                           textStyle: const TextStyle(
-                              fontSize: 15, color: Colors.black),
+                            fontSize: 15,
+                            color: Colors.black,
+                          ),
                           startTime: startTime!,
                           endTime: endTime!,
                           onTimeSelected: (time) {
                             setState(() {
-                              selectedTime = time;
+                              selectedTime = _snapToNearestHour(time);
                             });
                           },
+                          availableSlots: remainingSlots, standardBookingsPerHour: standardBookingsPerHour,
                         ),
                       ),
                     ),
                   ],
-                )),
-          ],
-        ),
-      ],
-    ),
-  );
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+// Function to snap TimeOfDay to the nearest hour
+  TimeOfDay _snapToNearestHour(TimeOfDay time) {
+    int roundedHour = time.minute >= 30 ? time.hour + 1 : time.hour;
+    return TimeOfDay(hour: roundedHour % 24, minute: 0); // Ensure hour is valid
+  }
+
+  Future<Map<String, int>> fetchRemainingSlots(
+      DateTime date, String serviceProviderUid) async {
+    // Format the date to M/d/yyyy
+    String formattedDate =
+        "${date.day}/${date.month}/${date.year}";
+
+    logger.i('Fetching remaining slots for date: $formattedDate');
+
+    var docSnapshot = await FirebaseFirestore.instance
+        .collection('automotiveShops_profile')
+        .doc(serviceProviderUid)
+        .get();
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      Map<String, Map<String, dynamic>>? remainingSlots =
+      Map<String, Map<String, dynamic>>.from(data?['remainingSlots'] ?? {});
+
+      // Log the fetched remaining slots for inspection
+      logger.i('Remaining slots from Firestore: $remainingSlots');
+
+      // Check if the formattedDate exists in remainingSlots
+      if (remainingSlots.containsKey(formattedDate)) {
+        Map<String, int>? slotsForDate = remainingSlots[formattedDate]
+            ?.map((key, value) => MapEntry(key, value as int));
+        logger.i('Slots for date: $slotsForDate');
+        setState(() {
+          remainingSlots = (slotsForDate ?? {}).cast<String, Map<String, dynamic>>();
+        });
+        return slotsForDate ?? {};
+
+      } else {
+        logger.i('No slots found for the date: $formattedDate');
+        return {}; // Return empty map if no slots found for the date
+      }
+    } else {
+      logger.e('Profile not found for UID: $serviceProviderUid');
+      throw Exception('Profile not found');
+    }
+  }
+
 }

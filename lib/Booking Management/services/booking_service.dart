@@ -11,7 +11,8 @@ class BookingService {
   final logger = Logger();
 
   //Fetch services offered by the service provider
-  Future<List<Map<String, dynamic>>> fetchServices(String serviceProviderUid) async {
+  Future<List<Map<String, dynamic>>> fetchServices(
+      String serviceProviderUid) async {
     try {
       QuerySnapshot querySnapshot = await firestore
           .collection('services')
@@ -23,7 +24,8 @@ class BookingService {
           .map((doc) => doc.data() as Map<String, dynamic>)
           .toList();
 
-      logger.i('Services fetched successfully for provider: $serviceProviderUid');
+      logger
+          .i('Services fetched successfully for provider: $serviceProviderUid');
       return services;
     } catch (e) {
       logger.e('Error fetching services: $e');
@@ -55,7 +57,8 @@ class BookingService {
       Map<String, dynamic> carDetailsMap = {};
 
       for (var doc in snapshot.docs) {
-        final carDetails = CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>);
+        final carDetails =
+            CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>);
         carDetailsMap[doc.id] = carDetails.toMap();
       }
 
@@ -71,10 +74,8 @@ class BookingService {
     final user = _auth.currentUser;
     if (user != null) {
       try {
-        final doc = await firestore
-            .collection('car_owner_profile')
-            .doc(user.uid)
-            .get();
+        final doc =
+            await firestore.collection('car_owner_profile').doc(user.uid).get();
         final data = doc.data();
 
         if (data != null) {
@@ -100,10 +101,8 @@ class BookingService {
     final user = _auth.currentUser;
     if (user != null) {
       try {
-        final doc = await firestore
-            .collection('car_owner_profile')
-            .doc(user.uid)
-            .get();
+        final doc =
+            await firestore.collection('car_owner_profile').doc(user.uid).get();
         final data = doc.data();
 
         if (data != null) {
@@ -125,10 +124,12 @@ class BookingService {
   }
 
 // Fetch shop name of the service provider
-  Future<List<String>?> fetchAllowedDaysOfWeek(String serviceProviderUid) async {
+  Future<List<String>?> fetchAllowedDaysOfWeek(
+      String serviceProviderUid) async {
     try {
       final doc = await firestore
-          .collection('automotiveShops_profile') // Adjust the collection name if necessary
+          .collection(
+              'automotiveShops_profile') // Adjust the collection name if necessary
           .doc(serviceProviderUid)
           .get();
 
@@ -137,12 +138,14 @@ class BookingService {
 
         if (data != null) {
           // Extract daysOfTheWeek as a List<String>
-          final List<String>? allowedDaysOfTheWeek = List<String>.from(data['daysOfTheWeek'] ?? []);
+          final List<String>? allowedDaysOfTheWeek =
+              List<String>.from(data['daysOfTheWeek'] ?? []);
 
           // Convert allowed days to the desired format
           return convertToFullWeekDays(allowedDaysOfTheWeek);
         } else {
-          logger.i('No profile data found for service provider: $serviceProviderUid');
+          logger.i(
+              'No profile data found for service provider: $serviceProviderUid');
           return null; // Return null if no data found
         }
       } else {
@@ -159,7 +162,13 @@ class BookingService {
   List<String> convertToFullWeekDays(List<String>? allowedDays) {
     // Define the full week days
     List<String> fullWeekDays = [
-      'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
     ];
 
     // If allowedDays is null or empty, return an empty list
@@ -171,14 +180,13 @@ class BookingService {
     return fullWeekDays.where((day) => allowedDays.contains(day)).toList();
   }
 
-
-
-
   // Fetch shop name of the service provider
-  Future<String?> fetchServiceProviderShopName(String serviceProviderUid) async {
+  Future<String?> fetchServiceProviderShopName(
+      String serviceProviderUid) async {
     try {
       final doc = await firestore
-          .collection('automotiveShops_profile') // Adjust the collection name if necessary
+          .collection(
+              'automotiveShops_profile') // Adjust the collection name if necessary
           .doc(serviceProviderUid)
           .get();
 
@@ -191,7 +199,8 @@ class BookingService {
           logger.i('SHOPNAME', shopName);
           return shopName; // Return the shop name
         } else {
-          logger.i('No profile data found for service provider: $serviceProviderUid');
+          logger.i(
+              'No profile data found for service provider: $serviceProviderUid');
           return null; // Return null if no data found
         }
       } else {
@@ -205,22 +214,25 @@ class BookingService {
   }
 
   // Fetch location of the service provider
-  Future<String?> fetchServiceProviderLocation(String serviceProviderUid) async {
+  Future<String?> fetchServiceProviderLocation(
+      String serviceProviderUid) async {
     try {
       final doc = await firestore
-          .collection('automotiveShops_profile') // Adjust the collection name if necessary
+          .collection(
+              'automotiveShops_profile') // Adjust the collection name if necessary
           .doc(serviceProviderUid)
           .get();
 
       if (doc.exists) {
-        final data = doc.data() as Map<String, dynamic>?;
+        final data = doc.data();
 
         if (data != null) {
           // Extract location
           final String location = data['location'] ?? '';
           return location; // Return the location
         } else {
-          logger.i('No profile data found for service provider: $serviceProviderUid');
+          logger.i(
+              'No profile data found for service provider: $serviceProviderUid');
           return null; // Return null if no data found
         }
       } else {
@@ -232,7 +244,6 @@ class BookingService {
       return null;
     }
   }
-
 
   // Create a booking request
   Future<String> createBookingRequest({
@@ -284,7 +295,10 @@ class BookingService {
       );
 
       // Store the booking in Firestore
-      await firestore.collection('bookings').doc(bookingId).set(newBooking.toMap());
+      await firestore
+          .collection('bookings')
+          .doc(bookingId)
+          .set(newBooking.toMap());
 
       logger.i('Booking request created successfully: $bookingId');
       return 'Booking added successfully';
@@ -292,5 +306,80 @@ class BookingService {
       logger.e('Failed to add booking: $e');
       return 'Failed to add booking: $e';
     }
+  }
+
+  // Fetch shop name of the service provider
+  Future<int?> fetchServiceProviderNumberOfBookings(
+      String serviceProviderUid) async {
+    try {
+      final doc = await firestore
+          .collection(
+              'automotiveShops_profile') // Adjust the collection name if necessary
+          .doc(serviceProviderUid)
+          .get();
+
+      if (doc.exists) {
+        final data = doc.data();
+
+        if (data != null) {
+          // Extract shopName
+          final int numberOfBookingsPerHour = data['numberOfBookingsPerHour'];
+          logger.i('numberOfBookings', numberOfBookingsPerHour);
+          return numberOfBookingsPerHour; // Return the shop name
+        } else {
+          logger.i(
+              'No profile data found for service provider: $serviceProviderUid');
+          return null; // Return null if no data found
+        }
+      } else {
+        logger.i('No profile found for service provider: $serviceProviderUid');
+        return null;
+      }
+    } catch (e) {
+      logger.e('Error fetching service provider shop name: $e');
+      return null;
+    }
+  }
+
+  // Fetch existing bookings for a specific service provider
+  // Fetch existing bookings for a specific service provider
+  Future<List<BookingModel>> fetchExistingBookings(
+      String serviceProviderId) async {
+    QuerySnapshot bookingSnapshot = await firestore
+        .collection('bookings')
+        .where('serviceProviderUid', isEqualTo: serviceProviderId)
+        .get();
+
+    // Cast the data to Map<String, dynamic> before passing to fromMap
+    return bookingSnapshot.docs.map((doc) {
+      final data = doc.data()
+          as Map<String, dynamic>?; // Safely cast to Map<String, dynamic>
+      if (data != null) {
+        return BookingModel.fromMap(data);
+      } else {
+        throw Exception('Booking data is null for document: ${doc.id}');
+      }
+    }).toList();
+  }
+
+  Future<Map<String, int>> fetchBookingsForDate(String serviceProviderUid, DateTime date) async {
+    // Query the bookings from your database based on service provider ID and the selected date
+    // Return a map where the key is the hour of the day and the value is the number of bookings
+    // Example: {'9AM': 3, '10AM': 4}
+    // Assume 'bookingsPerHour' is the limit of bookings per hour
+    return await FirebaseFirestore.instance
+        .collection('bookings')
+        .where('serviceProviderUid', isEqualTo: serviceProviderUid)
+        .where('date', isEqualTo: date.toIso8601String())
+        .get()
+        .then((querySnapshot) {
+      Map<String, int> bookingsPerHour = {};
+      for (var doc in querySnapshot.docs) {
+        // Assuming you store time in 'timeSlot' field as a string (e.g., '9AM', '10AM')
+        String timeSlot = doc['timeSlot'];
+        bookingsPerHour[timeSlot] = (bookingsPerHour[timeSlot] ?? 0) + 1;
+      }
+      return bookingsPerHour;
+    });
   }
 }
