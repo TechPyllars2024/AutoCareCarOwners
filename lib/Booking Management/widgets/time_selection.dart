@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class TimePickerDisplay extends StatefulWidget {
   final TimeOfDay initialTime;
@@ -6,7 +7,7 @@ class TimePickerDisplay extends StatefulWidget {
   final TimeOfDay endTime; // Closing time
   final TextStyle textStyle;
   final Function(TimeOfDay) onTimeSelected;
-  final int maxBookingsPerHour;
+  final Map<String, int> availableSlots;
 
   const TimePickerDisplay({
     super.key,
@@ -14,7 +15,7 @@ class TimePickerDisplay extends StatefulWidget {
     required this.startTime,
     required this.endTime,
     required this.onTimeSelected,
-    required this.maxBookingsPerHour, // Accept bookings data
+    required this.availableSlots,
     this.textStyle = const TextStyle(fontSize: 20),
   });
 
@@ -24,6 +25,8 @@ class TimePickerDisplay extends StatefulWidget {
 
 class _TimePickerDisplayState extends State<TimePickerDisplay> {
   late TimeOfDay _timeOfDay;
+  final Logger logger = Logger();
+
 
   @override
   void initState() {
@@ -50,9 +53,9 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
 
   String _formatTime(TimeOfDay timeOfDay) {
     final int hour =
-        timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
-            ? 12
-            : timeOfDay.hourOfPeriod;
+    timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
+        ? 12
+        : timeOfDay.hourOfPeriod;
     final String period = timeOfDay.period == DayPeriod.am ? 'AM' : 'PM';
     final String minute = timeOfDay.minute.toString().padLeft(2, '0');
     return '$hour:$minute $period';
@@ -65,11 +68,10 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
         return HourlyTimePicker(
           startTime: widget.startTime,
           endTime: widget.endTime,
+          availableSlots: widget.availableSlots,
           onTimeSelected: (String selectedTime) {
             Navigator.of(context).pop(selectedTime);
           },
-          standardBookingsPerHour:
-              widget.maxBookingsPerHour, // Pass booking data
         );
       },
     );
@@ -80,13 +82,11 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
       setState(() {
         _timeOfDay = selectedTime;
       });
-      widget.onTimeSelected(
-          selectedTime);
+      widget.onTimeSelected(selectedTime);
     }
   }
 
   TimeOfDay _parseTimeSlot(String timeSlot) {
-    // Extract the start time from the time slot string
     String startTimeStr = timeSlot.split(' - ')[0];
     return _convertStringToTimeOfDay(startTimeStr);
   }
@@ -108,24 +108,27 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
   }
 }
 
-
 class HourlyTimePicker extends StatelessWidget {
   final TimeOfDay startTime;
   final TimeOfDay endTime;
   final Function(String) onTimeSelected;
-  final int standardBookingsPerHour; // New parameter to hold booking counts
+  final Map<String, int> availableSlots;
 
-  const HourlyTimePicker({
+  HourlyTimePicker({
     super.key,
     required this.startTime,
     required this.endTime,
     required this.onTimeSelected,
-    required this.standardBookingsPerHour, // Accepting the booking data
+    required this.availableSlots,
   });
+
+  final Logger logger = Logger();
 
   @override
   Widget build(BuildContext context) {
     List<String> timeOptions = _generateTimeOptions(startTime, endTime);
+
+    logger.i('Available Slots Map: $availableSlots');
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -142,14 +145,15 @@ class HourlyTimePicker extends StatelessWidget {
             child: ListView.builder(
               itemCount: timeOptions.length,
               itemBuilder: (context, index) {
+                String timeSlot = timeOptions[index];
                 return GestureDetector(
                   onTap: () {
-                    onTimeSelected(timeOptions[index]);
+                    onTimeSelected(timeSlot);
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Text(
-                      _formatTimeWithBookings(timeOptions[index]),
+                      _formatTimeWithBookings(timeSlot),
                       style: const TextStyle(fontSize: 18),
                     ),
                   ),
@@ -168,26 +172,60 @@ class HourlyTimePicker extends StatelessWidget {
 
     while (current.hour < end.hour ||
         (current.hour == end.hour && current.minute < end.minute)) {
-      TimeOfDay next =
-          TimeOfDay(hour: current.hour + 1, minute: 0);
-      options.add('${_formatTime(current)} - ${_formatTime(next)}');
-      current = next;
+      // Create the next time slot
+      String timeSlot = '${_formatTime(current)} - ${_formatTime(TimeOfDay(hour: current.hour + 1, minute: 0))}';
+      options.add(timeSlot);
+      current = TimeOfDay(hour: current.hour + 1, minute: 0);
     }
     return options;
   }
 
   String _formatTime(TimeOfDay timeOfDay) {
     final int hour =
-        timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
-            ? 12
-            : timeOfDay.hourOfPeriod;
+    timeOfDay.hourOfPeriod == 0 && timeOfDay.period == DayPeriod.pm
+        ? 12
+        : timeOfDay.hourOfPeriod;
     final String period = timeOfDay.period == DayPeriod.am ? 'AM' : 'PM';
     final String minute = timeOfDay.minute.toString().padLeft(2, '0');
     return '$hour:$minute $period';
   }
 
   String _formatTimeWithBookings(String timeSlot) {
-    // Use the standard bookings per hour for each time slot
-    return '$timeSlot | Bookings Left: $standardBookingsPerHour';
+    String startTimeKey = timeSlot.split(' - ')[0]; // Get the start time from the timeSlot
+
+    // Normalize the startTimeKey by replacing non-breaking spaces with regular spaces
+    String formattedKey = _convertTimeToKeyFormat(startTimeKey);
+
+    // Debugging: Print keys for verification
+    logger.i('Time slot is: $timeSlot');
+    logger.i('Formatted Key: $formattedKey');
+    logger.i('Available Slots Keys: $availableSlots');
+
+    // Fetch the available slots, normalizing both formattedKey and availableSlots keys
+    String bookingsLeft = _getNormalizedAvailableSlots(formattedKey)?.toString() ?? '0';
+
+    return '$timeSlot | Bookings Left: $bookingsLeft';
+  }
+
+  String _convertTimeToKeyFormat(String time) {
+    // Normalize the time string by replacing non-breaking spaces with regular spaces
+    List<String> parts = time.replaceAll('\u202F', ' ').replaceAll('\u00A0', ' ').split(' ');
+    String timeOfDay = parts[0]; // "hour:minute"
+    String period = parts[1]; // "AM/PM"
+    return '$timeOfDay $period'; // e.g., "5:00 AM"
+  }
+
+// Normalize the keys in availableSlots by replacing non-breaking spaces and matching formats
+  String? _getNormalizedAvailableSlots(String formattedKey) {
+    for (String key in availableSlots.keys) {
+      // Normalize the key by replacing non-breaking spaces and regularizing spaces
+      String normalizedKey = key.replaceAll('\u202F', ' ').replaceAll('\u00A0', ' ');
+      if (normalizedKey == formattedKey) {
+        return availableSlots[key].toString(); // Return the bookings left for this slot
+      }
+    }
+    return null; // Return null if no match found
   }
 }
+
+
