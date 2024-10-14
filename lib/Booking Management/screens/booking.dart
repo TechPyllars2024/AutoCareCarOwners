@@ -1,5 +1,6 @@
 import 'package:autocare_carowners/Booking%20Management/services/booking_service.dart';
 import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
@@ -7,6 +8,7 @@ import 'package:autocare_carowners/Booking%20Management/widgets/checklist.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/time_selection.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/date_selection.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import '../../Authentication/Widgets/snackBar.dart';
 import '../../Service Directory Management/services/categories_service.dart';
@@ -129,13 +131,11 @@ class _BookingState extends State<Booking> {
     return "${parsedDate.day}/${parsedDate.month}/${parsedDate.year}"; // Change format as needed
   }
 
-  String formatBookingTime(TimeOfDay time) {
-    final hours =
-        time.hour % 12 == 0 ? 12 : time.hour % 12; // Convert 0 and 12 to 12
-    final minutes =
-        time.minute.toString().padLeft(2, '0'); // Ensure two-digit minutes
-    final period = time.hour >= 12 ? 'PM' : 'AM'; // Determine AM/PM
-    return "$hours:$minutes $period"; // Format as needed
+  // Convert TimeOfDay to formatted time string (e.g., "9:00 AM")
+  String formatTimeOfDay(TimeOfDay timeOfDay) {
+    final now = DateTime.now();
+    final time = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    return DateFormat.jm().format(time); // 'jm' gives the '9:00 AM' format
   }
 
   @override
@@ -600,7 +600,7 @@ class _BookingState extends State<Booking> {
     );
   }
 
-  //Submit Button
+// Submit Button
   Widget submitButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
@@ -613,9 +613,8 @@ class _BookingState extends State<Booking> {
           String fuelType = fuelTypeController.text;
           String color = colorController.text;
           String transmission = transmissionController.text;
-          String bookingDate =
-              formatBookingDate(selectedDate.toString());
-          String bookingTime = formatBookingTime(selectedTime);
+          String bookingDate = formatBookingDate(selectedDate.toString());
+          String bookingTime = formatTimeOfDay(selectedTime);
 
           // Assuming dropdownController.selectedOptions is a list of selected services
           List<String> selectedServices = dropdownController.selectedOptionList;
@@ -639,42 +638,85 @@ class _BookingState extends State<Booking> {
           });
 
           try {
-            // Call your booking service to save the booking
-            await BookingService().createBookingRequest(
-                carOwnerUid: user!.uid,
-                serviceProviderUid: widget.serviceProviderUid,
-                selectedService: selectedServices.join(', '),
-                bookingDate: bookingDate,
-                bookingTime: bookingTime,
-                carBrand: brand,
-                carModel: model,
-                carYear: year,
-                fuelType: fuelType,
-                color: color,
-                transmission: transmission,
-                createdAt: DateTime.now(),
-                status: 'pending',
-                phoneNumber: phoneNumber,
-                fullName: fullName,
-                totalPrice: totalPrice,
-                shopAddress: shopAddress,
-                shopName: shopName);
+            // Fetch the service provider's existing remainingSlots from Firestore
+            var docSnapshot = await FirebaseFirestore.instance
+                .collection('automotiveShops_profile')
+                .doc(widget.serviceProviderUid)
+                .get();
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Successfully Booked'),
-                backgroundColor: Colors.green,
-              ),
-            );
-            // Show a success message
-            logger.i('Booking confirmed successfully!');
-            // Optionally, you can navigate to another page or reset the form
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const NavBar(),
-              ),
-            );
+            Map<String, dynamic>? data = docSnapshot.data();
+            Map<String, Map<String, dynamic>> remainingSlots =
+            Map<String, Map<String, dynamic>>.from(data?['remainingSlots'] ?? {});
+
+            // Fetch startTime, endTime, and numberOfBookingsPerHour from data
+            String finalStartTime = formatTimeOfDay(startTime!);
+            String finalEndTime = formatTimeOfDay(endTime!);
+            int numberOfBookingsPerHour = data?['numberOfBookingsPerHour'] ?? 1;
+
+            // Check if the booking date exists in remainingSlots
+            if (!remainingSlots.containsKey(bookingDate)) {
+              // If no slots for this date, generate the time slots for this day
+              remainingSlots[bookingDate] = generateTimeSlots(finalStartTime, finalEndTime, numberOfBookingsPerHour);
+            }
+
+            // Decrement the slot for the specific booking time
+            if (remainingSlots[bookingDate]!.containsKey(bookingTime)) {
+              if (remainingSlots[bookingDate]![bookingTime]! > 0) {
+                remainingSlots[bookingDate]![bookingTime] = remainingSlots[bookingDate]![bookingTime]! - 1;
+
+                // Call your booking service to save the booking
+                await BookingService().createBookingRequest(
+                  carOwnerUid: user!.uid,
+                  serviceProviderUid: widget.serviceProviderUid,
+                  selectedService: selectedServices.join(', '),
+                  bookingDate: bookingDate,
+                  bookingTime: bookingTime,
+                  carBrand: brand,
+                  carModel: model,
+                  carYear: year,
+                  fuelType: fuelType,
+                  color: color,
+                  transmission: transmission,
+                  createdAt: DateTime.now(),
+                  status: 'pending',
+                  phoneNumber: phoneNumber,
+                  fullName: fullName,
+                  totalPrice: totalPrice,
+                  shopAddress: shopAddress,
+                  shopName: shopName,
+                );
+
+                // Update the service provider's remainingSlots in Firestore
+                await FirebaseFirestore.instance
+                    .collection('automotiveShops_profile')
+                    .doc(widget.serviceProviderUid)
+                    .update({'remainingSlots': remainingSlots});
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Successfully Booked'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+                // Show a success message
+                logger.i('Booking confirmed successfully!');
+
+                // Navigate to another page or reset the form
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NavBar(),
+                  ),
+                );
+              } else {
+                // If no slots are available for the selected time, show an error
+                Utils.showSnackBar('Selected time is fully booked. Please choose another time.');
+                return;
+              }
+            } else {
+              Utils.showSnackBar('Selected time is not available. Please choose another time.');
+              return;
+            }
           } catch (e) {
             // Handle any errors during booking submission
             logger.e('Error confirming booking: $e');
@@ -685,8 +727,7 @@ class _BookingState extends State<Booking> {
           backgroundColor: Colors.orange.shade900,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(15), // Set the border radius to 15
+            borderRadius: BorderRadius.circular(15), // Set the border radius to 15
           ),
           minimumSize: const Size(400, 45),
         ),
@@ -700,6 +741,46 @@ class _BookingState extends State<Booking> {
       ),
     );
   }
+
+
+// Helper function to generate time slots based on start and end times
+  Map<String, int> generateTimeSlots(String startTime, String endTime, int standardBookingsPerHour) {
+    Map<String, int> timeSlots = {};
+
+    // Parse startTime and endTime into DateTime objects
+    DateTime start = _parseTime(startTime);
+    DateTime end = _parseTime(endTime);
+
+    // Generate time slots in hourly intervals
+    while (start.isBefore(end)) {
+      String formattedTime = _formatTime(start);
+      timeSlots[formattedTime] = standardBookingsPerHour; // Assign the standard bookings per hour
+
+      // Increment the time by 1 hour
+      start = start.add(const Duration(hours: 1));
+    }
+
+    // Ensure the last time slot (if endTime is exactly at the hour) is included
+    if (start.isAtSameMomentAs(end)) {
+      String formattedTime = _formatTime(start);
+      timeSlots[formattedTime] = standardBookingsPerHour;
+    }
+
+    return timeSlots;
+  }
+
+// Helper function to parse time string into DateTime
+  DateTime _parseTime(String time) {
+    // Example format: '9:00 AM' or '4:00 PM'
+    final format = DateFormat.jm(); // 'jm' stands for 'hour:minute AM/PM'
+    return format.parse(time);
+  }
+
+// Helper function to format DateTime object to '9:00 AM' format
+  String _formatTime(DateTime time) {
+    return DateFormat.jm().format(time);
+  }
+
 
   Widget timeSelection() => Padding(
     padding: const EdgeInsets.all(20.0),
