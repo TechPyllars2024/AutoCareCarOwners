@@ -235,7 +235,6 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           'My Bookings',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 20, // Increased font size for better readability
             color: Colors.black, // Set a contrasting color for visibility
           ),
         ),
