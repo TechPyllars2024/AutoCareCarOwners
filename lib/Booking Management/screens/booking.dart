@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:autocare_carowners/Booking%20Management/services/booking_service.dart';
 import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 import '../../Authentication/Widgets/snackBar.dart';
+import '../../ProfileManagement/screens/car_owner_car_details.dart';
 import '../../Service Directory Management/services/categories_service.dart';
 
 class Booking extends StatefulWidget {
@@ -29,7 +31,7 @@ class _BookingState extends State<Booking> {
   final user = FirebaseAuth.instance.currentUser;
   late Future<Map<String, dynamic>> _providerData;
   List<Map<String, dynamic>> services = [];
-  late Future<Map<String, dynamic>> carOwnerData;
+  late Future<Map<String, dynamic>> carDetailsData;
   final logger = Logger();
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -44,6 +46,24 @@ class _BookingState extends State<Booking> {
   late final int standardBookingsPerHour;
   Map<String, int> availableSlotsPerHour = {};
   Map<String, int> remainingSlots = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _providerData =
+        CategoriesService().fetchProviderByUid(widget.serviceProviderUid);
+    loadServices();
+    carDetailsData = fetchCarDetails();
+    logger.i('carDetailsData: $carDetailsData');
+    fetchTimeData();
+    _fetchFullName();
+    _fetchPhoneNumber();
+    _fetchShopName();
+    _fetchShopAddress();
+    _fetchDaysOfTheWeek();
+    _fetchNumberOfBookingsPerHour();
+    fetchBookingsForDate(selectedDate);
+  }
 
   Future<void> fetchTimeData() async {
     try {
@@ -140,29 +160,6 @@ class _BookingState extends State<Booking> {
     return DateFormat.jm().format(time); // 'jm' gives the '9:00 AM' format
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _providerData =
-        CategoriesService().fetchProviderByUid(widget.serviceProviderUid);
-    loadServices();
-    carOwnerData = fetchCarDetails();
-    fetchTimeData();
-    _fetchFullName();
-    _fetchPhoneNumber();
-    _fetchShopName();
-    _fetchShopAddress();
-    _fetchDaysOfTheWeek();
-    _fetchNumberOfBookingsPerHour();
-    fetchBookingsForDate(selectedDate);
-    brandController = TextEditingController();
-    modelController = TextEditingController();
-    yearController = TextEditingController();
-    fuelTypeController = TextEditingController();
-    colorController = TextEditingController();
-    transmissionController = TextEditingController();
-  }
-
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
       Map<String, dynamic> fetchedCarDetails =
@@ -254,27 +251,17 @@ class _BookingState extends State<Booking> {
     });
   }
 
-  @override
-  void dispose() {
-    // Dispose of the controllers when the widget is disposed
-    brandController.dispose();
-    modelController.dispose();
-    yearController.dispose();
-    fuelTypeController.dispose();
-    colorController.dispose();
-    transmissionController.dispose();
-    super.dispose();
+  void navigateToCarDetails() async {
+    // Navigate to the CarDetails screen and wait for the result
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CarDetails()),
+    );
+    // After returning from the CarDetails screen, fetch the updated car details
+    setState(() {
+      carDetailsData = fetchCarDetails();
+    });
   }
-
-  bool isEditing = false;
-
-  // TextEditingController to handle car details input
-  late TextEditingController brandController;
-  late TextEditingController modelController;
-  late TextEditingController yearController;
-  late TextEditingController fuelTypeController;
-  late TextEditingController colorController;
-  late TextEditingController transmissionController;
 
   @override
   Widget build(BuildContext context) {
@@ -502,118 +489,189 @@ class _BookingState extends State<Booking> {
       );
 
   Widget carDetails() => FutureBuilder<Map<String, dynamic>>(
-      future: carOwnerData,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No car owner data found'));
-        }
-
-        final carData = snapshot.data!;
-        logger.i('car Data', carData);
-        final carDetails = carData.entries.first.value as Map<String, dynamic>;
-
-        // Initialize controllers with current car data
-        brandController =
-            TextEditingController(text: carDetails['brand'] as String? ?? '');
-        modelController =
-            TextEditingController(text: carDetails['model'] as String? ?? '');
-        yearController =
-            TextEditingController(text: carDetails['year']?.toString() ?? '');
-        fuelTypeController = TextEditingController(
-            text: carDetails['fuelType'] as String? ?? '');
-        colorController =
-            TextEditingController(text: carDetails['color'] as String? ?? '');
-        transmissionController = TextEditingController(
-            text: carDetails['transmissionType'] as String? ?? '');
-
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    future: carDetailsData,
+    builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Center(child: Text('Error: ${snapshot.error}'));
+      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        return Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Text(
-                'Car Details',
+                'No car details data found',
                 style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
-              TextField(
-                controller: brandController,
-                decoration: const InputDecoration(labelText: 'Brand'),
-              ),
-              TextField(
-                controller: modelController,
-                decoration: const InputDecoration(labelText: 'Model'),
-              ),
-              TextField(
-                controller: yearController,
-                decoration: const InputDecoration(labelText: 'Year'),
-              ),
-              TextField(
-                controller: fuelTypeController,
-                decoration: const InputDecoration(labelText: 'Fuel Type'),
-              ),
-              TextField(
-                controller: colorController,
-                decoration: const InputDecoration(labelText: 'Color'),
-              ),
-              TextField(
-                controller: transmissionController,
-                decoration: const InputDecoration(labelText: 'Transmission'),
+              const SizedBox(width: 16),
+              ElevatedButton.icon(
+                onPressed: navigateToCarDetails,
+                icon: const Icon(
+                  Icons.add,
+                  size: 18,
+                  color: Colors.white,
+                ),
+                label: const Text(
+                  'Add Car Details',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange.shade900,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 4.0,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
               ),
             ],
           ),
         );
-      });
+      }
 
-  Widget carDetailRow(String label, TextEditingController controller) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      final carData = snapshot.data!;
+      logger.i('car Data', carData);
+      final carDetails = carData.entries.first.value as Map<String, dynamic>;
+
+      return SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Car Details',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: navigateToCarDetails,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange.shade900,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 8.0,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0), // Rounded button
+                        ),
+                      ),
+                      child: const Text(
+                        'Edit Details',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                _buildDetailRow('Brand', carDetails['brand'], Icons.directions_car),
+                const SizedBox(height: 10),
+                _buildDetailRow('Model', carDetails['model'], Icons.model_training),
+                const SizedBox(height: 10),
+                _buildDetailRow('Year', carDetails['year']?.toString(), Icons.calendar_today),
+                const SizedBox(height: 10),
+                _buildDetailRow('Fuel Type', carDetails['fuelType'], Icons.local_gas_station),
+                const SizedBox(height: 10),
+                _buildDetailRow('Color', carDetails['color'], Icons.color_lens),
+                const SizedBox(height: 10),
+                _buildDetailRow('Transmission', carDetails['transmissionType'], Icons.settings),
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+
+  Widget _buildDetailRow(String label, String? value, IconData icon) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey[100], // Light grey background for the row
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 4.0, // Soft shadow effect
+            offset: Offset(0, 2), // Shadow offset
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            children: [
+              Icon(icon, color: Colors.orange.shade900), // Icon next to the label
+              const SizedBox(width: 4), // Space between icon and label
+              Text(
+                label,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
           ),
-          // Display text field if editing, otherwise just display the value
-          isEditing
-              ? Expanded(
-                  child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                      hintText: 'Enter $label',
-                    ),
-                  ),
-                )
-              : Text(controller.text),
+          Text(
+            value ?? 'N/A', // Display 'N/A' if value is null
+            style: const TextStyle(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
   }
 
-// Submit Button
+
+  // Submit Button
   Widget submitButton(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
       child: ElevatedButton(
         onPressed: () async {
-          // Collecting information from the input fields and selected services
-          String brand = brandController.text;
-          String model = modelController.text;
-          String year = yearController.text;
-          String fuelType = fuelTypeController.text;
-          String color = colorController.text;
-          String transmission = transmissionController.text;
+          Map<String, dynamic> fetchCarDetails = await carDetailsData;
+          logger.i('Car Details: $fetchCarDetails');
+
+          // Get the first key of the fetched car details
+          String carKey = fetchCarDetails.keys.first;
+
+          // Now access the nested car details using this key
+          Map<String, dynamic> carDetails = fetchCarDetails[carKey] ?? {};
+
+          // Collecting information from the fetched car details
+          String brand = carDetails['brand'] ?? '';
+          String model = carDetails['model'] ?? '';
+          String year = carDetails['year']?.toString() ?? '';
+          String fuelType = carDetails['fuelType'] ?? '';
+          String color = carDetails['color'] ?? '';
+          String transmission = carDetails['transmissionType'] ?? '';
+
+
           String bookingDate = formatBookingDate(selectedDate.toString());
           String bookingTime = formatTimeOfDay(selectedTime);
 
@@ -621,15 +679,22 @@ class _BookingState extends State<Booking> {
           List<String> selectedServices = dropdownController.selectedOptionList;
 
           // Validate the input
-          if (brand.isEmpty ||
-              model.isEmpty ||
-              year.isEmpty ||
-              fuelType.isEmpty ||
-              color.isEmpty ||
-              transmission.isEmpty ||
-              selectedServices.isEmpty) {
-            // Show an error message if validation fails
-            Utils.showSnackBar('Please complete the details');
+          String errorMessage = '';
+          if (brand.isEmpty) errorMessage += 'Brand is required.\n';
+          if (model.isEmpty) errorMessage += 'Model is required.\n';
+          if (year.isEmpty) errorMessage += 'Year is required.\n';
+          if (fuelType.isEmpty) errorMessage += 'Fuel Type is required.\n';
+          if (color.isEmpty) errorMessage += 'Color is required.\n';
+          if (transmission.isEmpty) errorMessage += 'Transmission is required.\n';
+          if (selectedServices.isEmpty) errorMessage += 'Please select at least one service.\n';
+
+          // Year validation
+          if (year.isNotEmpty && (int.tryParse(year) == null || int.parse(year) < 1886 || int.parse(year) > DateTime.now().year)) {
+            errorMessage += 'Please enter a valid year.\n';
+          }
+
+          if (errorMessage.isNotEmpty) {
+            Utils.showSnackBar(errorMessage);
             return; // Exit the method
           }
 
@@ -791,7 +856,7 @@ class _BookingState extends State<Booking> {
 
   Widget timeSelection() {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -838,7 +903,8 @@ class _BookingState extends State<Booking> {
                                 selectedDate,
                                 widget.serviceProviderUid,
                               );
-                              logger.i('Remaining slots fetched: $remainingSlots');
+                              logger.i(
+                                  'Remaining slots fetched: $remainingSlots');
                             } catch (e) {
                               logger.e('Error fetching slots: $e');
                             }
@@ -872,7 +938,8 @@ class _BookingState extends State<Booking> {
                               selectedTime = _snapToNearestHour(time);
                             });
                           },
-                          availableSlots: remainingSlots, standardBookingsPerHour: standardBookingsPerHour,
+                          availableSlots: remainingSlots,
+                          standardBookingsPerHour: standardBookingsPerHour,
                         ),
                       ),
                     ),
@@ -895,8 +962,7 @@ class _BookingState extends State<Booking> {
   Future<Map<String, int>> fetchRemainingSlots(
       DateTime date, String serviceProviderUid) async {
     // Format the date to M/d/yyyy
-    String formattedDate =
-        "${date.day}/${date.month}/${date.year}";
+    String formattedDate = "${date.day}/${date.month}/${date.year}";
 
     logger.i('Fetching remaining slots for date: $formattedDate');
 
@@ -908,7 +974,7 @@ class _BookingState extends State<Booking> {
     if (docSnapshot.exists) {
       Map<String, dynamic>? data = docSnapshot.data();
       Map<String, Map<String, dynamic>>? remainingSlots =
-      Map<String, Map<String, dynamic>>.from(data?['remainingSlots'] ?? {});
+          Map<String, Map<String, dynamic>>.from(data?['remainingSlots'] ?? {});
 
       // Log the fetched remaining slots for inspection
       logger.i('Remaining slots from Firestore: $remainingSlots');
@@ -919,10 +985,10 @@ class _BookingState extends State<Booking> {
             ?.map((key, value) => MapEntry(key, value as int));
         logger.i('Slots for date: $slotsForDate');
         setState(() {
-          remainingSlots = (slotsForDate ?? {}).cast<String, Map<String, dynamic>>();
+          remainingSlots =
+              (slotsForDate ?? {}).cast<String, Map<String, dynamic>>();
         });
         return slotsForDate ?? {};
-
       } else {
         logger.i('No slots found for the date: $formattedDate');
         return {}; // Return empty map if no slots found for the date
@@ -932,5 +998,4 @@ class _BookingState extends State<Booking> {
       throw Exception('Profile not found');
     }
   }
-
 }
