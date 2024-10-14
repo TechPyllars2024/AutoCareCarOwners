@@ -108,6 +108,7 @@ class _TimePickerDisplayState extends State<TimePickerDisplay> {
   }
 }
 
+
 class HourlyTimePicker extends StatelessWidget {
   final TimeOfDay startTime;
   final TimeOfDay endTime;
@@ -168,11 +169,10 @@ class HourlyTimePicker extends StatelessWidget {
     while (current.hour < end.hour ||
         (current.hour == end.hour && current.minute < end.minute)) {
       TimeOfDay next =
-          TimeOfDay(hour: current.hour + 1, minute: 0); // Increment by 1 hour
+          TimeOfDay(hour: current.hour + 1, minute: 0);
       options.add('${_formatTime(current)} - ${_formatTime(next)}');
       current = next;
     }
-
     return options;
   }
 
