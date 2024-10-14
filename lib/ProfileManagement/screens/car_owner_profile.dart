@@ -55,7 +55,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
         automaticallyImplyLeading: false,
         title: const Text(
           'Profile',
-          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 30),
+          style: TextStyle(fontWeight: FontWeight.w900),
         ),
         backgroundColor: Colors.grey.shade100,
         actions: [
