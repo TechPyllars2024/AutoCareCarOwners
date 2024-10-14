@@ -43,6 +43,7 @@ class _BookingState extends State<Booking> {
   late final List<String> allowedDaysOfWeek;
   late final standardBookingsPerHour;
   Map<String, int> availableSlotsPerHour = {};
+  Map<String, int> remainingSlots = {};
 
   Future<void> fetchTimeData() async {
     try {
@@ -134,7 +135,8 @@ class _BookingState extends State<Booking> {
   // Convert TimeOfDay to formatted time string (e.g., "9:00 AM")
   String formatTimeOfDay(TimeOfDay timeOfDay) {
     final now = DateTime.now();
-    final time = DateTime(now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
+    final time = DateTime(
+        now.year, now.month, now.day, timeOfDay.hour, timeOfDay.minute);
     return DateFormat.jm().format(time); // 'jm' gives the '9:00 AM' format
   }
 
@@ -251,7 +253,6 @@ class _BookingState extends State<Booking> {
       availableSlotsPerHour = fetchedBookings;
     });
   }
-
 
   @override
   void dispose() {
@@ -646,7 +647,8 @@ class _BookingState extends State<Booking> {
 
             Map<String, dynamic>? data = docSnapshot.data();
             Map<String, Map<String, dynamic>> remainingSlots =
-            Map<String, Map<String, dynamic>>.from(data?['remainingSlots'] ?? {});
+                Map<String, Map<String, dynamic>>.from(
+                    data?['remainingSlots'] ?? {});
 
             // Fetch startTime, endTime, and numberOfBookingsPerHour from data
             String finalStartTime = formatTimeOfDay(startTime!);
@@ -656,13 +658,15 @@ class _BookingState extends State<Booking> {
             // Check if the booking date exists in remainingSlots
             if (!remainingSlots.containsKey(bookingDate)) {
               // If no slots for this date, generate the time slots for this day
-              remainingSlots[bookingDate] = generateTimeSlots(finalStartTime, finalEndTime, numberOfBookingsPerHour);
+              remainingSlots[bookingDate] = generateTimeSlots(
+                  finalStartTime, finalEndTime, numberOfBookingsPerHour);
             }
 
             // Decrement the slot for the specific booking time
             if (remainingSlots[bookingDate]!.containsKey(bookingTime)) {
               if (remainingSlots[bookingDate]![bookingTime]! > 0) {
-                remainingSlots[bookingDate]![bookingTime] = remainingSlots[bookingDate]![bookingTime]! - 1;
+                remainingSlots[bookingDate]![bookingTime] =
+                    remainingSlots[bookingDate]![bookingTime]! - 1;
 
                 // Call your booking service to save the booking
                 await BookingService().createBookingRequest(
@@ -710,11 +714,13 @@ class _BookingState extends State<Booking> {
                 );
               } else {
                 // If no slots are available for the selected time, show an error
-                Utils.showSnackBar('Selected time is fully booked. Please choose another time.');
+                Utils.showSnackBar(
+                    'Selected time is fully booked. Please choose another time.');
                 return;
               }
             } else {
-              Utils.showSnackBar('Selected time is not available. Please choose another time.');
+              Utils.showSnackBar(
+                  'Selected time is not available. Please choose another time.');
               return;
             }
           } catch (e) {
@@ -727,7 +733,8 @@ class _BookingState extends State<Booking> {
           backgroundColor: Colors.orange.shade900,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15), // Set the border radius to 15
+            borderRadius:
+                BorderRadius.circular(15), // Set the border radius to 15
           ),
           minimumSize: const Size(400, 45),
         ),
@@ -742,9 +749,9 @@ class _BookingState extends State<Booking> {
     );
   }
 
-
 // Helper function to generate time slots based on start and end times
-  Map<String, int> generateTimeSlots(String startTime, String endTime, int standardBookingsPerHour) {
+  Map<String, int> generateTimeSlots(
+      String startTime, String endTime, int standardBookingsPerHour) {
     Map<String, int> timeSlots = {};
 
     // Parse startTime and endTime into DateTime objects
@@ -754,7 +761,8 @@ class _BookingState extends State<Booking> {
     // Generate time slots in hourly intervals
     while (start.isBefore(end)) {
       String formattedTime = _formatTime(start);
-      timeSlots[formattedTime] = standardBookingsPerHour; // Assign the standard bookings per hour
+      timeSlots[formattedTime] =
+          standardBookingsPerHour; // Assign the standard bookings per hour
 
       // Increment the time by 1 hour
       start = start.add(const Duration(hours: 1));
@@ -781,88 +789,148 @@ class _BookingState extends State<Booking> {
     return DateFormat.jm().format(time);
   }
 
-
-  Widget timeSelection() => Padding(
-    padding: const EdgeInsets.all(20.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Select Date and Time',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 35),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      child: DatePickerDisplay(
-                        initialDate: selectedDate,
-                        textStyle: const TextStyle(
-                            fontSize: 15, color: Colors.black),
-                        onDateSelected: (date) {
-                          setState(() {
-                            selectedDate = date;
-                          });
-                        },
-                        allowedDaysOfWeek: allowedDaysOfWeek,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 15.0, horizontal: 35),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      child: TimePickerDisplay(
-                        initialTime: selectedTime,
-                        textStyle: const TextStyle(
-                            fontSize: 15, color: Colors.black),
-                        startTime: startTime!,
-                        endTime: endTime!,
-                        onTimeSelected: (time) {
-                          setState(() {
-                            // Apply snapping to the nearest hour
-                            selectedTime = _snapToNearestHour(time);
-                          });
-                        },
-                        maxBookingsPerHour: standardBookingsPerHour,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+  Widget timeSelection() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Select Date and Time',
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-          ],
-        ),
-      ],
-    ),
-  );
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15.0,
+                          horizontal: 35,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: DatePickerDisplay(
+                          initialDate: selectedDate,
+                          textStyle: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                          ),
+                          onDateSelected: (date) async {
+                            setState(() {
+                              selectedDate = date;
+                            });
+                            // Fetch remaining slots for the selected date
+                            try {
+                              remainingSlots = await fetchRemainingSlots(
+                                selectedDate,
+                                widget.serviceProviderUid,
+                              );
+                              logger.i('Remaining slots fetched: $remainingSlots');
+                            } catch (e) {
+                              logger.e('Error fetching slots: $e');
+                            }
+                          },
+                          allowedDaysOfWeek: allowedDaysOfWeek,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15.0,
+                          horizontal: 35,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        child: TimePickerDisplay(
+                          initialTime: selectedTime,
+                          textStyle: const TextStyle(
+                            fontSize: 15,
+                            color: Colors.black,
+                          ),
+                          startTime: startTime!,
+                          endTime: endTime!,
+                          onTimeSelected: (time) {
+                            setState(() {
+                              selectedTime = _snapToNearestHour(time);
+                            });
+                          },
+                          availableSlots: remainingSlots,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
 
 // Function to snap TimeOfDay to the nearest hour
   TimeOfDay _snapToNearestHour(TimeOfDay time) {
     int roundedHour = time.minute >= 30 ? time.hour + 1 : time.hour;
     return TimeOfDay(hour: roundedHour % 24, minute: 0); // Ensure hour is valid
   }
+
+  Future<Map<String, int>> fetchRemainingSlots(
+      DateTime date, String serviceProviderUid) async {
+    // Format the date to M/d/yyyy
+    String formattedDate =
+        "${date.day}/${date.month}/${date.year}";
+
+    logger.i('Fetching remaining slots for date: $formattedDate');
+
+    var docSnapshot = await FirebaseFirestore.instance
+        .collection('automotiveShops_profile')
+        .doc(serviceProviderUid)
+        .get();
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? data = docSnapshot.data();
+      Map<String, Map<String, dynamic>>? remainingSlots =
+      Map<String, Map<String, dynamic>>.from(data?['remainingSlots'] ?? {});
+
+      // Log the fetched remaining slots for inspection
+      logger.i('Remaining slots from Firestore: $remainingSlots');
+
+      // Check if the formattedDate exists in remainingSlots
+      if (remainingSlots.containsKey(formattedDate)) {
+        Map<String, int>? slotsForDate = remainingSlots[formattedDate]
+            ?.map((key, value) => MapEntry(key, value as int));
+        logger.i('Slots for date: $slotsForDate');
+        setState(() {
+          remainingSlots = (slotsForDate ?? {}).cast<String, Map<String, dynamic>>();
+        });
+        return slotsForDate ?? {};
+
+      } else {
+        logger.i('No slots found for the date: $formattedDate');
+        return {}; // Return empty map if no slots found for the date
+      }
+    } else {
+      logger.e('Profile not found for UID: $serviceProviderUid');
+      throw Exception('Profile not found');
+    }
+  }
+
 }
