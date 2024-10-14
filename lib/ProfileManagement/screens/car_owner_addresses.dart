@@ -101,7 +101,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
           content: SingleChildScrollView( // Wrap the content with SingleChildScrollView
-            child: Container(
+            child: SizedBox(
               width: MediaQuery
                   .of(context)
                   .size
