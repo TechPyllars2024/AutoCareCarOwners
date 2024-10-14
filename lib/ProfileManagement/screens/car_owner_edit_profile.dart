@@ -133,7 +133,7 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
         backgroundColor: Colors.grey.shade100,
         title: const Text(
           'Edit Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.w900),
         ),
       ),
       body: _isLoading
