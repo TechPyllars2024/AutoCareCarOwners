@@ -268,7 +268,7 @@ class _BookingState extends State<Booking> {
     final double top = coverHeight - profileHeight / 2;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking'),
+        title: const Text('Booking', style: TextStyle(fontWeight: FontWeight.w900)),
       ),
       body: SafeArea(
         child: FutureBuilder<Map<String, dynamic>>(
