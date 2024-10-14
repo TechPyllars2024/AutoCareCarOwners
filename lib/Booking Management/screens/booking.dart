@@ -41,7 +41,7 @@ class _BookingState extends State<Booking> {
   late final String shopName;
   late final String shopAddress;
   late final List<String> allowedDaysOfWeek;
-  late final standardBookingsPerHour;
+  late final int standardBookingsPerHour;
   Map<String, int> availableSlotsPerHour = {};
   Map<String, int> remainingSlots = {};
 
@@ -872,7 +872,7 @@ class _BookingState extends State<Booking> {
                               selectedTime = _snapToNearestHour(time);
                             });
                           },
-                          availableSlots: remainingSlots,
+                          availableSlots: remainingSlots, standardBookingsPerHour: standardBookingsPerHour,
                         ),
                       ),
                     ),
