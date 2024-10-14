@@ -100,7 +100,19 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
                           child: CachedNetworkImage(
                             imageUrl: services[index].imageUrl,
                             placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
+                             Center(
+                               child: Padding(
+                                 padding: const EdgeInsets.all(50.0),
+                                 child: SizedBox(
+                                   height: 18,
+                                   width: 18,
+                                   child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
+                                    strokeWidth: 3.0,
+                                                               ),
+                                 ),
+                               ),
+                             ),
                             errorWidget: (context, url, error) =>
                             const Icon(Icons.error),
                             fit: BoxFit.cover,
