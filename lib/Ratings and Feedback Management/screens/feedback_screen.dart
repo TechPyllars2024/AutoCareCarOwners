@@ -92,7 +92,7 @@ class _FeedbackFormScreenState extends State<FeedbackFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Submit Feedback')),
+      appBar: AppBar(title: const Text('Submit Feedback', style: TextStyle(fontWeight: FontWeight.w900))),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator()) // Show loading indicator
           : SingleChildScrollView(

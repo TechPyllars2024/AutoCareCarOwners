@@ -99,7 +99,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
         title: Text(
           widget.serviceName,
           style: TextStyle(
-              fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 20),
+              fontWeight: FontWeight.w900, color: Colors.grey[800]),
         ),
       ),
       body: SafeArea(

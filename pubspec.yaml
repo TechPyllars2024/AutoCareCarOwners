@@ -53,13 +53,8 @@ dependencies:
   carousel_slider: ^5.0.0
   cached_network_image: ^3.4.1
   shared_preferences: ^2.3.2
-
   smooth_page_indicator: ^1.2.0+3
-
-
   flutter_native_splash: ^2.4.1
-
-
 
 
 dev_dependencies:

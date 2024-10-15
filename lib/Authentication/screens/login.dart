@@ -215,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       // Sign Up OR
-                      SizedBox(height: size.height * 0.02),
+                      SizedBox(height: size.height * 0.03),
                       const Or(),
 
                       // Sign Up with Google
@@ -228,7 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       // Already have an account? Log In
 
-                      SizedBox(height: size.height * 0.035),
+                      SizedBox(height: size.height * 0.05),
 
                       Padding(
                         padding: const EdgeInsets.only(top: 8),

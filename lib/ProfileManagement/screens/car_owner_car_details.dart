@@ -278,7 +278,7 @@ class _CarDetailsState extends State<CarDetails> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
-        title: const Text('Car Details', style: TextStyle(fontWeight: FontWeight.w700),),
+        title: const Text('Car Details', style: TextStyle(fontWeight: FontWeight.bold),),
       ),
       body: carDetails.isEmpty
           ? const Center(child: Text('No car details. Add a new car.'))

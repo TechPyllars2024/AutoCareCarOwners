@@ -49,9 +49,10 @@ class _ShopProfileState extends State<ShopProfile> {
   Widget build(BuildContext context) {
     final double top = coverHeight - profileHeight / 2;
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: Text('Shop Profile',
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 20),
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
         )
       ),
       body: SafeArea(
@@ -362,6 +363,7 @@ class _ShopProfileState extends State<ShopProfile> {
           return const Center(child: Text('No services available.'));
         } else {
           final services = snapshot.data!;
+          final enableInfiniteScroll = services.length > 2;
 
           return Column(
             children: [
@@ -370,9 +372,11 @@ class _ShopProfileState extends State<ShopProfile> {
                 child: Row(
                   children: [
                     Text(
-                      'Other Services',
-                      style:
-                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      'Services',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Spacer(),
                   ],
@@ -396,21 +400,20 @@ class _ShopProfileState extends State<ShopProfile> {
                           children: [
                             Expanded(
                               flex: 8,
-
                               child: Container(
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
+                                decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15),
                                   ),
-                                  color: Colors.white,
+                                  color: Colors.grey.shade300,
                                 ),
                                 clipBehavior: Clip.antiAlias,
                                 child: service.servicePicture.isNotEmpty
                                     ? Image.network(
                                   service.servicePicture,
                                   height: 100,
-                                  width: double.infinity,  // Ensure the image fills the container's width
+                                  width: double.infinity,
                                   fit: BoxFit.cover,
                                 )
                                     : const Placeholder(),
@@ -423,14 +426,23 @@ class _ShopProfileState extends State<ShopProfile> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(service.name, style: const TextStyle(fontWeight: FontWeight.bold),),
-
-                                    Text('Starts at Php ${service.price}', style: const TextStyle(fontSize: 13),),
+                                    Text(
+                                      service.name,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Starts at Php ${service.price}',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -440,7 +452,7 @@ class _ShopProfileState extends State<ShopProfile> {
                     height: 220,
                     viewportFraction: 0.8,
                     initialPage: 0,
-                    enableInfiniteScroll: true,
+                    enableInfiniteScroll: enableInfiniteScroll,
                     autoPlay: true,
                     autoPlayInterval: const Duration(seconds: 3),
                   ),

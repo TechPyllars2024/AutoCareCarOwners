@@ -15,7 +15,7 @@ class CarOwnerAddress extends StatefulWidget {
 class _CarOwnerAddressState extends State<CarOwnerAddress> {
   List<CarOwnerAddressModel> addresses = [];
   late AddressService addressService;
-  bool _isLoading = false; // Loading state variable
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -101,7 +101,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
           content: SingleChildScrollView( // Wrap the content with SingleChildScrollView
-            child: Container(
+            child: SizedBox(
               width: MediaQuery
                   .of(context)
                   .size
