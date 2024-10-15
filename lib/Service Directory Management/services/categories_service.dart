@@ -89,7 +89,6 @@ class CategoriesService {
     }
   }
 
-  // Fetch service provider by UID with caching
   // Fetch service provider by uid
   Future<Map<String, dynamic>> fetchProviderByUid(String uid) async {
     try {
