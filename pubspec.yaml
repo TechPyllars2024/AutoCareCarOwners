@@ -55,6 +55,7 @@ dependencies:
   shared_preferences: ^2.3.2
   smooth_page_indicator: ^1.2.0+3
   flutter_native_splash: ^2.4.1
+  google_maps_flutter: ^2.9.0
 
 
 dev_dependencies:
