@@ -1,4 +1,5 @@
 import 'package:autocare_carowners/Authentication/screens/verifyEmail.dart';
+import 'package:autocare_carowners/api/firebase_push_notification.dart';
 //import 'package:autocare_carowners/Navigation%20Bar/navbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,7 +10,7 @@ import 'Authentication/screens/login.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  await FirebaseNotificationAPI().initializeNotifications();
   FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true
   );
