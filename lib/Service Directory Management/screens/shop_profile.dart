@@ -6,7 +6,7 @@ import 'package:logger/logger.dart';
 
 import '../../Messages Management/screens/callScreen.dart';
 import '../../Messages Management/screens/callingScreen.dart';
-import '../../Messages Management/screens/messageScreen.dart';
+import '../../Messages Management/screens/chatScreen.dart';
 import '../../Ratings and Feedback Management/models/feedback_model.dart';
 import '../models/services_model.dart';
 import '../services/categories_service.dart';
