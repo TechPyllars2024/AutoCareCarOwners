@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../widgets/convertCoordinates.dart';
 import '../widgets/googleMap.dart';
 
 class GasolineStation extends StatefulWidget {
+
   const GasolineStation({super.key});
 
   @override
@@ -28,8 +30,10 @@ class _GasolineStationState extends State<GasolineStation> {
       body: Column(
 
         children: [
-          GoogleMapWidget()
+          GoogleMapWidget(),
+          ConvertCoordinates(),
         ],
+
       ),
     );
   }
