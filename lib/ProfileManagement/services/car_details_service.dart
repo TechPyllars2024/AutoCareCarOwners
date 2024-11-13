@@ -62,6 +62,28 @@ class CarDetailsService {
       throw Exception('Failed to delete car details. Please try again.');
     }
   }
+
+  // Set a default car (updating the Firestore and the local list)
+  Future<void> setDefaultCar(int index, List<CarDetailsModel> carDetails) async {
+    try {
+      // Update the local state immediately
+      for (int i = 0; i < carDetails.length; i++) {
+        carDetails[i].isDefault = i == index;  // Set the default car
+      }
+
+      // Perform Firestore update in the background
+      final snapshot = await carDetailsCollection.get();
+      for (int i = 0; i < snapshot.docs.length; i++) {
+        final docId = snapshot.docs[i].id;
+        await carDetailsCollection.doc(docId).update({
+          'isDefault': i == index,
+        });
+      }
+    } catch (e) {
+      logger.e('Error setting default car: $e');
+      throw Exception('Unable to set default car. Please try again.');
+    }
+  }
 }
 
 class CapitalizeEachWordFormatter extends TextInputFormatter {
