@@ -53,7 +53,7 @@ class _BookingState extends State<Booking> {
     _providerData =
         CategoriesService().fetchProviderByUid(widget.serviceProviderUid);
     loadServices();
-    carDetailsData = fetchCarDetails();
+    carDetailsData = fetchDefaultCarDetails();
     logger.i('carDetailsData: $carDetailsData');
     fetchTimeData();
     _fetchFullName();
@@ -160,16 +160,22 @@ class _BookingState extends State<Booking> {
     return DateFormat.jm().format(time); // 'jm' gives the '9:00 AM' format
   }
 
-  Future<Map<String, dynamic>> fetchCarDetails() async {
+  Future<Map<String, dynamic>> fetchDefaultCarDetails() async {
     try {
-      Map<String, dynamic> fetchedCarDetails =
-          await BookingService().fetchCarOwnerDetails(user!.uid);
+      // Fetch default car details instead of all car details
+      Map<String, dynamic> fetchedCarDetails = await BookingService()
+          .fetchDefaultCarDetails(user!.uid); // Call the new function
 
-      logger.i('Car Owner Data: $fetchedCarDetails');
-      return fetchedCarDetails;
+      if (fetchedCarDetails.isEmpty) {
+        logger.i('No default car found for this user.');
+      } else {
+        logger.i('Default Car Data: $fetchedCarDetails');
+      }
+
+      return fetchedCarDetails; // Return the fetched car details
     } catch (e) {
       logger.e('Error fetching car details: $e');
-      return {};
+      return {}; // Return empty map in case of error
     }
   }
 
@@ -259,7 +265,7 @@ class _BookingState extends State<Booking> {
     );
     // After returning from the CarDetails screen, fetch the updated car details
     setState(() {
-      carDetailsData = fetchCarDetails();
+      carDetailsData = fetchDefaultCarDetails();
     });
   }
 
@@ -268,7 +274,8 @@ class _BookingState extends State<Booking> {
     final double top = coverHeight - profileHeight / 2;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Booking', style: TextStyle(fontWeight: FontWeight.w900)),
+        title: const Text('Booking',
+            style: TextStyle(fontWeight: FontWeight.w900)),
       ),
       body: SafeArea(
         child: FutureBuilder<Map<String, dynamic>>(
@@ -489,123 +496,131 @@ class _BookingState extends State<Booking> {
       );
 
   Widget carDetails() => FutureBuilder<Map<String, dynamic>>(
-    future: carDetailsData,
-    builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return const Center(child: CircularProgressIndicator());
-      } else if (snapshot.hasError) {
-        return Center(child: Text('Error: ${snapshot.error}'));
-      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-        return Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                'No car details data found',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(width: 16),
-              ElevatedButton.icon(
-                onPressed: navigateToCarDetails,
-                icon: const Icon(
-                  Icons.add,
-                  size: 18,
-                  color: Colors.white,
-                ),
-                label: const Text(
-                  'Add Car Details',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white,
+        future: carDetailsData,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'No car details data found',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange.shade900,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                    vertical: 4.0,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      }
-
-      final carData = snapshot.data!;
-      logger.i('car Data', carData);
-      final carDetails = carData.entries.first.value as Map<String, dynamic>;
-
-      return SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          elevation: 6,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Car Details',
+                  const SizedBox(width: 16),
+                  ElevatedButton.icon(
+                    onPressed: navigateToCarDetails,
+                    icon: const Icon(
+                      Icons.add,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      'Add Car Details',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                        color: Colors.white,
                       ),
                     ),
-                    ElevatedButton(
-                      onPressed: navigateToCarDetails,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange.shade900,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 8.0,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30.0), // Rounded button
-                        ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange.shade900,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                        vertical: 4.0,
                       ),
-                      child: const Text(
-                        'Edit Details',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final carData = snapshot.data!;
+          logger.i('car Data', carData);
+          final carDetails =
+              carData.entries.first.value as Map<String, dynamic>;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Card(
+              elevation: 6,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Car Details',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: navigateToCarDetails,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange.shade900,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 8.0,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(30.0), // Rounded button
+                            ),
+                          ),
+                          child: const Text(
+                            'Edit Details',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    _buildDetailRow(
+                        'Brand', carDetails['brand'], Icons.directions_car),
+                    const SizedBox(height: 10),
+                    _buildDetailRow(
+                        'Model', carDetails['model'], Icons.model_training),
+                    const SizedBox(height: 10),
+                    _buildDetailRow('Year', carDetails['year']?.toString(),
+                        Icons.calendar_today),
+                    const SizedBox(height: 10),
+                    _buildDetailRow('Fuel Type', carDetails['fuelType'],
+                        Icons.local_gas_station),
+                    const SizedBox(height: 10),
+                    _buildDetailRow(
+                        'Color', carDetails['color'], Icons.color_lens),
+                    const SizedBox(height: 10),
+                    _buildDetailRow('Transmission',
+                        carDetails['transmissionType'], Icons.settings),
                   ],
                 ),
-                const SizedBox(height: 10),
-                _buildDetailRow('Brand', carDetails['brand'], Icons.directions_car),
-                const SizedBox(height: 10),
-                _buildDetailRow('Model', carDetails['model'], Icons.model_training),
-                const SizedBox(height: 10),
-                _buildDetailRow('Year', carDetails['year']?.toString(), Icons.calendar_today),
-                const SizedBox(height: 10),
-                _buildDetailRow('Fuel Type', carDetails['fuelType'], Icons.local_gas_station),
-                const SizedBox(height: 10),
-                _buildDetailRow('Color', carDetails['color'], Icons.color_lens),
-                const SizedBox(height: 10),
-                _buildDetailRow('Transmission', carDetails['transmissionType'], Icons.settings),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       );
-    },
-  );
 
   Widget _buildDetailRow(String label, String? value, IconData icon) {
     return Container(
@@ -626,7 +641,8 @@ class _BookingState extends State<Booking> {
         children: [
           Row(
             children: [
-              Icon(icon, color: Colors.orange.shade900), // Icon next to the label
+              Icon(icon,
+                  color: Colors.orange.shade900), // Icon next to the label
               const SizedBox(width: 4), // Space between icon and label
               Text(
                 label,
@@ -640,13 +656,15 @@ class _BookingState extends State<Booking> {
           ),
           Text(
             value ?? 'N/A', // Display 'N/A' if value is null
-            style: const TextStyle(fontSize: 13, color: Colors.black54, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontSize: 13,
+                color: Colors.black54,
+                fontWeight: FontWeight.bold),
           ),
         ],
       ),
     );
   }
-
 
   // Submit Button
   Widget submitButton(BuildContext context) {
@@ -671,7 +689,6 @@ class _BookingState extends State<Booking> {
           String color = carDetails['color'] ?? '';
           String transmission = carDetails['transmissionType'] ?? '';
 
-
           String bookingDate = formatBookingDate(selectedDate.toString());
           String bookingTime = formatTimeOfDay(selectedTime);
 
@@ -685,11 +702,16 @@ class _BookingState extends State<Booking> {
           if (year.isEmpty) errorMessage += 'Year is required.\n';
           if (fuelType.isEmpty) errorMessage += 'Fuel Type is required.\n';
           if (color.isEmpty) errorMessage += 'Color is required.\n';
-          if (transmission.isEmpty) errorMessage += 'Transmission is required.\n';
-          if (selectedServices.isEmpty) errorMessage += 'Please select at least one service.\n';
+          if (transmission.isEmpty)
+            errorMessage += 'Transmission is required.\n';
+          if (selectedServices.isEmpty)
+            errorMessage += 'Please select at least one service.\n';
 
           // Year validation
-          if (year.isNotEmpty && (int.tryParse(year) == null || int.parse(year) < 1886 || int.parse(year) > DateTime.now().year)) {
+          if (year.isNotEmpty &&
+              (int.tryParse(year) == null ||
+                  int.parse(year) < 1886 ||
+                  int.parse(year) > DateTime.now().year)) {
             errorMessage += 'Please enter a valid year.\n';
           }
 
