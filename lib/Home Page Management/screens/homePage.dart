@@ -1,8 +1,8 @@
-import 'package:autocare_carowners/Home%20Page%20Management/screens/gasoline_station.dart';
+import 'package:autocare_carowners/Home%20Page%20Management/screens/gasolineStation.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/card.dart';
-import '../widgets/diagnosis_field.dart';
+import '../widgets/diagnosisField.dart';
 //import '../widgets/googleMap.dart';
 
 
