@@ -30,7 +30,7 @@ class _CarDetailsState extends State<CarDetails> {
     try {
       // Update the local state immediately
       for (int i = 0; i < cars.length; i++) {
-        cars[i].isDefault = i == index;  // Mark the car at 'index' as default
+        cars[i].isDefault = i == index; // Mark the car at 'index' as default
       }
 
       // Perform Firestore update in the background
@@ -38,7 +38,7 @@ class _CarDetailsState extends State<CarDetails> {
       for (int i = 0; i < snapshot.docs.length; i++) {
         final docId = snapshot.docs[i].id;
         await carDetailsService.carDetailsCollection.doc(docId).update({
-          'isDefault': i == index,  // Update the 'isDefault' field
+          'isDefault': i == index, // Update the 'isDefault' field
         });
       }
     } catch (e) {
@@ -68,7 +68,10 @@ class _CarDetailsState extends State<CarDetails> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontSize: 15), ),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -80,12 +83,55 @@ class _CarDetailsState extends State<CarDetails> {
                 await carDetailsService.deleteCarDetails(docId);
                 _fetchCarDetails();
               },
-              child:  Text('Delete', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w700, fontSize: 15),),
+              child: Text(
+                'Delete',
+                style: TextStyle(
+                    color: Colors.orange.shade900,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15),
+              ),
             ),
           ],
         );
       },
     );
+  }
+  //Helper function to get color from color name
+  Color _getColorFromName(String colorName) {
+    switch (colorName.toLowerCase()) {
+      case 'red':
+        return Colors.red;
+      case 'black':
+        return Colors.black;
+      case 'white':
+        return Colors.white;
+      case 'green':
+        return Colors.green;
+      case 'silver':
+        return Colors.grey.shade300;
+      case 'yellow':
+        return Colors.yellow;
+      case 'beige':
+        return const Color(0xFFF5F5DC);
+      case 'blue':
+        return Colors.blue;
+      case 'brown':
+        return Colors.brown;
+      case 'gold':
+        return const Color(0xFFFFD700);
+      case 'grey':
+        return Colors.grey;
+      case 'orange':
+        return Colors.orange;
+      case 'pink':
+        return Colors.pink;
+      case 'purple':
+        return Colors.purple;
+      case 'tan':
+        return const Color(0xFFD2B48C);
+      default:
+        return Colors.grey; // Default color if no match is found
+    }
   }
 
   void _showCarDetailsDialog({CarDetailsModel? car, int? index}) {
@@ -107,10 +153,7 @@ class _CarDetailsState extends State<CarDetails> {
           title: Text(car == null ? 'Add Car Details' : 'Edit Car Details'),
           content: SingleChildScrollView(
             child: SizedBox(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.9,
+              width: MediaQuery.of(context).size.width * 0.9,
               child: Form(
                 key: formKey,
                 child: Column(
@@ -188,12 +231,29 @@ class _CarDetailsState extends State<CarDetails> {
                         'Pink',
                         'Purple',
                         'Tan'
-                      ]
-                          .map((color) => DropdownMenuItem(
-                                value: color,
-                                child: Text(color),
-                              ))
-                          .toList(),
+                      ].map((colorName) {
+                        return DropdownMenuItem(
+                          value: colorName,
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 24, // Size of the color swatch
+                                height: 24,
+                                margin: const EdgeInsets.only(
+                                    right: 8), // Space between swatch and text
+                                decoration: BoxDecoration(
+                                  shape: BoxShape
+                                      .circle, // Change to BoxShape.rectangle for square
+                                  color: _getColorFromName(
+                                      colorName), // Get color from helper function
+                                ),
+                              ),
+                              Text(
+                                  colorName), // Display color name beside the swatch
+                            ],
+                          ),
+                        );
+                      }).toList(),
                       onChanged: (newValue) {
                         setState(() {
                           color = newValue!;
@@ -206,6 +266,7 @@ class _CarDetailsState extends State<CarDetails> {
                         return null;
                       },
                     ),
+                    const SizedBox(height: 10),
                     DropdownButtonFormField<String>(
                       value: transmissionType,
                       decoration:
@@ -259,7 +320,10 @@ class _CarDetailsState extends State<CarDetails> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Cancel', style: TextStyle(color: Colors.grey, fontSize: 15),),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Colors.grey, fontSize: 15),
+              ),
             ),
             TextButton(
               onPressed: () async {
@@ -287,7 +351,13 @@ class _CarDetailsState extends State<CarDetails> {
                   Navigator.of(context).pop();
                 }
               },
-              child: Text(car == null ? 'Add' : 'Update', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w900, fontSize: 15),),
+              child: Text(
+                car == null ? 'Add' : 'Update',
+                style: TextStyle(
+                    color: Colors.orange.shade900,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15),
+              ),
             ),
           ],
         );
@@ -301,7 +371,10 @@ class _CarDetailsState extends State<CarDetails> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
-        title: const Text('Car Details', style: TextStyle(fontWeight: FontWeight.bold),),
+        title: const Text(
+          'Car Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: carDetails.isEmpty
           ? const Center(child: Text('No car details. Add a new car.'))
@@ -318,7 +391,8 @@ class _CarDetailsState extends State<CarDetails> {
                         color: Colors.orange.shade900,
                         width: 2, // Optional: Set the border width
                       ),
-                      borderRadius: BorderRadius.circular(8), // Optional: Add rounded corners
+                      borderRadius: BorderRadius.circular(
+                          8), // Optional: Add rounded corners
                     ),
                     elevation: 8,
                     child: ListTile(
@@ -350,7 +424,9 @@ class _CarDetailsState extends State<CarDetails> {
                           IconButton(
                             icon: Icon(
                               car.isDefault ? Icons.star : Icons.star_border,
-                              color: car.isDefault ? Colors.orange.shade900 : Colors.grey,
+                              color: car.isDefault
+                                  ? Colors.orange.shade900
+                                  : Colors.grey,
                             ),
                             onPressed: () async {
                               setState(() {
@@ -358,8 +434,9 @@ class _CarDetailsState extends State<CarDetails> {
                                   carDetails[i].isDefault = i == index;
                                 }
                               });
-                              await carDetailsService.setDefaultCar(index, carDetails); // Set this car as default
-                              _fetchCarDetails();  // Re-fetch car details to update UI
+                              await carDetailsService.setDefaultCar(
+                                  index, carDetails); // Set this car as default
+                              _fetchCarDetails(); // Re-fetch car details to update UI
                             },
                           ),
                         ],
@@ -374,7 +451,12 @@ class _CarDetailsState extends State<CarDetails> {
         onPressed: () {
           _showCarDetailsDialog();
         },
-        child: const Icon(Icons.add, color: Colors.white, size: 30, weight: 20,),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+          size: 30,
+          weight: 20,
+        ),
       ),
     );
   }
