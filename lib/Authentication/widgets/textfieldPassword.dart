@@ -35,12 +35,11 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
         children: [
           SizedBox(
             height: 45,
-
             child: TextField(
               style: const TextStyle(fontSize: 15),
               controller: widget.textEditingController,
               obscureText: widget.isPass &&
-                  !_isPasswordVisible, // Toggle password visibility
+                  !_isPasswordVisible,
               keyboardType: widget.textInputType,
               decoration: InputDecoration(
                 labelText: widget.hintText,
@@ -65,15 +64,15 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
                         },
                       )
                     : null,
-                border:  OutlineInputBorder(
+                border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
                   borderSide: const BorderSide(color: Colors.grey),
                 ),
-                enabledBorder:  OutlineInputBorder(
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
                   borderSide: const BorderSide(color: Colors.grey),
                 ),
-                focusedBorder:  OutlineInputBorder(
+                focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
                   borderSide: const BorderSide(color: Colors.grey),
                 ),
@@ -82,7 +81,7 @@ class _TextFieldPasswordState extends State<TextFieldPassword> {
               onChanged: (value) {
                 setState(() {
                   errorMessage =
-                      widget.validator?.call(value); // Validate on text change
+                      widget.validator?.call(value);
                 });
               },
             ),
