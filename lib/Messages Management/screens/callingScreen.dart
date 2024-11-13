@@ -50,43 +50,51 @@ class _CallingScreenState extends State<CallingScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   // Mute Button
-                  Column(
-                    children: [
-                      FloatingActionButton(
-                        backgroundColor: Colors.grey[800],
-                        onPressed: () {
-                          // Handle mute action
-                        },
-                        child: const Icon(Icons.mic_off, color: Colors.white),
+                  GestureDetector(
+                    onTap: () {
+                      // Handle mute action
+                    },
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[800],
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 30),
-                    ],
+                      child: const Icon(Icons.mic_off, color: Colors.white, size: 30),
+                    ),
                   ),
+
                   // Speaker Button
-                  Column(
-                    children: [
-                      FloatingActionButton(
-                        backgroundColor: Colors.grey[800],
-                        onPressed: () {
-                          // Handle speaker action
-                        },
-                        child: const Icon(Icons.volume_up, color: Colors.white),
+                  GestureDetector(
+                    onTap: () {
+                      // Handle speaker action
+                    },
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[800],
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 30),
-                    ],
+                      child: const Icon(Icons.volume_up, color: Colors.white, size: 30),
+                    ),
                   ),
+
                   // End Call Button
-                  Column(
-                    children: [
-                      FloatingActionButton(
-                        backgroundColor: Colors.red,
-                        onPressed: () {
-                          Navigator.pop(context); // End call and go back
-                        },
-                        child: const Icon(Icons.call_end, color: Colors.white),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context); // End call and go back
+                    },
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 30),
-                    ],
+                      child: const Icon(Icons.call_end, color: Colors.white, size: 30),
+                    ),
                   ),
                 ],
               ),
