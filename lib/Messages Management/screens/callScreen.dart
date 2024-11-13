@@ -48,30 +48,44 @@ class _CallScreenState extends State<CallScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Column(
-                    children: [
-                      FloatingActionButton(
-                        backgroundColor: Colors.green,
-                        onPressed: () {
-                          Navigator.pop(context); // End call and go back
-                        },
-                        child: const Icon(Icons.call, color: Colors.white),
+                  // Accept Call Button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context); // Handle accept call
+                    },
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      decoration: const BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 30),
-                    ],
+                      child: const Icon(
+                        Icons.call,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
                   ),
-                  // End Call Button
-                  Column(
-                    children: [
-                      FloatingActionButton(
-                        backgroundColor: Colors.red,
-                        onPressed: () {
-                          Navigator.pop(context); // End call and go back
-                        },
-                        child: const Icon(Icons.call_end, color: Colors.white),
+
+                  // Decline Call Button
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context); // Handle decline call
+                    },
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      decoration: const BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 30),
-                    ],
+                      child: const Icon(
+                        Icons.call_end,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
                   ),
                 ],
               ),
