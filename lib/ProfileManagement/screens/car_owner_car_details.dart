@@ -2,6 +2,7 @@ import 'package:autocare_carowners/ProfileManagement/models/car_owner_car_detail
 import 'package:autocare_carowners/ProfileManagement/services/car_details_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 
 class CarDetails extends StatefulWidget {
   final List<CarDetailsModel> carDetails;
@@ -15,6 +16,7 @@ class CarDetails extends StatefulWidget {
 class _CarDetailsState extends State<CarDetails> {
   late List<CarDetailsModel> carDetails;
   late CarDetailsService carDetailsService;
+  final logger = Logger();
 
   @override
   void initState() {
@@ -22,6 +24,27 @@ class _CarDetailsState extends State<CarDetails> {
     carDetails = List.from(widget.carDetails);
     carDetailsService = CarDetailsService();
     _fetchCarDetails();
+  }
+
+  Future<void> setDefaultCar(int index, List<CarDetailsModel> cars) async {
+    try {
+      // Update the local state immediately
+      for (int i = 0; i < cars.length; i++) {
+        cars[i].isDefault = i == index;  // Mark the car at 'index' as default
+      }
+
+      // Perform Firestore update in the background
+      final snapshot = await carDetailsService.carDetailsCollection.get();
+      for (int i = 0; i < snapshot.docs.length; i++) {
+        final docId = snapshot.docs[i].id;
+        await carDetailsService.carDetailsCollection.doc(docId).update({
+          'isDefault': i == index,  // Update the 'isDefault' field
+        });
+      }
+    } catch (e) {
+      logger.i('Error setting default car: $e');
+      throw Exception('Unable to set default car. Please try again.');
+    }
   }
 
   Future<void> _fetchCarDetails() async {
@@ -322,6 +345,21 @@ class _CarDetailsState extends State<CarDetails> {
                             icon: const Icon(Icons.delete),
                             onPressed: () {
                               _showDeleteConfirmationDialog(index);
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(
+                              car.isDefault ? Icons.star : Icons.star_border,
+                              color: car.isDefault ? Colors.orange.shade900 : Colors.grey,
+                            ),
+                            onPressed: () async {
+                              setState(() {
+                                for (int i = 0; i < carDetails.length; i++) {
+                                  carDetails[i].isDefault = i == index;
+                                }
+                              });
+                              await carDetailsService.setDefaultCar(index, carDetails); // Set this car as default
+                              _fetchCarDetails();  // Re-fetch car details to update UI
                             },
                           ),
                         ],
