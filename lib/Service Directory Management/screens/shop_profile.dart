@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:logger/logger.dart';
 
+import '../../Messages Management/screens/callScreen.dart';
+import '../../Messages Management/screens/callingScreen.dart';
+import '../../Messages Management/screens/messageScreen.dart';
 import '../../Ratings and Feedback Management/models/feedback_model.dart';
 import '../models/services_model.dart';
 import '../services/categories_service.dart';
@@ -260,7 +263,15 @@ class _ShopProfileState extends State<ShopProfile> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.message, color: Colors.orange.shade900, size: 25),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChatScreen()),
+                    );
+                  },
+                  child: Icon(Icons.message, color: Colors.orange.shade900, size: 25),
+                ),
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
@@ -281,7 +292,15 @@ class _ShopProfileState extends State<ShopProfile> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.call, color: Colors.orange.shade900, size: 25),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => CallingScreen()),
+                    );
+                  },
+                  child: Icon(Icons.call, color: Colors.orange.shade900, size: 25),
+                ),
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
