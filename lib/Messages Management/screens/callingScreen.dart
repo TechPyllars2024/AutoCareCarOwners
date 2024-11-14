@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CallingScreen extends StatefulWidget {
+  const CallingScreen({super.key, this.child});
+
+  final Widget? child;
+
   @override
-  _CallingScreenState createState() => _CallingScreenState();
+  State<CallingScreen> createState() => _CallingScreenState();
 }
 
 class _CallingScreenState extends State<CallingScreen> {
