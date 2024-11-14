@@ -1,22 +1,24 @@
 class ConversationModel {
-  final String conversationId; // Unique ID for the conversation
-  final String shopName; // Name of the shop
-  final String shopProfilePhoto; // URL of the shop's profile photo
-  final List<String> participants; // List of user IDs involved in the conversation
-  final String lastMessage; // Last message sent in the conversation
-  final DateTime lastMessageTime; // Timestamp of the last message
-  final String lastMessageSender; // User ID of the sender of the last message
-  final Map<String, int> unreadCount; // Unread message count per user
+  String conversationId;
+  String shopName;
+  String shopProfilePhoto;
+  String lastMessage;
+  DateTime lastMessageTime;
+  Map<String, int> unreadCount;
+  String senderUid;
+  String receiverUid;
+  int numberOfMessages;
 
   ConversationModel({
     required this.conversationId,
     required this.shopName,
     required this.shopProfilePhoto,
-    required this.participants,
     required this.lastMessage,
     required this.lastMessageTime,
-    required this.lastMessageSender,
     required this.unreadCount,
+    required this.senderUid,
+    required this.receiverUid,
+    required this.numberOfMessages,
   });
 
   // Convert ConversationModel to a Map for Firestore
@@ -25,11 +27,12 @@ class ConversationModel {
       'conversationId': conversationId,
       'shopName': shopName,
       'shopProfilePhoto': shopProfilePhoto,
-      'participants': participants,
       'lastMessage': lastMessage,
       'lastMessageTime': lastMessageTime.toIso8601String(),
-      'lastMessageSender': lastMessageSender,
       'unreadCount': unreadCount,
+      'senderUid': senderUid,
+      'receiverUid': receiverUid,
+      'numberOfMessages': numberOfMessages,
     };
   }
 
@@ -39,11 +42,12 @@ class ConversationModel {
       conversationId: id,
       shopName: doc['shopName'] ?? '',
       shopProfilePhoto: doc['shopProfilePhoto'] ?? '',
-      participants: List<String>.from(doc['participants'] ?? []),
       lastMessage: doc['lastMessage'] ?? '',
       lastMessageTime: DateTime.parse(doc['lastMessageTime'] ?? DateTime.now().toIso8601String()),
-      lastMessageSender: doc['lastMessageSender'] ?? '',
       unreadCount: Map<String, int>.from(doc['unreadCount'] ?? {}),
+      senderUid: doc['senderUid'] ?? '',
+      receiverUid: doc['receiverUid'] ?? '',
+      numberOfMessages: doc['numberOfMessages'] ?? 0,
     );
   }
 }
