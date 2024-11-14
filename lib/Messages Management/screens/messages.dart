@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'messageScreen.dart';
+import 'chatScreen.dart';
 
 class CarOwnerMessagesScreen extends StatefulWidget {
   const CarOwnerMessagesScreen({super.key, this.child});
@@ -35,6 +35,7 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: const Text('Messages',
         style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black)),
       ),
@@ -64,7 +65,8 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
               // Navigate to the chat screen
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ChatScreen()),
+                MaterialPageRoute(builder: (context) => const ChatScreen(serviceProviderUid: '', conversationId: '')
+                ),
               );
             },
           );
