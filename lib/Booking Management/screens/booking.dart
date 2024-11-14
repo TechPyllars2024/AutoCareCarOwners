@@ -181,6 +181,7 @@ class _BookingState extends State<Booking> {
 
   // Load services and calculate total price
   void loadServices() async {
+    dropdownController.clearSelection();
     List<Map<String, dynamic>> fetchedServices =
         await BookingService().fetchServices(widget.serviceProviderUid);
     setState(() {
@@ -471,29 +472,31 @@ class _BookingState extends State<Booking> {
         ),
       );
 
+  // Widget to display the checklist of services
   Widget pickService() => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Select Service',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Checklist(
-              options:
-                  services.map((service) => service['name'] as String).toList(),
-              hintText: 'Service Services',
-              controller: dropdownController,
-              onSelectionChanged: (selectedOptions) {},
-            ),
-          ],
+    padding: const EdgeInsets.all(8.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select Service',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      );
+        Checklist(
+          options: services.map((service) => service['name'] as String).toList(),
+          hintText: 'Select Services',
+          controller: dropdownController,
+          onSelectionChanged: (selectedOptions) {
+            // Handle selection changes if needed
+          },
+        ),
+      ],
+    ),
+  );
 
   Widget carDetails() => FutureBuilder<Map<String, dynamic>>(
         future: carDetailsData,
