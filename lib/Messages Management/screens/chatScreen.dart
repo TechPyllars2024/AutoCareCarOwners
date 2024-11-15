@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
 
 import '../models/message_model.dart';
@@ -27,7 +30,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String _senderId = '';
   String _shopName = 'Loading...';
   String _shopProfilePhoto = '';
-  final Logger logger = Logger();
+  File? _pickedImage;
 
   @override
   void initState() {
@@ -47,8 +50,8 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> _sendMessage() async {
-    if (_messageController.text.trim().isNotEmpty) {
+  Future<void> _sendMessage({File? imageFile}) async {
+    if (_messageController.text.trim().isNotEmpty || imageFile != null) {
       final message = MessageModel(
         messageId: '',
         conversationId: widget.conversationId,
@@ -57,8 +60,22 @@ class _ChatScreenState extends State<ChatScreen> {
         isRead: false,
         senderId: _senderId,
       );
-      _chatService.sendMessage(message);
+      await _chatService.sendMessage(message, imageFile: imageFile);
       _messageController.clear();
+      setState(() {
+        _pickedImage = null;
+      });
+    }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() {
+        _pickedImage = File(pickedFile.path); // Set the picked image
+      });
     }
   }
 
@@ -145,25 +162,74 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: const InputDecoration(
-                      hintText: 'Type a message...',
+          if (_pickedImage != null) // Display the image preview if an image is picked
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 150, // Set a fixed height for the preview
+                    width: double.infinity,
+                    child: Image.file(
+                      _pickedImage!,
+                      fit: BoxFit.contain, // Scale the image to fit
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  onPressed: _sendMessage,
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Center(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.orange.shade900,
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white),
+                        onPressed: () {
+                          setState(() {
+                            _pickedImage = null;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 1),
+            child: Container(
+              color: Colors.white,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.image, color: Colors.orange.shade900),
+                    onPressed: () => _pickImage(ImageSource.gallery),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.camera_alt, color: Colors.orange.shade900),
+                    onPressed: () => _pickImage(ImageSource.camera),
+                  ),
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: const InputDecoration(
+                        hintText: 'Type a message...',
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.send, color: Colors.orange.shade900),
+                    onPressed: () {
+                      if (_pickedImage != null || _messageController.text.trim().isNotEmpty) {
+                        _sendMessage(imageFile: _pickedImage); // Send message or image
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
