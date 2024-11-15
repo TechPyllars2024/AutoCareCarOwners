@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert';  // For JSON decoding
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -50,7 +50,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   );
 
   Future<void> getNearbyGasStations(double latitude, double longitude) async {
-    final apiKey = 'AIzaSyAON_aL6GHDiKk4tx_3vWSERcW-NrtgXcM'; // API key
+    final apiKey = 'AIzaSyCrbgW2yWOxrm932ZOoVV1_vw1ImfRLMDM';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=5000&type=gas_station&key=$apiKey');
 
@@ -66,11 +66,19 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
           final lat = location['lat'];
           final lng = location['lng'];
           final name = result['name'];
+          final address = result['vicinity'] ?? 'Address not available';
+          final rating = result['rating'] != null
+              ? result['rating'].toString()
+              : 'No ratings';
+
           setState(() {
             _marker.add(Marker(
               markerId: MarkerId(name),
               position: LatLng(lat, lng),
-              infoWindow: InfoWindow(title: name),
+              infoWindow: InfoWindow(
+                title: name,
+                snippet: 'Address: $address\nRating: $rating',
+              ),
             ));
           });
         }
@@ -89,7 +97,6 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
         height: MediaQuery.of(context).size.height * 0.6,
         child: Column(
           children: [
-
             Expanded(
               child: GoogleMap(
                 initialCameraPosition: _cameraPosition,
@@ -121,7 +128,6 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
                   controller.animateCamera(
                     CameraUpdate.newCameraPosition(cameraPosition),
                   );
-
 
                   await getNearbyGasStations(value.latitude, value.longitude);
                 });

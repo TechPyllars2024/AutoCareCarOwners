@@ -34,7 +34,7 @@ class _GasolineStationState extends State<GasolineStation> {
           Expanded(
             child: GoogleMapWidget(),
           ),
-
+          // Fixed height for ConvertCoordinates
           Container(
             color: Colors.white,
             padding: const EdgeInsets.all(16.0),
