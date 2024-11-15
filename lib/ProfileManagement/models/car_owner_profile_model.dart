@@ -18,7 +18,8 @@ class CarOwnerProfileModel {
   });
 
   // Factory method to create CarOwnerProfileModel from Firestore document
-  factory CarOwnerProfileModel.fromDocument(Map<String, dynamic> doc, String uid) {
+  factory CarOwnerProfileModel.fromDocument(
+      Map<String, dynamic> doc, String uid) {
     return CarOwnerProfileModel(
       uid: uid,
       profileId: doc['profileId'] ?? '',

@@ -98,14 +98,13 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.grey.shade100,
       resizeToAvoidBottomInset: true,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
             child: const CarImageWidget(
-
                 imagePath: 'lib/Authentication/assets/images/repair2.jpg')
                 .animate()
                 .fadeIn(duration: const Duration(seconds: 2)),
@@ -113,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // Expanded container that stretches to the bottom of the screen
           Expanded(
-
             child: Container(
               height: MediaQuery.of(context).size.height * 0.6,
               padding: const EdgeInsets.all(20),

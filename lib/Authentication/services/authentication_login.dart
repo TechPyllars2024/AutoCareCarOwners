@@ -8,7 +8,6 @@ class AuthenticationMethodLogIn {
   final user = FirebaseAuth.instance.currentUser;
   final GoogleSignIn googleSignIn = GoogleSignIn();
 
-
   // LOG IN with Email and Password
   Future<String> loginUser({
     required String email,
@@ -28,7 +27,8 @@ class AuthenticationMethodLogIn {
       User user = userCredential.user!;
 
       // Check if user document exists in Firestore
-      DocumentSnapshot userDoc = await firestore.collection("users").doc(user.uid).get();
+      DocumentSnapshot userDoc =
+          await firestore.collection("users").doc(user.uid).get();
 
       if (userDoc.exists) {
         var userData = userDoc.data() as Map<String, dynamic>;
@@ -68,31 +68,32 @@ class AuthenticationMethodLogIn {
     try {
       await GoogleSignIn().signOut();
 
-      final GoogleSignInAccount? googleUser = await GoogleSignIn(
-          scopes: [
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "https://www.googleapis.com/auth/userinfo.email"
-          ]
-      ).signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(scopes: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ]).signIn();
       if (googleUser == null) {
         return "Google Log-In was canceled. Please try again.";
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final OAuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await auth.signInWithCredential(credential);
+      UserCredential userCredential =
+          await auth.signInWithCredential(credential);
       final User? user = userCredential.user;
 
       if (user == null) {
         return "Failed to log in with Google. Please try again.";
       }
 
-      DocumentSnapshot userDoc = await firestore.collection("users").doc(user.uid).get();
+      DocumentSnapshot userDoc =
+          await firestore.collection("users").doc(user.uid).get();
 
       if (userDoc.exists) {
         var userData = userDoc.data() as Map<String, dynamic>;
@@ -107,7 +108,8 @@ class AuthenticationMethodLogIn {
         return "No account found. Please register as a car owner.";
       }
     } on FirebaseAuthException catch (e) {
-      return e.message ?? "A problem occurred during Google Log-In. Please try again.";
+      return e.message ??
+          "A problem occurred during Google Log-In. Please try again.";
     } catch (e) {
       return "An unexpected error occurred. Please try again later.";
     }
