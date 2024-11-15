@@ -7,6 +7,7 @@ class MessageModel {
   DateTime timestamp;
   bool isRead;
   String messageType;
+  String senderId;
 
   MessageModel({
     required this.messageId,
@@ -15,6 +16,7 @@ class MessageModel {
     required this.timestamp,
     required this.isRead,
     this.messageType = 'text',
+    required this.senderId,
   });
 
   // Convert MessageModel to a Map for Firestore
@@ -26,18 +28,18 @@ class MessageModel {
       'timestamp': timestamp.toIso8601String(),
       'isRead': isRead,
       'messageType': messageType,
+      'senderId': senderId,
     };
   }
 
-  // Create MessageModel from a Firestore document
-  factory MessageModel.fromMap(Map<String, dynamic> map, String messageId) {
+  factory MessageModel.fromMap(Map<String, dynamic> data, String id) {
     return MessageModel(
-      messageId: messageId,
-      conversationId: map['conversationId'],
-      messageText: map['messageText'],
-      timestamp: (map['timestamp'] as Timestamp).toDate(),
-      isRead: map['isRead'],
-      messageType: map['messageType'],
+      messageId: id,
+      conversationId: data['conversationId'] ?? '',
+      messageText: data['messageText'] ?? '',
+      senderId: data['senderId'] ?? '',
+      timestamp: DateTime.parse(data['timestamp']),
+      isRead: data['isRead'] ?? false,
     );
   }
 
@@ -49,6 +51,7 @@ class MessageModel {
       timestamp: timestamp,
       isRead: isRead,
       messageType: messageType,
+      senderId: senderId,
     );
   }
 }
