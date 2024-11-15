@@ -9,7 +9,6 @@ class StartConversationModel {
   String shopProfilePhoto;
   String lastMessage;
   DateTime lastMessageTime;
-  Map<String, int> unreadCount;
   int numberOfMessages;
 
   StartConversationModel({
@@ -21,7 +20,6 @@ class StartConversationModel {
     required this.shopProfilePhoto,
     required this.lastMessage,
     required this.lastMessageTime,
-    required this.unreadCount,
     required this.numberOfMessages,
   });
 
@@ -35,7 +33,6 @@ class StartConversationModel {
       'shopProfilePhoto': shopProfilePhoto,
       'lastMessage': lastMessage,
       'lastMessageTime': lastMessageTime.toIso8601String(),
-      'unreadCount': unreadCount,
       'numberOfMessages': numberOfMessages,
     };
   }
@@ -49,8 +46,11 @@ class StartConversationModel {
       shopName: map['shopName'] ?? '',
       shopProfilePhoto: map['shopProfilePhoto'] ?? '',
       lastMessage: map['lastMessage'] ?? '',
-      lastMessageTime: map['lastMessageTime'] != null ? (map['lastMessageTime'] as Timestamp).toDate() : DateTime.now(),
-      unreadCount: Map<String, int>.from(map['unreadCount'] ?? {}),
+      lastMessageTime: map['lastMessageTime'] != null
+          ? (map['lastMessageTime'] is Timestamp
+          ? (map['lastMessageTime'] as Timestamp).toDate()
+          : DateTime.parse(map['lastMessageTime']))
+          : DateTime.now(),
       numberOfMessages: map['numberOfMessages'] ?? 0,
     );
   }
