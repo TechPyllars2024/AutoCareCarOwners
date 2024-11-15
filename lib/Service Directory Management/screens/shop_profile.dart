@@ -1,12 +1,13 @@
 import 'package:autocare_carowners/Booking%20Management/screens/booking.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:logger/logger.dart';
-
-import '../../Messages Management/screens/callScreen.dart';
+import '../../Messages Management/models/startConversation.dart';
 import '../../Messages Management/screens/callingScreen.dart';
 import '../../Messages Management/screens/chatScreen.dart';
+import '../../Messages Management/services/chat_service.dart';
 import '../../Ratings and Feedback Management/models/feedback_model.dart';
 import '../models/services_model.dart';
 import '../services/categories_service.dart';
@@ -27,6 +28,7 @@ class _ShopProfileState extends State<ShopProfile> {
   final double coverHeight = 160;
   final double profileHeight = 100;
   bool isExpanded = false;
+  final ChatService _chatService = ChatService();
 
   late Future<Map<String, dynamic>> _providerData;
 
@@ -46,6 +48,54 @@ class _ShopProfileState extends State<ShopProfile> {
         ),
       ),
     );
+  }
+
+
+
+  Future<void> _startConversation(BuildContext context) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String senderId = user.uid;
+      String receiverId = widget.serviceProviderUid;
+
+      StartConversationModel? existingConversation = await _chatService.getExistingConversation(senderId, receiverId);
+
+      if (existingConversation != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(serviceProviderUid: widget.serviceProviderUid, conversationId: existingConversation.conversationId),
+          ),
+        );
+      } else {
+        String conversationId = await _chatService.generateConversationId();
+
+        final providerData = await _chatService.fetchProviderByUid(receiverId);
+        String shopName = providerData['shopName'] ?? 'Unknown Shop';
+        String shopProfilePhoto = providerData['profileImage'] ?? '';
+
+        StartConversationModel conversation = StartConversationModel(
+          conversationId: conversationId,
+          senderId: senderId,
+          receiverId: receiverId,
+          timestamp: DateTime.now(),
+          shopName: shopName,
+          shopProfilePhoto: shopProfilePhoto,
+          lastMessage: '',
+          lastMessageTime: DateTime.now(),
+          numberOfMessages: 0,
+        );
+
+        await _chatService.createConversation(conversation);
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ChatScreen(serviceProviderUid: widget.serviceProviderUid, conversationId: conversationId),
+          ),
+        );
+      }
+    }
   }
 
   @override
@@ -257,7 +307,7 @@ class _ShopProfileState extends State<ShopProfile> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
+          SizedBox(
             width: 60,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -265,10 +315,7 @@ class _ShopProfileState extends State<ShopProfile> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ChatScreen()),
-                    );
+                    _startConversation(context);
                   },
                   child: Icon(Icons.message, color: Colors.orange.shade900, size: 25),
                 ),
@@ -296,7 +343,7 @@ class _ShopProfileState extends State<ShopProfile> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => CallingScreen()),
+                      MaterialPageRoute(builder: (context) => const CallingScreen()),
                     );
                   },
                   child: Icon(Icons.call, color: Colors.orange.shade900, size: 25),
