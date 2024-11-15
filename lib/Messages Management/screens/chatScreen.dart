@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:logger/logger.dart';
 
 import '../models/message_model.dart';
 import '../models/startConversation.dart';
 import '../services/chat_service.dart';
+import '../widgets/messageBubble.dart';
 
 class ChatScreen extends StatefulWidget {
   final String serviceProviderUid;
@@ -25,6 +27,7 @@ class _ChatScreenState extends State<ChatScreen> {
   String _senderId = '';
   String _shopName = 'Loading...';
   String _shopProfilePhoto = '';
+  final Logger logger = Logger();
 
   @override
   void initState() {
@@ -44,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     if (_messageController.text.trim().isNotEmpty) {
       final message = MessageModel(
         messageId: '',
@@ -52,6 +55,7 @@ class _ChatScreenState extends State<ChatScreen> {
         messageText: _messageController.text.trim(),
         timestamp: DateTime.now(),
         isRead: false,
+        senderId: _senderId,
       );
       _chatService.sendMessage(message);
       _messageController.clear();
@@ -61,6 +65,7 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
         backgroundColor: Colors.orange[900],
         iconTheme: const IconThemeData(color: Colors.white),
@@ -117,36 +122,24 @@ class _ChatScreenState extends State<ChatScreen> {
                   return const Center(child: CircularProgressIndicator());
                 }
 
+                if (snapshot.hasError) {
+                  print('Error fetching messages: ${snapshot.error}');
+                  return const Center(child: Text('Error loading messages.'));
+                }
+
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  print('No messages found.');
                   return const Center(child: Text('No messages yet.'));
                 }
 
                 final messages = snapshot.data!;
-
+                print('Messages fetched: ${messages.length}');
                 return ListView.builder(
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    final isMe = message.messageId == _senderId;
-                    return Align(
-                      alignment: isMe
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(vertical: 5),
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: isMe ? Colors.blue : Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          message.messageText,
-                          style: TextStyle(
-                              color: isMe ? Colors.white : Colors.black),
-                        ),
-                      ),
-                    );
+                    return MessageBubble(message: message, isMe: message.senderId == _senderId);
                   },
                 );
               },
