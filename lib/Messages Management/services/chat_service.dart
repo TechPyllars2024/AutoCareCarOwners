@@ -42,27 +42,20 @@ class ChatService {
           .collection('messages')
           .doc(messageId)
           .set(message.toMap());
+
+      // Update the last message in the conversation document
+      await _firestore
+          .collection('conversations')
+          .doc(message.conversationId)
+          .update({
+        'lastMessage': message.messageText,
+        'lastMessageTime': message.timestamp,
+      });
     } catch (e) {
       print('Error sending message: $e');
     }
   }
 
-  // Fetch messages for a specific conversation
-  // Stream<List<MessageModel>> getMessages(String conversationId) {
-  //   return _firestore
-  //       .collection('conversations')
-  //       .doc(conversationId)
-  //       .collection('messages')
-  //       .orderBy('timestamp', descending: true)
-  //       .snapshots()
-  //       .map((querySnapshot) {
-  //     return querySnapshot.docs.map((doc) {
-  //       return MessageModel.fromMap(doc.data(), doc.id);
-  //     }).toList();
-  //   });
-  // }
-
-  // Stream messages for a specific conversation
   Stream<List<MessageModel>> getMessages(String conversationId) {
     return _firestore
         .collection('conversations')
@@ -70,9 +63,26 @@ class ChatService {
         .collection('messages')
         .orderBy('timestamp', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-        .map((doc) => MessageModel.fromMap(doc.data(), doc.id))
-        .toList());
+        .map((snapshot) {
+      final messages = snapshot.docs.map((doc) => MessageModel.fromMap(doc.data(), doc.id)).toList();
+      final numberOfMessages = messages.length;
+
+      // Update the message count in the database
+      _updateMessageCount(conversationId, numberOfMessages);
+
+      return messages;
+    });
+  }
+
+  Future<void> _updateMessageCount(String conversationId, int count) async {
+    try {
+      await _firestore
+          .collection('conversations')
+          .doc(conversationId)
+          .update({'numberOfMessages': count});
+    } catch (e) {
+      print('Error updating message count: $e');
+    }
   }
 
   Future<StartConversationModel> fetchStartConversationById(String conversationId) async {
