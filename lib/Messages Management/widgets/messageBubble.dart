@@ -1,3 +1,4 @@
+import 'package:autocare_carowners/Messages%20Management/widgets/fullViewImage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +23,25 @@ class MessageBubble extends StatelessWidget {
             color: isMe ? Colors.orange.shade900 : Colors.white,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Text(
+          child: message.imageUrl != null && message.imageUrl!.isNotEmpty
+              ? GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => FullImageView(imageUrl: message.imageUrl!),
+                ),
+              );
+            },
+            child: SizedBox(
+              height: 130,
+              child: Image.network(
+                message.imageUrl!,
+                fit: BoxFit.cover,
+              ),
+            ),
+          )
+              : Text(
             message.messageText,
             style: TextStyle(color: isMe ? Colors.white : Colors.black),
           ),
