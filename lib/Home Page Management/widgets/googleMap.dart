@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:convert';  // For JSON decoding
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:http/http.dart' as http;
 
 class GoogleMapWidget extends StatefulWidget {
   const GoogleMapWidget({super.key});
@@ -15,7 +17,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     await Geolocator.requestPermission()
         .then((value) {})
         .onError((error, stackTrace) {
-      print(error.toString());
+      print("Error requesting location permission: $error");
     });
     return await Geolocator.getCurrentPosition();
   }
@@ -47,14 +49,47 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     zoom: 14.0,
   );
 
+  Future<void> getNearbyGasStations(double latitude, double longitude) async {
+    final apiKey = 'AIzaSyAON_aL6GHDiKk4tx_3vWSERcW-NrtgXcM'; // API key
+    final url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=5000&type=gas_station&key=$apiKey');
+
+    final response = await http.get(url);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print("Nearby gas stations response: $data");
+
+      final results = data['results'];
+      if (results != null && results.isNotEmpty) {
+        for (var result in results) {
+          final location = result['geometry']['location'];
+          final lat = location['lat'];
+          final lng = location['lng'];
+          final name = result['name'];
+          setState(() {
+            _marker.add(Marker(
+              markerId: MarkerId(name),
+              position: LatLng(lat, lng),
+              infoWindow: InfoWindow(title: name),
+            ));
+          });
+        }
+      } else {
+        print("No gas stations found nearby.");
+      }
+    } else {
+      print('Failed to load nearby gas stations: ${response.statusCode}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.6, // Adjusted height to take more space
+        height: MediaQuery.of(context).size.height * 0.6,
         child: Column(
           children: [
-            // Wrap the GoogleMap widget with Expanded
+
             Expanded(
               child: GoogleMap(
                 initialCameraPosition: _cameraPosition,
@@ -67,7 +102,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
             ElevatedButton(
               onPressed: () async {
                 getUserCurrentLocation().then((value) async {
-                  print("my current location: $value");
+                  print("My current location: $value");
                   setState(() {
                     _marker.add(
                       Marker(
@@ -86,6 +121,9 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
                   controller.animateCamera(
                     CameraUpdate.newCameraPosition(cameraPosition),
                   );
+
+
+                  await getNearbyGasStations(value.latitude, value.longitude);
                 });
               },
               child: const Text('Get Current Location'),
