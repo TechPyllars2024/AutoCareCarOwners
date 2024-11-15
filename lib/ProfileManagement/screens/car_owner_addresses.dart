@@ -302,8 +302,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                         color: address.isDefault
                             ? Colors.orange.shade900
                             : Colors
-                                .transparent, // Change 2: Orange border if default
-                        width: 2, // Optional: Set the border width
+                            .transparent, // Change 2: Orange border if default
+                        width: 2, // Optional: Set the
                       ),
                       borderRadius: BorderRadius.circular(
                           8), // Optional: Add rounded corners

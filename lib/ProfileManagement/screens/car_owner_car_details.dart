@@ -385,16 +385,20 @@ class _CarDetailsState extends State<CarDetails> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Card(
-                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                       side: BorderSide(
-                        color: Colors.orange.shade900,
-                        width: 2, // Optional: Set the border width
+                        color: car.isDefault
+                            ? Colors.orange.shade900
+                            : Colors
+                            .transparent, // Change 2: Orange border if default
+                        width: 2, // Optional: Set the
                       ),
                       borderRadius: BorderRadius.circular(
                           8), // Optional: Add rounded corners
                     ),
                     elevation: 8,
+                    color:
+                    car.isDefault ? Colors.white : Colors.grey.shade200,
                     child: ListTile(
                       title: Text('${car.brand} ${car.model}'),
                       subtitle: Column(
