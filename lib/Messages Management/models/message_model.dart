@@ -8,6 +8,7 @@ class MessageModel {
   bool isRead;
   String messageType;
   String senderId;
+  String? imageUrl;
 
   MessageModel({
     required this.messageId,
@@ -17,6 +18,7 @@ class MessageModel {
     required this.isRead,
     this.messageType = 'text',
     required this.senderId,
+    this.imageUrl,
   });
 
   // Convert MessageModel to a Map for Firestore
@@ -29,6 +31,7 @@ class MessageModel {
       'isRead': isRead,
       'messageType': messageType,
       'senderId': senderId,
+      'imageUrl': imageUrl,
     };
   }
 
@@ -37,21 +40,24 @@ class MessageModel {
       messageId: id,
       conversationId: data['conversationId'] ?? '',
       messageText: data['messageText'] ?? '',
-      senderId: data['senderId'] ?? '',
       timestamp: DateTime.parse(data['timestamp']),
       isRead: data['isRead'] ?? false,
+      messageType: data['messageType'] ?? 'text',
+      senderId: data['senderId'] ?? '',
+      imageUrl: data['imageUrl'],
     );
   }
 
-  MessageModel copyWith({String? messageId}) {
+  MessageModel copyWith({String? messageId, String? imageUrl, String? messageType}) {
     return MessageModel(
       messageId: messageId ?? this.messageId,
       conversationId: conversationId,
       messageText: messageText,
       timestamp: timestamp,
       isRead: isRead,
-      messageType: messageType,
+      messageType: messageType ?? this.messageType,
       senderId: senderId,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 }
