@@ -62,6 +62,8 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.orange[900],
+        iconTheme: const IconThemeData(color: Colors.white),
         title: FutureBuilder<Map<String, dynamic>>(
           future: _providerData,
           builder: (context, snapshot) {
@@ -87,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   const SizedBox(width: 10),
                   Text(
                     _shopName,
-                    style: const TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ],
               );
@@ -96,6 +98,14 @@ class _ChatScreenState extends State<ChatScreen> {
             }
           },
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.call, color: Colors.white),
+            onPressed: () {
+              // Handle call action
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
