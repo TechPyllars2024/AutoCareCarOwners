@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import '../models/message_model.dart';
 import '../models/startConversation.dart';
 
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   Future<void> createConversation(StartConversationModel conversation) async {
     await _firestore
@@ -31,10 +35,15 @@ class ChatService {
   }
 
   // Send a message
-  Future<void> sendMessage(MessageModel message) async {
+  Future<void> sendMessage(MessageModel message, {File? imageFile}) async {
     try {
-      final messageId = _firestore.collection('conversations').doc().id; // Generate unique ID for the message
-      message.messageId = messageId;
+      if (imageFile != null) {
+        final imageUrl = await _uploadImage(imageFile);
+        message = message.copyWith(imageUrl: imageUrl, messageType: 'image');
+      }
+
+      final messageId = _firestore.collection('conversations').doc().id;
+      message = message.copyWith(messageId: messageId);
 
       await _firestore
           .collection('conversations')
@@ -43,17 +52,23 @@ class ChatService {
           .doc(messageId)
           .set(message.toMap());
 
-      // Update the last message in the conversation document
       await _firestore
           .collection('conversations')
           .doc(message.conversationId)
           .update({
-        'lastMessage': message.messageText,
+        'lastMessage': message.messageText.isNotEmpty ? message.messageText : 'Image',
         'lastMessageTime': message.timestamp,
       });
     } catch (e) {
       print('Error sending message: $e');
     }
+  }
+
+  Future<String> _uploadImage(File imageFile) async {
+    final storageRef = _storage.ref().child('chat_images/${DateTime.now().millisecondsSinceEpoch}.jpg');
+    final uploadTask = storageRef.putFile(imageFile);
+    final snapshot = await uploadTask.whenComplete(() => {});
+    return await snapshot.ref.getDownloadURL();
   }
 
   Stream<List<MessageModel>> getMessages(String conversationId) {
