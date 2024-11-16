@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
+import 'package:intl/intl.dart';
 
 import '../models/message_model.dart';
 import '../models/startConversation.dart';
@@ -74,9 +74,13 @@ class _ChatScreenState extends State<ChatScreen> {
 
     if (pickedFile != null) {
       setState(() {
-        _pickedImage = File(pickedFile.path); // Set the picked image
+        _pickedImage = File(pickedFile.path);
       });
     }
+  }
+
+  bool isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
   }
 
   @override
@@ -150,29 +154,44 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
 
                 final messages = snapshot.data!;
-                print('Messages fetched: ${messages.length}');
+
                 return ListView.builder(
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    return MessageBubble(message: message, isMe: message.senderId == _senderId);
+                    final previousMessage = index < messages.length - 1 ? messages[index + 1] : null;
+                    final isNewDay = previousMessage == null || !isSameDay(message.timestamp, previousMessage.timestamp);
+
+                    return Column(
+                      children: [
+                        if (isNewDay)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20, bottom: 10),
+                            child: Text(
+                              DateFormat('MMMM d, yyyy').format(message.timestamp),
+                              style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        MessageBubble(message: message, isMe: message.senderId == _senderId),
+                      ],
+                    );
                   },
                 );
               },
             ),
           ),
-          if (_pickedImage != null) // Display the image preview if an image is picked
+          if (_pickedImage != null)
             Container(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
                   SizedBox(
-                    height: 150, // Set a fixed height for the preview
+                    height: 150,
                     width: double.infinity,
                     child: Image.file(
                       _pickedImage!,
-                      fit: BoxFit.contain, // Scale the image to fit
+                      fit: BoxFit.contain,
                     ),
                   ),
                   const SizedBox(height: 8),
