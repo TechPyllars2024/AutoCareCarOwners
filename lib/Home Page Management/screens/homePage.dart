@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../widgets/card.dart';
 import '../widgets/diagnosisField.dart';
-//import '../widgets/googleMap.dart';
+//import '../widgets/gasolineStationMap.dart';
 
 
 

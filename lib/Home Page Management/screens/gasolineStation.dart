@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../widgets/convertCoordinates.dart';
-import '../widgets/googleMap.dart';
+
+import '../widgets/gasolineStationMap.dart';
 
 class GasolineStation extends StatefulWidget {
   const GasolineStation({super.key});
@@ -38,7 +38,7 @@ class _GasolineStationState extends State<GasolineStation> {
           Container(
             color: Colors.white,
             padding: const EdgeInsets.all(16.0),
-            child: ConvertCoordinates(),
+           // child: ConvertCoordinates(),
           ),
         ],
       ),

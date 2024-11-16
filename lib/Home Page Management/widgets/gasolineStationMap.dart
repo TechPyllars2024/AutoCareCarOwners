@@ -13,17 +13,7 @@ class GoogleMapWidget extends StatefulWidget {
 }
 
 class _GoogleMapWidgetState extends State<GoogleMapWidget> {
-  Future<Position> getUserCurrentLocation() async {
-    await Geolocator.requestPermission()
-        .then((value) {})
-        .onError((error, stackTrace) {
-      print("Error requesting location permission: $error");
-    });
-    return await Geolocator.getCurrentPosition();
-  }
-
   final Completer<GoogleMapController> _controller = Completer();
-
   final List<Marker> _marker = [];
   final List<Marker> _markerList = [
     const Marker(
@@ -38,18 +28,57 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
     ),
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    _marker.addAll(_markerList);
-  }
-
   final CameraPosition _cameraPosition = const CameraPosition(
     target: LatLng(7.0736, 125.6110),
     zoom: 14.0,
   );
 
-  Future<void> getNearbyGasStations(double latitude, double longitude) async {
+  @override
+  void initState() {
+    super.initState();
+    _marker.addAll(_markerList);
+    _initializeLocationAndFetchStations();
+  }
+
+  Future<void> _initializeLocationAndFetchStations() async {
+    final position = await _getUserCurrentLocation();
+    if (position != null) {
+      _updateMapWithCurrentLocation(position);
+      await _getNearbyGasStations(position.latitude, position.longitude);
+    }
+  }
+
+  Future<Position?> _getUserCurrentLocation() async {
+    try {
+      await Geolocator.requestPermission();
+      return await Geolocator.getCurrentPosition();
+    } catch (e) {
+      print("Error getting location: $e");
+      return null;
+    }
+  }
+
+  void _updateMapWithCurrentLocation(Position position) async {
+    setState(() {
+      _marker.add(
+        Marker(
+          markerId: const MarkerId("3"),
+          position: LatLng(position.latitude, position.longitude),
+          infoWindow: const InfoWindow(title: "My Location"),
+        ),
+      );
+    });
+
+    final GoogleMapController controller = await _controller.future;
+    final cameraPosition = CameraPosition(
+      target: LatLng(position.latitude, position.longitude),
+      zoom: 14.0,
+    );
+
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
+
+  Future<void> _getNearbyGasStations(double latitude, double longitude) async {
     final apiKey = 'AIzaSyCrbgW2yWOxrm932ZOoVV1_vw1ImfRLMDM';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=5000&type=gas_station&key=$apiKey');
@@ -94,47 +123,13 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Container(
-        height: MediaQuery.of(context).size.height * 0.6,
-        child: Column(
-          children: [
-            Expanded(
-              child: GoogleMap(
-                initialCameraPosition: _cameraPosition,
-                markers: Set.of(_marker),
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                getUserCurrentLocation().then((value) async {
-                  print("My current location: $value");
-                  setState(() {
-                    _marker.add(
-                      Marker(
-                        markerId: const MarkerId("3"),
-                        position: LatLng(value.latitude, value.longitude),
-                        infoWindow: const InfoWindow(title: "My Location"),
-                      ),
-                    );
-                  });
-
-                  CameraPosition cameraPosition = CameraPosition(
-                    target: LatLng(value.latitude, value.longitude),
-                    zoom: 14.0,
-                  );
-                  final GoogleMapController controller = await _controller.future;
-                  controller.animateCamera(
-                    CameraUpdate.newCameraPosition(cameraPosition),
-                  );
-
-                  await getNearbyGasStations(value.latitude, value.longitude);
-                });
-              },
-              child: const Text('Get Current Location'),
-            ),
-          ],
+        height: MediaQuery.of(context).size.height * 1,
+        child: GoogleMap(
+          initialCameraPosition: _cameraPosition,
+          markers: Set.of(_marker),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
         ),
       ),
     );
