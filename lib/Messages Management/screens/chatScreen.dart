@@ -33,6 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
   File? _pickedImage;
   String? _conversationId;
   String _currentUserId = '';
+  late bool _isLoading = false;
 
   @override
   void initState() {
@@ -73,6 +74,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _sendMessage({File? imageFile}) async {
     if (_messageController.text.trim().isNotEmpty || imageFile != null) {
+      setState(() {
+        _isLoading = true;
+      });
+
       final message = MessageModel(
         messageId: '',
         conversationId: widget.conversationId,
@@ -84,6 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
       _messageController.clear();
       setState(() {
         _pickedImage = null;
+        _isLoading = false;
       });
     }
   }
@@ -204,8 +210,10 @@ class _ChatScreenState extends State<ChatScreen> {
           if (_pickedImage != null)
             Container(
               padding: const EdgeInsets.all(8.0),
-              child: Column(
+              child: Stack(
+                alignment: Alignment.center,
                 children: [
+                  // Image Container
                   SizedBox(
                     height: 150,
                     width: double.infinity,
@@ -214,9 +222,22 @@ class _ChatScreenState extends State<ChatScreen> {
                       fit: BoxFit.contain,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Center(
+                  // Loading Overlay
+                  if (_isLoading)
+                    Positioned.fill(
+                      child: Container(
+                        color: Colors.black.withOpacity(0.5),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ),
+                  // Close Button
+                  Positioned(
+                    top: 0,
+                    right: 0,
                     child: Container(
+                      margin: const EdgeInsets.all(8.0), // Adjust for padding inside the container
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.orange.shade900,
@@ -253,6 +274,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       controller: _messageController,
                       decoration: const InputDecoration(
                         hintText: 'Type a message...',
+                        hintStyle: TextStyle(color: Colors.black54),
                         border: InputBorder.none,
                       ),
                     ),
