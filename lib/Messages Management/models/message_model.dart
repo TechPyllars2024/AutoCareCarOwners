@@ -5,7 +5,6 @@ class MessageModel {
   String conversationId;
   String messageText;
   DateTime timestamp;
-  bool isRead;
   String messageType;
   String senderId;
   String? imageUrl;
@@ -15,7 +14,6 @@ class MessageModel {
     required this.conversationId,
     required this.messageText,
     required this.timestamp,
-    required this.isRead,
     this.messageType = 'text',
     required this.senderId,
     this.imageUrl,
@@ -28,7 +26,6 @@ class MessageModel {
       'conversationId': conversationId,
       'messageText': messageText,
       'timestamp': timestamp.toIso8601String(),
-      'isRead': isRead,
       'messageType': messageType,
       'senderId': senderId,
       'imageUrl': imageUrl,
@@ -41,7 +38,6 @@ class MessageModel {
       conversationId: data['conversationId'] ?? '',
       messageText: data['messageText'] ?? '',
       timestamp: DateTime.parse(data['timestamp']),
-      isRead: data['isRead'] ?? false,
       messageType: data['messageType'] ?? 'text',
       senderId: data['senderId'] ?? '',
       imageUrl: data['imageUrl'],
@@ -54,7 +50,6 @@ class MessageModel {
       conversationId: conversationId,
       messageText: messageText,
       timestamp: timestamp,
-      isRead: isRead,
       messageType: messageType ?? this.messageType,
       senderId: senderId,
       imageUrl: imageUrl ?? this.imageUrl,

@@ -78,7 +78,6 @@ class _ChatScreenState extends State<ChatScreen> {
         conversationId: widget.conversationId,
         messageText: _messageController.text.trim(),
         timestamp: DateTime.now(),
-        isRead: false,
         senderId: _senderId,
       );
       await _chatService.sendMessage(message, imageFile: imageFile);
@@ -165,13 +164,13 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
 
                 if (snapshot.hasError) {
-                  print('Error fetching messages: ${snapshot.error}');
                   return const Center(child: Text('Error loading messages.'));
                 }
 
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  print('No messages found.');
-                  return const Center(child: Text('No messages yet.'));
+                  return const Center(child: Text("Welcome!\nWe're ready to assist with\nwhatever your car needs.",
+                                                  textAlign: TextAlign.center,
+                                                  style: TextStyle(fontSize: 20, color: Colors.black)));
                 }
 
                 final messages = snapshot.data!;
