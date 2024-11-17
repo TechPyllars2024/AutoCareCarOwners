@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import '../services/chat_service.dart';
-import '../models/startConversation.dart';
+import '../models/startConversation_model.dart';
 import 'chatScreen.dart';
 
 class CarOwnerMessagesScreen extends StatefulWidget {

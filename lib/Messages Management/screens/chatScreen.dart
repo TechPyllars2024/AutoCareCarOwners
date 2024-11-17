@@ -6,7 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import '../models/message_model.dart';
-import '../models/startConversation.dart';
+import '../models/startConversation_model.dart';
 import '../services/chat_service.dart';
 import '../widgets/messageBubble.dart';
 

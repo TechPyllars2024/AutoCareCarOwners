@@ -10,6 +10,7 @@ class StartConversationModel {
   String lastMessage;
   DateTime lastMessageTime;
   int numberOfMessages;
+  bool isRead;
 
   StartConversationModel({
     required this.conversationId,
@@ -21,6 +22,7 @@ class StartConversationModel {
     required this.lastMessage,
     required this.lastMessageTime,
     required this.numberOfMessages,
+    this.isRead = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,7 @@ class StartConversationModel {
       'lastMessage': lastMessage,
       'lastMessageTime': lastMessageTime.toIso8601String(),
       'numberOfMessages': numberOfMessages,
+      'isRead': isRead,
     };
   }
 
@@ -52,6 +55,7 @@ class StartConversationModel {
           : DateTime.parse(map['lastMessageTime']))
           : DateTime.now(),
       numberOfMessages: map['numberOfMessages'] ?? 0,
+      isRead: map['isRead'] ?? false,
     );
   }
 }
