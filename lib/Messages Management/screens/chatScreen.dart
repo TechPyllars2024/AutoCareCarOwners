@@ -255,41 +255,46 @@ class _ChatScreenState extends State<ChatScreen> {
                 ],
               ),
             ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 1),
-            child: Container(
-              color: Colors.white,
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.image, color: Colors.orange.shade900),
-                    onPressed: () => _pickImage(ImageSource.gallery),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.camera_alt, color: Colors.orange.shade900),
-                    onPressed: () => _pickImage(ImageSource.camera),
-                  ),
-                  Expanded(
-                    child: TextField(
-                      controller: _messageController,
-                      decoration: const InputDecoration(
-                        hintText: 'Type a message...',
-                        hintStyle: TextStyle(color: Colors.black54),
-                        border: InputBorder.none,
+          Column(
+            children: [
+              const SizedBox(height: 20),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 1),
+                child: Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.image, color: Colors.orange.shade900),
+                        onPressed: () => _pickImage(ImageSource.gallery),
                       ),
-                    ),
+                      IconButton(
+                        icon: Icon(Icons.camera_alt, color: Colors.orange.shade900),
+                        onPressed: () => _pickImage(ImageSource.camera),
+                      ),
+                      Expanded(
+                        child: TextField(
+                          controller: _messageController,
+                          decoration: const InputDecoration(
+                            hintText: 'Type a message...',
+                            hintStyle: TextStyle(color: Colors.black54),
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.send, color: Colors.orange.shade900),
+                        onPressed: () {
+                          if (_pickedImage != null || _messageController.text.trim().isNotEmpty) {
+                            _sendMessage(imageFile: _pickedImage); // Send message or image
+                          }
+                        },
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    icon: Icon(Icons.send, color: Colors.orange.shade900),
-                    onPressed: () {
-                      if (_pickedImage != null || _messageController.text.trim().isNotEmpty) {
-                        _sendMessage(imageFile: _pickedImage); // Send message or image
-                      }
-                    },
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           )
         ],
       ),
