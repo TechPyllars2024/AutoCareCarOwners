@@ -31,6 +31,8 @@ class _ChatScreenState extends State<ChatScreen> {
   String _shopName = 'Loading...';
   String _shopProfilePhoto = '';
   File? _pickedImage;
+  String? _conversationId;
+  String _currentUserId = '';
 
   @override
   void initState() {
@@ -38,6 +40,7 @@ class _ChatScreenState extends State<ChatScreen> {
     _fetchCurrentUser();
     _providerData = ChatService().fetchProviderByUid(widget.serviceProviderUid);
     _conversationData = _chatService.fetchStartConversationById(widget.conversationId);
+    _initializeConversation();
   }
 
   // Fetch the current user's UID (senderId)
@@ -46,6 +49,24 @@ class _ChatScreenState extends State<ChatScreen> {
     if (user != null) {
       setState(() {
         _senderId = user.uid;
+      });
+    }
+  }
+
+  Future<void> _initializeConversation() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      _currentUserId = currentUser.uid;
+    }
+
+    if (widget.conversationId != null) {
+      setState(() {
+        _conversationId = widget.conversationId;
+      });
+    } else {
+      final conversationId = await _chatService.initializeConversation(_currentUserId, widget.serviceProviderUid);
+      setState(() {
+        _conversationId = conversationId;
       });
     }
   }
