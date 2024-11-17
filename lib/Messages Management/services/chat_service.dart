@@ -70,6 +70,12 @@ class ChatService {
     }
   }
 
+  Future<void> markConversationAsRead(String conversationId) async {
+    await _firestore.collection('conversations').doc(conversationId).update({
+      'isRead': true,
+    });
+  }
+
   // Send a message
   Future<void> sendMessage(MessageModel message, {File? imageFile}) async {
     try {
