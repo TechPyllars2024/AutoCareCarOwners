@@ -34,6 +34,42 @@ class ChatService {
     return null;
   }
 
+  Stream<List<StartConversationModel>> getUserConversations(String userId) {
+    return _firestore
+        .collection('conversations')
+        .where('senderId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => StartConversationModel.fromMap(doc.data()))
+        .toList());
+  }
+
+  Future<String> initializeConversation(String currentUserId, String serviceProviderUid) async {
+    // Check for an existing conversation
+    StartConversationModel? existingConversation = await getExistingConversation(currentUserId, serviceProviderUid);
+
+    if (existingConversation != null) {
+      return existingConversation.conversationId;
+    } else {
+      // Create a new conversation if none exists
+      final newConversationId = await generateConversationId();
+      final newConversation = StartConversationModel(
+        conversationId: newConversationId,
+        senderId: currentUserId,
+        receiverId: serviceProviderUid,
+        timestamp: DateTime.now(),
+        shopName: 'Shop Name', // Replace with actual shop name
+        shopProfilePhoto: 'Shop Profile Photo URL', // Replace with actual URL
+        lastMessage: '',
+        lastMessageTime: DateTime.now(),
+        numberOfMessages: 0,
+      );
+
+      await createConversation(newConversation);
+      return newConversationId;
+    }
+  }
+
   // Send a message
   Future<void> sendMessage(MessageModel message, {File? imageFile}) async {
     try {
