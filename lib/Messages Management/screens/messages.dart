@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
+import '../services/chat_service.dart';
+import '../models/startConversation.dart';
 import 'chatScreen.dart';
 
 class CarOwnerMessagesScreen extends StatefulWidget {
@@ -12,61 +16,86 @@ class CarOwnerMessagesScreen extends StatefulWidget {
 }
 
 class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
-  // Mock data for conversations
-  final List<Map<String, String>> conversations = [
-    {
-      'name': 'John Doe',
-      'lastMessage': 'Hey, how are you?',
-      'time': '10:30 AM',
-    },
-    {
-      'name': 'Jane Smith',
-      'lastMessage': 'Can we reschedule our meeting?',
-      'time': '9:15 AM',
-    },
-    {
-      'name': 'Mike Johnson',
-      'lastMessage': 'Sure, let me check my calendar. Make sure that day will cool and fun.',
-      'time': 'Yesterday',
-    },
-  ];
+  final ChatService _chatService = ChatService();
+  String _currentUserId = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCurrentUser();
+  }
+
+  Future<void> _fetchCurrentUser() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      setState(() {
+        _currentUserId = user.uid;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Messages',
-        style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black)),
+        title: const Text(
+          'Messages',
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+        ),
       ),
-      body: ListView.builder(
-        itemCount: conversations.length,
-        itemBuilder: (context, index) {
-          final conversation = conversations[index];
-          return ListTile(
-            leading: const CircleAvatar(
-              backgroundColor: Colors.orange,
-              child: Icon(Icons.person, color: Colors.white),
-            ),
-            title: Text(
-              conversation['name']!,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              conversation['lastMessage']!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: Text(
-              conversation['time']!,
-              style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-            ),
-            onTap: () {
-              // Navigate to the chat screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const ChatScreen(serviceProviderUid: '', conversationId: '')
+      body: _currentUserId.isEmpty
+          ? const Center(child: CircularProgressIndicator())
+          : StreamBuilder<List<StartConversationModel>>(
+        stream: _chatService.getUserConversations(_currentUserId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return const Center(child: Text('Error loading messages.'));
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No conversations yet.'));
+          }
+          final conversations = snapshot.data!;
+          return ListView.builder(
+            itemCount: conversations.length,
+            itemBuilder: (context, index) {
+              final conversation = conversations[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: conversation.shopProfilePhoto.isNotEmpty
+                      ? NetworkImage(conversation.shopProfilePhoto)
+                      : null,
+                  child: conversation.shopProfilePhoto.isEmpty
+                      ? const Icon(Icons.person, color: Colors.white)
+                      : null,
                 ),
+                title: Text(
+                  conversation.shopName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  conversation.lastMessage,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                trailing: Text(
+                  DateFormat.jm().format(conversation.lastMessageTime),
+                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ChatScreen(
+                        serviceProviderUid: conversation.receiverId,
+                        conversationId: conversation.conversationId,
+                      ),
+                    ),
+                  );
+                },
               );
             },
           );
