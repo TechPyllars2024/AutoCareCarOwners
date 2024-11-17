@@ -55,10 +55,13 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
           if (snapshot.hasError) {
             return const Center(child: Text('Error loading messages.'));
           }
+          final conversations = snapshot.data!
+              .where((conversation) => conversation.lastMessage.isNotEmpty)
+              .toList();
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return const Center(child: Text('No conversations yet.'));
           }
-          final conversations = snapshot.data!;
+          // final conversations = snapshot.data!;
           conversations.sort((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime));
           return ListView.builder(
             itemCount: conversations.length,
