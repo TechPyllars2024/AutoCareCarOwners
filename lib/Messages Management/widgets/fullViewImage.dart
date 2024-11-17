@@ -10,6 +10,7 @@ class FullImageView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade900,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Center(
         child: InteractiveViewer(
