@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class MessageModel {
   String messageId;
   String conversationId;
@@ -19,7 +17,6 @@ class MessageModel {
     this.imageUrl,
   });
 
-  // Convert MessageModel to a Map for Firestore
   Map<String, dynamic> toMap() {
     return {
       'messageId': messageId,

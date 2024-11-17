@@ -64,7 +64,7 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
             itemCount: conversations.length,
             itemBuilder: (context, index) {
               final conversation = conversations[index];
-              final isRead = conversation.isRead; // Assuming `isRead` is a boolean property in your model
+              final isRead = conversation.isRead;
               return ListTile(
                 leading: CircleAvatar(
                   backgroundImage: conversation.shopProfilePhoto.isNotEmpty

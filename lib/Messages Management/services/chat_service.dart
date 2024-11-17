@@ -45,13 +45,11 @@ class ChatService {
   }
 
   Future<String> initializeConversation(String currentUserId, String serviceProviderUid) async {
-    // Check for an existing conversation
     StartConversationModel? existingConversation = await getExistingConversation(currentUserId, serviceProviderUid);
 
     if (existingConversation != null) {
       return existingConversation.conversationId;
     } else {
-      // Create a new conversation if none exists
       final newConversationId = await generateConversationId();
       final newConversation = StartConversationModel(
         conversationId: newConversationId,
@@ -76,7 +74,6 @@ class ChatService {
     });
   }
 
-  // Send a message
   Future<void> sendMessage(MessageModel message, {File? imageFile}) async {
     try {
       if (imageFile != null) {
@@ -124,7 +121,6 @@ class ChatService {
       final messages = snapshot.docs.map((doc) => MessageModel.fromMap(doc.data(), doc.id)).toList();
       final numberOfMessages = messages.length;
 
-      // Update the message count in the database
       _updateMessageCount(conversationId, numberOfMessages);
 
       return messages;
@@ -143,7 +139,6 @@ class ChatService {
   }
 
   Future<StartConversationModel> fetchStartConversationById(String conversationId) async {
-    // Replace with your actual data fetching logic
     final startConversationData = await FirebaseFirestore.instance
         .collection('conversations')
         .doc(conversationId)
@@ -156,7 +151,6 @@ class ChatService {
     }
   }
 
-  // Fetch shop details by UID
   Future<Map<String, dynamic>> fetchProviderByUid(String uid) async {
     try {
       DocumentSnapshot providerSnapshot = await _firestore

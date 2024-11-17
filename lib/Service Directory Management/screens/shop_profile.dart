@@ -50,8 +50,6 @@ class _ShopProfileState extends State<ShopProfile> {
     );
   }
 
-
-
   Future<void> _startConversation(BuildContext context) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
