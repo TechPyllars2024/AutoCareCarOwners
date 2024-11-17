@@ -59,10 +59,12 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
             return const Center(child: Text('No conversations yet.'));
           }
           final conversations = snapshot.data!;
+          conversations.sort((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime));
           return ListView.builder(
             itemCount: conversations.length,
             itemBuilder: (context, index) {
               final conversation = conversations[index];
+              final isRead = conversation.isRead; // Assuming `isRead` is a boolean property in your model
               return ListTile(
                 leading: CircleAvatar(
                   backgroundImage: conversation.shopProfilePhoto.isNotEmpty
@@ -80,12 +82,16 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
                   conversation.lastMessage,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
+                  ),
                 ),
                 trailing: Text(
                   DateFormat.jm().format(conversation.lastMessageTime),
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
                 ),
-                onTap: () {
+                onTap: () async {
+                  await _chatService.markConversationAsRead(conversation.conversationId);
                   Navigator.push(
                     context,
                     MaterialPageRoute(
