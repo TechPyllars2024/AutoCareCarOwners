@@ -56,8 +56,11 @@ class ChatService {
         senderId: currentUserId,
         receiverId: serviceProviderUid,
         timestamp: DateTime.now(),
-        shopName: 'Shop Name', // Replace with actual shop name
-        shopProfilePhoto: 'Shop Profile Photo URL', // Replace with actual URL
+        shopName: 'Shop Name',
+        shopProfilePhoto: 'Shop Profile Photo URL',
+        carOwnerFirstName: 'Car Owner First Name',
+        carOwnerLastName: 'Car Owner Last Name',
+        carOwnerProfilePhoto: 'Car Owner Profile Photo URL',
         lastMessage: '',
         lastMessageTime: DateTime.now(),
         numberOfMessages: 0,
@@ -148,6 +151,18 @@ class ChatService {
       return StartConversationModel.fromMap(startConversationData.data()!);
     } else {
       throw Exception('Conversation not found');
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchCarOwnerDetails(String userId) async {
+    DocumentSnapshot userSnapshot = await _firestore
+        .collection('car_owner_profile')
+        .doc(userId)
+        .get();
+    if (userSnapshot.exists) {
+      return userSnapshot.data() as Map<String, dynamic>;
+    } else {
+      throw Exception('Car owner not found');
     }
   }
 
