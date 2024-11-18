@@ -72,6 +72,11 @@ class _ShopProfileState extends State<ShopProfile> {
         String shopName = providerData['shopName'] ?? 'Unknown Shop';
         String shopProfilePhoto = providerData['profileImage'] ?? '';
 
+        final carOwnerData = await _chatService.fetchCarOwnerDetails(senderId);
+        String carOwnerFirstName = carOwnerData['firstName'] ?? '';
+        String carOwnerLastName = carOwnerData['lastName'] ?? '';
+        String carOwnerProfilePhoto = carOwnerData['profileImage'] ?? '';
+
         StartConversationModel conversation = StartConversationModel(
           conversationId: conversationId,
           senderId: senderId,
@@ -79,6 +84,9 @@ class _ShopProfileState extends State<ShopProfile> {
           timestamp: DateTime.now(),
           shopName: shopName,
           shopProfilePhoto: shopProfilePhoto,
+          carOwnerFirstName: carOwnerFirstName,
+          carOwnerLastName: carOwnerLastName,
+          carOwnerProfilePhoto: carOwnerProfilePhoto,
           lastMessage: '',
           lastMessageTime: DateTime.now(),
           numberOfMessages: 0,
