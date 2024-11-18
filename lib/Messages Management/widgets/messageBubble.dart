@@ -8,8 +8,14 @@ import '../models/message_model.dart';
 class MessageBubble extends StatelessWidget {
   final MessageModel message;
   final bool isMe;
+  final List<String> allImageUrls; // Add this line
 
-  const MessageBubble({required this.message, required this.isMe, Key? key}) : super(key: key);
+  const MessageBubble({
+    required this.message,
+    required this.isMe,
+    required this.allImageUrls, // Add this line
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +44,10 @@ class MessageBubble extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => FullImageView(imageUrl: message.imageUrl!),
+                          builder: (context) => FullImageView(
+                            imageUrls: allImageUrls, // Pass the list of all image URLs
+                            initialIndex: allImageUrls.indexOf(message.imageUrl!), // Set the initial index
+                          ),
                         ),
                       );
                     },

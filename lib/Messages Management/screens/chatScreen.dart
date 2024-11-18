@@ -180,6 +180,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
 
                 final messages = snapshot.data!;
+                final allImageUrls = messages
+                    .where((message) => message.imageUrl != null && message.imageUrl!.isNotEmpty)
+                    .map((message) => message.imageUrl!)
+                    .toList();
 
                 return ListView.builder(
                   reverse: true,
@@ -199,7 +203,7 @@ class _ChatScreenState extends State<ChatScreen> {
                               style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
                             ),
                           ),
-                        MessageBubble(message: message, isMe: message.senderId == _senderId),
+                        MessageBubble(message: message, isMe: message.senderId == _senderId, allImageUrls: allImageUrls),
                       ],
                     );
                   },
