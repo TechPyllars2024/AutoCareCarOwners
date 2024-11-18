@@ -9,21 +9,21 @@ class Or extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: Divider(
-          color: Colors.black, // Color of the divider
-          thickness: 1, // Thickness of the divider
+            color: Colors.black,
+            thickness: 1,
           ),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Text(
-          'Or',
-          style: TextStyle(color: Colors.black),
+            'Or',
+            style: TextStyle(color: Colors.black),
           ),
         ),
         Expanded(
           child: Divider(
-          color: Colors.black, // Color of the divider
-          thickness: 1, // Thickness of the divider
+            color: Colors.black,
+            thickness: 1,
           ),
         ),
       ],

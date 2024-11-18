@@ -24,8 +24,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 2), (Timer t) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadBookings();
+    });
+    _timer = Timer.periodic(const Duration(seconds: 10), (Timer t) {
+      if (mounted) _loadBookings();
     });
   }
 
@@ -229,6 +232,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
         title: const Text(
