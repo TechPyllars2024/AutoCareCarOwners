@@ -47,7 +47,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
   Future<void> checkEmailVerified() async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      await user.reload(); // Reload user to check the latest email verification status
+      await user.reload();
       setState(() {
         isEmailVerified = user.emailVerified;
       });
@@ -58,7 +58,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   Future<void> sendVerificationEmail() async {
     setState(() {
-      isLoading = true; // Show loader
+      isLoading = true;
     });
 
     try {
@@ -83,7 +83,12 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
           canResendEmail = false;
         });
 
-        Utils.showSnackBar("Verification email sent. Please check your inbox.");
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Verification email sent. Please check your inbox.'),
+            backgroundColor: Colors.green, // Set background color to green
+          ),
+        );
 
         // Cooldown period before allowing another resend
         await Future.delayed(const Duration(seconds: 30));
@@ -118,14 +123,19 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
         ? const Onboarding()
         : Scaffold(
+            backgroundColor: Colors.grey.shade100,
             appBar: AppBar(
-              title: const Text('Verify Email', style: TextStyle(fontSize: 20),),
+              automaticallyImplyLeading: false,
+              title: const Text(
+                'Verify Email',
+                style: TextStyle(fontWeight: FontWeight.w900),
+              ),
+              backgroundColor: Colors.grey.shade100,
             ),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
@@ -144,18 +154,16 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 30),
-
                   isLoading
                       ? const CircularProgressIndicator()
                       : ElevatedButton.icon(
-
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange.shade900,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15), // Change border radius here
+                              borderRadius: BorderRadius.circular(
+                                  15), // Change border radius here
                             ),
                             minimumSize: const Size.fromHeight(50),
-
                           ),
                           icon: const Icon(Icons.email,
                               size: 30, color: Colors.white),

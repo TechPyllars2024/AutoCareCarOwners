@@ -8,14 +8,13 @@ class CarImageWidget extends StatelessWidget {
     required this.imagePath,
   });
 
-@override
-Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Image.asset(
       imagePath,
       height: MediaQuery.of(context).size.height * 0.3,
       width: double.infinity,
       fit: BoxFit.cover,
-
     );
   }
 }

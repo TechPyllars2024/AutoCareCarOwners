@@ -37,7 +37,7 @@ class _TextFieldInputState extends State<TextFieldInput> {
             child: TextField(
               style: const TextStyle(fontSize: 15),
               controller: widget.textEditingController,
-              obscureText: widget.isPass, // Handle password visibility
+              obscureText: widget.isPass,
               keyboardType: widget.textInputType,
               decoration: InputDecoration(
                 labelText: widget.hintText,
@@ -48,15 +48,15 @@ class _TextFieldInputState extends State<TextFieldInput> {
                     const TextStyle(color: Color.fromARGB(255, 77, 76, 76)),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
-                  borderSide: BorderSide(color: Colors.grey),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
-                  borderSide: BorderSide(color: Colors.grey),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15.0),
-                  borderSide: BorderSide(color: Colors.grey),
+                  borderSide: const BorderSide(color: Colors.grey),
                 ),
                 // Remove errorText from InputDecoration
               ),

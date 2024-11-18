@@ -12,13 +12,18 @@ import '../services/profile_service.dart';
 class CarOwnerCompleteProfileScreen extends StatefulWidget {
   final CarOwnerProfileModel currentUser;
 
-  const CarOwnerCompleteProfileScreen({super.key, required this.currentUser});
+  const CarOwnerCompleteProfileScreen(
+      {super.key, required this.currentUser, this.child});
+
+  final Widget? child;
 
   @override
-  State<CarOwnerCompleteProfileScreen> createState() => _CarOwnerCompleteProfileScreenState();
+  State<CarOwnerCompleteProfileScreen> createState() =>
+      _CarOwnerCompleteProfileScreenState();
 }
 
-class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileScreen> {
+class _CarOwnerCompleteProfileScreenState
+    extends State<CarOwnerCompleteProfileScreen> {
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
   late TextEditingController phoneNumberController;
@@ -33,9 +38,12 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
   @override
   void initState() {
     super.initState();
-    firstNameController = TextEditingController(text: widget.currentUser.firstName);
-    lastNameController = TextEditingController(text: widget.currentUser.lastName);
-    phoneNumberController = TextEditingController(text: widget.currentUser.phoneNumber);
+    firstNameController =
+        TextEditingController(text: widget.currentUser.firstName);
+    lastNameController =
+        TextEditingController(text: widget.currentUser.lastName);
+    phoneNumberController =
+        TextEditingController(text: widget.currentUser.phoneNumber);
     profileImageController =
         TextEditingController(text: widget.currentUser.profileImage);
   }
@@ -64,7 +72,8 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
 
     // Upload the image if selected
     if (_image != null) {
-      final downloadUrl = await _profileService.uploadProfileImage(_image!, widget.currentUser.uid);
+      final downloadUrl = await _profileService.uploadProfileImage(
+          _image!, widget.currentUser.uid);
       profileImageController.text = downloadUrl;
     }
 
@@ -142,7 +151,7 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
       ),
       body: Stack(
         children: [
-           SingleChildScrollView(
+          SingleChildScrollView(
             child: Column(
               children: [
                 const SizedBox(height: 20),
@@ -153,10 +162,11 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                     backgroundImage: _image != null
                         ? FileImage(_image!)
                         : (profileImageController.text.isNotEmpty
-                        ? NetworkImage(profileImageController.text)
-                        : null),
+                            ? NetworkImage(profileImageController.text)
+                            : null),
                     child: _image == null && profileImageController.text.isEmpty
-                        ? const Icon(Icons.person, size: 100, color: Colors.black)
+                        ? const Icon(Icons.person,
+                            size: 100, color: Colors.black)
                         : null,
                   ),
                 ),
@@ -164,11 +174,12 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor:
-                    WidgetStateProperty.all(Colors.orange.shade900),
+                        WidgetStateProperty.all(Colors.orange.shade900),
                   ),
                   onPressed: () => _pickImage(ImageSource.gallery),
                   child: const Text('Add Photo',
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold)),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
@@ -177,7 +188,8 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                     children: [
                       const Text(
                         'Enter First Name',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 5),
                       TextField(
@@ -188,12 +200,16 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                             borderSide: BorderSide(color: Colors.orange),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            borderSide: BorderSide(
+                                color: Colors.orange
+                                    .shade900), // Border color when focused
                           ),
                           hintText: 'First Name',
                           contentPadding: const EdgeInsets.all(10),
-                          errorText: firstNameErrorMessage, // Display name validation error
+                          errorText:
+                              firstNameErrorMessage, // Display name validation error
                         ),
                         inputFormatters: [
                           CapitalizeEachWordFormatter(),
@@ -214,18 +230,24 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                     children: [
                       const Text(
                         'Enter Last Name',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       TextField(
                         controller: lastNameController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(color: Colors.orange.shade900),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            borderSide:
+                                BorderSide(color: Colors.orange.shade900),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(color: Colors.orange.shade900), // Border color when focused
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            borderSide: BorderSide(
+                                color: Colors.orange
+                                    .shade900), // Border color when focused
                           ),
                           hintText: 'Last Name',
                           contentPadding: const EdgeInsets.all(10),
@@ -250,7 +272,8 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                     children: [
                       const Text(
                         'Enter Phone Number',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       TextField(
                         controller: phoneNumberController,
@@ -260,12 +283,15 @@ class _CarOwnerCompleteProfileScreenState extends State<CarOwnerCompleteProfileS
                             borderSide: BorderSide(color: Colors.orange),
                           ),
                           focusedBorder: OutlineInputBorder(
-                            borderRadius: const BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(color: Colors.orange.shade900),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(15)),
+                            borderSide:
+                                BorderSide(color: Colors.orange.shade900),
                           ),
                           hintText: 'Phone Number',
                           contentPadding: const EdgeInsets.all(10),
-                          errorText: phoneErrorMessage, // Display phone validation error
+                          errorText:
+                              phoneErrorMessage, // Display phone validation error
                         ),
                         keyboardType: TextInputType.phone,
                         inputFormatters: [
