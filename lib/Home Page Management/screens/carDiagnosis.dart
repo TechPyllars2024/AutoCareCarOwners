@@ -21,7 +21,7 @@ class _CardiagnosisState extends State<Cardiagnosis> {
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
       Map<String, dynamic> fetchedCarDetails =
-      await BookingService().fetchCarOwnerDetails(user!.uid);
+      await BookingService().fetchDefaultCarDetails(user!.uid);
 
       logger.i('Car Owner Data: $fetchedCarDetails');
       return fetchedCarDetails;
