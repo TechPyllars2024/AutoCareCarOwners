@@ -26,15 +26,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
 
   Future<void> _fetchAddresses() async {
     setState(() {
-      _isLoading = true; // Start loading
+      _isLoading = true;
     });
     final fetchedAddresses = await addressService.fetchAddresses();
     setState(() {
       addresses = fetchedAddresses;
-      _isLoading = false; // Stop loading
+      _isLoading = false;
     });
   }
-
 
   void _showDeleteConfirmationDialog(int index) {
     showDialog(
@@ -80,14 +79,14 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
 
   void _showAddressDialog({CarOwnerAddressModel? address, int? index}) {
     final houseNumberandStreetController =
-    TextEditingController(text: address?.houseNumberandStreet ?? '');
+        TextEditingController(text: address?.houseNumberandStreet ?? '');
     final baranggayController =
-    TextEditingController(text: address?.baranggay ?? '');
+        TextEditingController(text: address?.baranggay ?? '');
     final cityController = TextEditingController(text: address?.city ?? '');
     final provinceController =
-    TextEditingController(text: address?.province ?? '');
+        TextEditingController(text: address?.province ?? '');
     final nearestLandmarkController =
-    TextEditingController(text: address?.nearestLandmark ?? '');
+        TextEditingController(text: address?.nearestLandmark ?? '');
 
     final formKey = GlobalKey<FormState>();
 
@@ -100,12 +99,10 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
             address == null ? 'Add Address' : 'Edit Address',
             style: const TextStyle(fontWeight: FontWeight.w700),
           ),
-          content: SingleChildScrollView( // Wrap the content with SingleChildScrollView
+          content: SingleChildScrollView(
+            // Wrap the content with SingleChildScrollView
             child: SizedBox(
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width * 0.9,
+              width: MediaQuery.of(context).size.width * 0.9,
               child: Form(
                 key: formKey,
                 child: Column(
@@ -194,7 +191,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter a province';
-                        }else if (value.length < 2 || value.length > 30) {
+                        } else if (value.length < 2 || value.length > 30) {
                           return 'Not a valid province';
                         }
                         return null;
@@ -294,21 +291,26 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
       body: addresses.isEmpty
           ? const Center(child: Text('No addresses. Add a new address.'))
           : Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: ListView.builder(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView.builder(
                 itemCount: addresses.length,
                 itemBuilder: (context, index) {
                   final address = addresses[index];
                   return Card(
                     shape: RoundedRectangleBorder(
                       side: BorderSide(
-                        color: address.isDefault ? Colors.orange.shade900 : Colors.transparent, // Change 2: Orange border if default
-                        width: 2, // Optional: Set the border width
+                        color: address.isDefault
+                            ? Colors.orange.shade900
+                            : Colors
+                            .transparent, // Change 2: Orange border if default
+                        width: 2, // Optional: Set the
                       ),
-                      borderRadius: BorderRadius.circular(8), // Optional: Add rounded corners
+                      borderRadius: BorderRadius.circular(
+                          8), // Optional: Add rounded corners
                     ),
                     elevation: 8,
-                    color: address.isDefault ? Colors.white : Colors.grey.shade200,
+                    color:
+                        address.isDefault ? Colors.white : Colors.grey.shade200,
                     child: ListTile(
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,7 +320,6 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                           Text(address.baranggay),
                           Text(address.city),
                           Text(address.province),
-
                           if (address.isDefault)
                             Text('Default Address',
                                 style: TextStyle(
@@ -334,7 +335,8 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                             icon: Icon(Icons.edit,
                                 color: Colors.grey.shade600, size: 18),
                             onPressed: () {
-                              _showAddressDialog(address: address, index: index);
+                              _showAddressDialog(
+                                  address: address, index: index);
                             },
                           ),
                           IconButton(
@@ -346,7 +348,9 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                           ),
                           IconButton(
                             icon: Icon(
-                              address.isDefault ? Icons.star : Icons.star_border,
+                              address.isDefault
+                                  ? Icons.star
+                                  : Icons.star_border,
                               size: 18,
                               color: address.isDefault
                                   ? Colors.orange.shade900
@@ -369,7 +373,7 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
                   );
                 },
               ),
-          ),
+            ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange.shade900,
         onPressed: () {

@@ -30,6 +30,7 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
     super.dispose();
   }
 
+  //reset password function
   Future<void> resetPassword() async {
     if (formKey.currentState?.validate() ?? false) {
       setState(() {
@@ -60,10 +61,10 @@ class _ForgotPasswordState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: const Text("Reset Password", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.grey.shade100,
+        title: const Text("Reset Password", style: TextStyle(fontWeight: FontWeight.w900)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

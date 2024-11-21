@@ -71,7 +71,8 @@ class AuthenticationMethodSignIn {
         case 'invalid-email':
           return "The email address is not valid. Please check and try again.";
         default:
-          return e.message ?? "We encountered an error during registration. Please try again.";
+          return e.message ??
+              "We encountered an error during registration. Please try again.";
       }
     } catch (e) {
       return "Something went wrong. Please try again later.";
@@ -82,12 +83,10 @@ class AuthenticationMethodSignIn {
   Future<String> signInWithGoogleForCarOwner() async {
     try {
       // Initiate Google Sign-In process
-      final GoogleSignIn googleSignIn = GoogleSignIn(
-          scopes: [
-            "https://www.googleapis.com/auth/userinfo.profile",
-            "https://www.googleapis.com/auth/userinfo.email"
-          ]
-      );
+      final GoogleSignIn googleSignIn = GoogleSignIn(scopes: [
+        "https://www.googleapis.com/auth/userinfo.profile",
+        "https://www.googleapis.com/auth/userinfo.email"
+      ]);
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser == null) {
@@ -95,7 +94,7 @@ class AuthenticationMethodSignIn {
       }
 
       final GoogleSignInAuthentication googleAuth =
-      await googleUser.authentication;
+          await googleUser.authentication;
 
       // Get the credentials from Google
       final OAuthCredential credential = GoogleAuthProvider.credential(
@@ -105,7 +104,7 @@ class AuthenticationMethodSignIn {
 
       // Sign in to Firebase with the Google credentials
       UserCredential userCredential =
-      await auth.signInWithCredential(credential);
+          await auth.signInWithCredential(credential);
       final User? user = userCredential.user;
 
       if (user == null) {
@@ -149,7 +148,8 @@ class AuthenticationMethodSignIn {
 
       return 'SUCCESS';
     } on FirebaseAuthException catch (e) {
-      return e.message ?? "A problem occurred during Google Sign-In. Please try again.";
+      return e.message ??
+          "A problem occurred during Google Sign-In. Please try again.";
     } catch (e) {
       return "An unexpected error occurred. Please try again later.";
     }

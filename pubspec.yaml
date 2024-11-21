@@ -55,6 +55,11 @@ dependencies:
   shared_preferences: ^2.3.2
   smooth_page_indicator: ^1.2.0+3
   flutter_native_splash: ^2.4.1
+  firebase_messaging: ^15.1.4
+  google_maps_flutter: ^2.9.0
+  geocoding: ^3.0.0
+  geolocator: ^13.0.2
+  http: ^1.2.2
 
 
 dev_dependencies:
@@ -88,6 +93,7 @@ flutter:
     - lib/Authentication/assets/images/icons/
     - assets/images/
     - lib/ProfileManagement/assets/
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

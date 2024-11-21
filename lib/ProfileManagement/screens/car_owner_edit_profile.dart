@@ -61,13 +61,13 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
       _isLoading = true;
     });
 
-    // Upload the image if selected
+    // If a new image is selected, upload it
     if (_image != null) {
       final downloadUrl = await _profileService.uploadProfileImage(_image!, widget.currentUser.uid);
-      profileImageController.text = downloadUrl;
+      profileImageController.text = downloadUrl; // Update profileImageController with the new URL
     }
 
-    // Create updated profile
+    // Create updated profile using the current or new image URL
     final updatedProfile = CarOwnerProfileModel(
       profileId: widget.currentUser.profileId,
       uid: widget.currentUser.uid,
@@ -75,7 +75,7 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
       lastName: lastNameController.text,
       phoneNumber: phoneNumberController.text,
       email: widget.currentUser.email,
-      profileImage: profileImageController.text,
+      profileImage: profileImageController.text, // Use existing or newly uploaded URL
     );
 
     // Check if this is the first time saving
@@ -88,7 +88,7 @@ class _CarOwnerEditProfileScreenState extends State<CarOwnerEditProfileScreen> {
 
     // Redirect based on whether it's the first time or just an edit
     if (isFirstTime) {
-      // First time: Navigate to next page
+      // First time: Navigate to the next page
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const Onboardingpage3()),

@@ -33,43 +33,53 @@ class BookingService {
     }
   }
 
-  // Fetch car owner details
-  Future<Map<String, dynamic>> fetchCarOwnerDetails(String carOwnerUid) async {
+  // Fetch default car details
+  Future<Map<String, dynamic>> fetchDefaultCarDetails(
+      String carOwnerUid) async {
     try {
       if (carOwnerUid.isEmpty) {
         logger.e('Invalid carOwnerUid');
-        return {};
+        return {}; // Return an empty map if the carOwnerUid is invalid
       }
 
-      carDetailsCollection = firestore
+      // Reference to the car details collection for the specific car owner
+      var carDetailsCollection = firestore
           .collection('car_owner_profile')
           .doc(carOwnerUid)
           .collection('carDetails');
 
-      final snapshot = await carDetailsCollection.get();
+      // Query to fetch the default car (where isDefault is true)
+      final snapshot = await carDetailsCollection
+          .where('isDefault', isEqualTo: true)
+          .limit(1) // Limit to only one result, since we expect one default car
+          .get();
+
       logger.i('Car details snapshot for user: $carOwnerUid');
 
       if (snapshot.docs.isEmpty) {
-        logger.i('No car details found for this user.');
-        return {};
+        logger.i('No default car found for this user.');
+        return {}; // Return an empty map if no default car is found
       }
 
+      // Map to hold car details
       Map<String, dynamic> carDetailsMap = {};
 
-      for (var doc in snapshot.docs) {
-        final carDetails =
-            CarDetailsModel.fromMap(doc.data() as Map<String, dynamic>);
-        carDetailsMap[doc.id] = carDetails.toMap();
-      }
+      // Fetch the first document from the snapshot (default car)
+      final doc = snapshot.docs.first;
+      final carDetails = CarDetailsModel.fromMap(doc.data());
 
-      logger.i('Car details fetched successfully.');
-      return carDetailsMap;
+      // Add the default car details to the map with its document ID
+      carDetailsMap[doc.id] = carDetails.toMap();
+
+      logger.i('Default car details fetched successfully.');
+      return carDetailsMap; // Return the map containing the default car's details
     } catch (error) {
-      logger.e('Error fetching car details: $error');
-      return {};
+      logger.e('Error fetching default car details: $error');
+      return {}; // Return an empty map if there's an error
     }
   }
 
+  //fetch full name of the car owner
   Future<String?> fetchFullName() async {
     final user = _auth.currentUser;
     if (user != null) {
@@ -362,7 +372,8 @@ class BookingService {
     }).toList();
   }
 
-  Future<Map<String, int>> fetchBookingsForDate(String serviceProviderUid, DateTime date) async {
+  Future<Map<String, int>> fetchBookingsForDate(
+      String serviceProviderUid, DateTime date) async {
     // Query the bookings from your database based on service provider ID and the selected date
     // Return a map where the key is the hour of the day and the value is the number of bookings
     // Example: {'9AM': 3, '10AM': 4}

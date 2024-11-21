@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class Onboardingpage2 extends StatefulWidget {
-  const Onboardingpage2({super.key});
+  const Onboardingpage2({super.key, this.child});
+
+  final Widget? child;
 
   @override
   State<Onboardingpage2> createState() => _Onboardingpage2State();
@@ -22,8 +24,9 @@ class _Onboardingpage2State extends State<Onboardingpage2> {
               width: 350,
               height: 350,
               fit: BoxFit.cover,
-            ).animate(onPlay: (controller) => controller.repeat())
-            .shimmer(delay: 1000.ms, duration: 1400.ms),
+            )
+                .animate(onPlay: (controller) => controller.repeat())
+                .shimmer(delay: 1000.ms, duration: 1400.ms),
             const SizedBox(height: 60),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 50.0),

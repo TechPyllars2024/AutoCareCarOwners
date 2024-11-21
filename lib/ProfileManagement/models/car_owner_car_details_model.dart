@@ -5,6 +5,7 @@ class CarDetailsModel {
   String color;
   String transmissionType;
   String fuelType;
+  bool isDefault;
 
   CarDetailsModel({
     required this.brand,
@@ -13,6 +14,7 @@ class CarDetailsModel {
     required this.color,
     required this.transmissionType,
     required this.fuelType,
+    this.isDefault = false
   });
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class CarDetailsModel {
       'color': color,
       'transmissionType': transmissionType,
       'fuelType': fuelType,
+      'isDefault': isDefault,
     };
   }
 
@@ -34,6 +37,7 @@ class CarDetailsModel {
       color: map['color'],
       transmissionType: map['transmissionType'],
       fuelType: map['fuelType'],
+      isDefault: map['isDefault'] ?? false,
     );
   }
 }
