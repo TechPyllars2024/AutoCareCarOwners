@@ -66,7 +66,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          const Text(
                             "One",
                             style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.black, height: .5),
                           ),
@@ -77,7 +77,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
                           SizedBox(height: 20,),
 
-                          Text(
+                          const Text(
                             "All Car",
                             style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.black, height: .5),
                           ),
