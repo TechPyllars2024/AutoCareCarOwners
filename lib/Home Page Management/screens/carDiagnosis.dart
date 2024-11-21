@@ -223,7 +223,7 @@ class _CardiagnosisState extends State<Cardiagnosis> {
                       const Text('Analyzing the problem.'),
                       const SizedBox(height: 16),
                     ],
-                  ),
+                  ),//
                 ),
               ),
             ],
