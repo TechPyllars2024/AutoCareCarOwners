@@ -150,14 +150,14 @@ class _ChatScreenState extends State<ChatScreen> {
             }
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.call, color: Colors.white),
-            onPressed: () {
-              // Handle call action
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.call, color: Colors.white),
+        //     onPressed: () {
+        //       // Handle call action
+        //     },
+        //   ),
+        // ],
       ),
       body: Column(
         children: [
