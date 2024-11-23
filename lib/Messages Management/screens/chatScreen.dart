@@ -120,7 +120,7 @@ class _ChatScreenState extends State<ChatScreen> {
           future: _providerData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
+              return const Text('Loading...', style: TextStyle(color: Colors.white));
             } else if (snapshot.hasError) {
               return const Text('Error loading provider');
             } else if (snapshot.hasData) {
