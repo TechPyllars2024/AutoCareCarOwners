@@ -120,7 +120,7 @@ class _ChatScreenState extends State<ChatScreen> {
           future: _providerData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
+              return const Text('Loading...', style: TextStyle(color: Colors.white));
             } else if (snapshot.hasError) {
               return const Text('Error loading provider');
             } else if (snapshot.hasData) {
@@ -150,14 +150,14 @@ class _ChatScreenState extends State<ChatScreen> {
             }
           },
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.call, color: Colors.white),
-            onPressed: () {
-              // Handle call action
-            },
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: const Icon(Icons.call, color: Colors.white),
+        //     onPressed: () {
+        //       // Handle call action
+        //     },
+        //   ),
+        // ],
       ),
       body: Column(
         children: [
@@ -287,10 +287,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         ),
                       ),
                       IconButton(
-                        icon: Icon(Icons.send, color: Colors.orange.shade900),
-                        onPressed: () {
+                        icon: Icon(Icons.send, color: _isLoading ? Colors.orange.shade900 : Colors.orange.shade900),
+                        onPressed: _isLoading ? null : () {
                           if (_pickedImage != null || _messageController.text.trim().isNotEmpty) {
-                            _sendMessage(imageFile: _pickedImage); // Send message or image
+                            _sendMessage(imageFile: _pickedImage);
                           }
                         },
                       ),
