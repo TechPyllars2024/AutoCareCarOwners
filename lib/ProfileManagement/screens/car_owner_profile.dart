@@ -24,7 +24,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
   CarOwnerAddressModel? defaultAddress;
   String? userEmail;
   final CarOwnerProfileService _profileService =
-      CarOwnerProfileService(); // Instantiate the service
+      CarOwnerProfileService();
 
   @override
   void initState() {
@@ -79,14 +79,14 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
             },
             icon: Container(
               decoration: BoxDecoration(
-                color: Colors.orange.shade900, // Set the background color to orange
-                borderRadius: BorderRadius.circular(12.0), // Rounded edges
+                color: Colors.orange.shade900,
+                borderRadius: BorderRadius.circular(12.0),
               ),
-              padding: const EdgeInsets.all(6.0), // Optional: Add some padding for better aesthetics
-              child: const Center( // Center the icon
+              padding: const EdgeInsets.all(6.0),
+              child: const Center(
                 child: Icon(
                   Icons.edit,
-                  color: Colors.white, // Set the icon color to white
+                  color: Colors.white,
                   size: 30,
                 ),
               ),
@@ -100,12 +100,12 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
           children: [
             Center(
               child: Container(
-                width: 180, // Adjust width for border thickness
-                height: 180, // Adjust height for border thickness
+                width: 180,
+                height: 180,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: Colors.orange.shade900, // Border color
+                    color: Colors.orange.shade900,
                     width: 1, // Border width
                   ),
                 ),
@@ -137,53 +137,56 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 20.0, left: 25),
+                  padding: const EdgeInsets.all(8.0),
                   child: profile?.phoneNumber != null && profile!.phoneNumber.isNotEmpty
-                      ? Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.phone, // Phone icon
-                        size: 20,
-                        color: Colors.orange.shade900,
-                      ),
-                      const SizedBox(width: 10), // Adds space between the icon and text
-                      Text(
-                        profile?.phoneNumber ?? 'No phone number available',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
+                      ? Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.phone,
+                              size: 20,
+                              color: Colors.orange.shade900,
+                            ),
+                            const SizedBox(width: 5),
+                            Text(
+                              profile?.phoneNumber ?? 'No phone number available',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  )
-                      : Container(), // If phone number is null, display an empty container
+                      )
+                      : Container(),
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 10.0, left: 25) ,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                       Icon(
-                        Icons.email_rounded, // Email icon
-                        size: 20,
-                        color: Colors.orange.shade900,
-                      ),
-                      const SizedBox(
-                          width: 10), // Adds space between the icon and text
-                      Text(
-                        userEmail ?? 'No available Email',
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.black87,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                         Icon(
+                          Icons.email_rounded,
+                          size: 20,
+                          color: Colors.orange.shade900,
                         ),
-                      ),
-                    ],
+                        const SizedBox(
+                            width: 10),
+                        Text(
+                          userEmail ?? 'No available Email',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
 
-                // fetching defualt address
                 StreamBuilder<CarOwnerAddressModel?>(
                   stream: _profileService.getDefaultAddress(),
                   builder: (context, snapshot) {
@@ -206,7 +209,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                               size: 20,
                               color: Colors.orange.shade900,
                             ),
-                            const SizedBox(width: 8), // Space between icon and text
+                            const SizedBox(width: 8),
                             Flexible(
                               child: Text(
                                 '${defaultAddress.houseNumberandStreet}, ${defaultAddress.baranggay}, ${defaultAddress.city}, ${defaultAddress.province}',
@@ -214,7 +217,7 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                                   color: Colors.black87,
                                   fontSize: 14,
                                 ),
-                                overflow: TextOverflow.visible, // Allows text to wrap
+                                overflow: TextOverflow.visible,
                               ),
                             ),
                           ],
@@ -276,22 +279,46 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                           )
                       ),
                       Container(
-                          margin: const EdgeInsets.only(bottom: 10),
-                          child: ProfileMenuWidget(
-                            title: "Logout",
-                            icon: Icons.logout,
-                            onPressed: () async {
-                              try {
-                                await AuthenticationMethodSignOut().signOut();
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                                );
-                              } catch (e) {
-                                Utils.showSnackBar('Error Signing Out: $e');
-                              }
-                            },
-                          )
-                      ), //
+                        width: 150,
+                        margin: const EdgeInsets.only(bottom: 10),
+                        child: GestureDetector(
+                          onTap: () async {
+                            try {
+                              await AuthenticationMethodSignOut().signOut();
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              );
+                            } catch (e) {
+                              Utils.showSnackBar('Error Signing Out: $e');
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                            decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(
+                                color: Colors.grey.shade300,
+                                width: 2,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.logout, color: Colors.orange.shade900),
+                                const SizedBox(width: 10),
+                                Text(
+                                  'Logout',
+                                  style: TextStyle(
+                                    color: Colors.grey.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
