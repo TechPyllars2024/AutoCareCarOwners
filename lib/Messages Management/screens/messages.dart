@@ -47,71 +47,82 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
         ),
       ),
       body: _currentUserId.isEmpty
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)))
           : StreamBuilder<List<StartConversationModel>>(
-        stream: _chatService.getUserConversations(_currentUserId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return const Center(child: Text('Error loading messages.'));
-          }
-          final conversations = snapshot.data!
-              .where((conversation) => conversation.lastMessage.isNotEmpty)
-              .toList();
-          if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No conversations yet.'));
-          }
-          // final conversations = snapshot.data!;
-          conversations.sort((a, b) => b.lastMessageTime.compareTo(a.lastMessageTime));
-          return ListView.builder(
-            itemCount: conversations.length,
-            itemBuilder: (context, index) {
-              final conversation = conversations[index];
-              final isRead = conversation.isRead;
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: conversation.shopProfilePhoto.isNotEmpty
-                      ? NetworkImage(conversation.shopProfilePhoto)
-                      : null,
-                  child: conversation.shopProfilePhoto.isEmpty
-                      ? const Icon(Icons.person, color: Colors.white)
-                      : null,
-                ),
-                title: Text(
-                  conversation.shopName,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  conversation.lastMessage,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontWeight: isRead ? FontWeight.normal : FontWeight.bold,
-                  ),
-                ),
-                trailing: Text(
-                  DateFormat.jm().format(conversation.lastMessageTime),
-                  style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
-                ),
-                onTap: () async {
-                  await _chatService.markConversationAsRead(conversation.conversationId);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ChatScreen(
-                        serviceProviderUid: conversation.receiverId,
-                        conversationId: conversation.conversationId,
+              stream: _chatService.getUserConversations(_currentUserId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                      child: CircularProgressIndicator(
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(Colors.orange)));
+                }
+                if (snapshot.hasError) {
+                  return const Center(child: Text('Error loading messages.'));
+                }
+                final conversations = snapshot.data!
+                    .where(
+                        (conversation) => conversation.lastMessage.isNotEmpty)
+                    .toList();
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No conversations yet.'));
+                }
+                // final conversations = snapshot.data!;
+                conversations.sort(
+                    (a, b) => b.lastMessageTime.compareTo(a.lastMessageTime));
+                return ListView.builder(
+                  itemCount: conversations.length,
+                  itemBuilder: (context, index) {
+                    final conversation = conversations[index];
+                    final isRead = conversation.isRead;
+                    return ListTile(
+                      leading: CircleAvatar(
+                        backgroundImage:
+                            conversation.shopProfilePhoto.isNotEmpty
+                                ? NetworkImage(conversation.shopProfilePhoto)
+                                : null,
+                        child: conversation.shopProfilePhoto.isEmpty
+                            ? const Icon(Icons.person, color: Colors.white)
+                            : null,
                       ),
-                    ),
-                  );
-                },
-              );
-            },
-          );
-        },
-      ),
+                      title: Text(
+                        conversation.shopName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        conversation.lastMessage,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight:
+                              isRead ? FontWeight.normal : FontWeight.bold,
+                        ),
+                      ),
+                      trailing: Text(
+                        DateFormat.jm().format(conversation.lastMessageTime),
+                        style: TextStyle(
+                            color: Colors.grey.shade600, fontSize: 12),
+                      ),
+                      onTap: () async {
+                        await _chatService.markConversationAsRead(
+                            conversation.conversationId);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ChatScreen(
+                              serviceProviderUid: conversation.receiverId,
+                              conversationId: conversation.conversationId,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
     );
   }
 }
