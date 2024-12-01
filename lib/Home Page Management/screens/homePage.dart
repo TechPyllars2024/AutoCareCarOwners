@@ -25,11 +25,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
           children: [
             const Text(
               'Auto',
-              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+              style:
+                  TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
             ),
             Text(
               'Care',
-              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.orange.shade900),
+              style: TextStyle(
+                  fontWeight: FontWeight.w900, color: Colors.orange.shade900),
             ),
           ],
         ),
@@ -60,7 +62,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                   // Text content
                   Padding(
-                    padding: EdgeInsets.only(top:40.0, left: 18.0),
+                    padding: EdgeInsets.only(top: 40.0, left: 18.0),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Column(
@@ -68,22 +70,36 @@ class _HomePageScreenState extends State<HomePageScreen> {
                         children: [
                           const Text(
                             "One",
-                            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.black, height: .5),
+                            style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                height: .5),
                           ),
                           Text(
                             "Destination.",
-                            style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.orange.shade900),
+                            style: TextStyle(
+                                fontSize: 45,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange.shade900),
                           ),
-
-                          SizedBox(height: 20,),
-
+                          SizedBox(
+                            height: 20,
+                          ),
                           const Text(
                             "All Car",
-                            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.black, height: .5),
+                            style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                height: .5),
                           ),
                           Text(
                             "Solutions.",
-                            style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.orange.shade900),
+                            style: TextStyle(
+                                fontSize: 45,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange.shade900),
                           ),
                         ],
                       ),
@@ -106,7 +122,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const GasolineStation()),
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const GasolineStation()),
                               );
                             },
                           ),
@@ -133,12 +151,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
               padding: const EdgeInsets.only(bottom: 25.0),
               child: DiagnosisField(
                 title: 'DIAGNOSE MY CAR',
-                subtitle: 'Not sure of what is wrong with your car? Let us help you through our diagnosis.',
+                subtitle:
+                    'Not sure of what is wrong with your car? Let us help you through our diagnosis.',
                 onTap: () {
-
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Cardiagnosis()),
+                    MaterialPageRoute(
+                        builder: (context) => const Cardiagnosis()),
                   );
                 },
               ),
