@@ -24,7 +24,9 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
       future: widget.carDetailsData,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)
+          ));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -69,7 +71,8 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
 
         // Extract the first car detail to display
         final carDetailsMap = snapshot.data!;
-        final firstCarDetail = carDetailsMap.values.first; // Access the first car detail
+        final firstCarDetail =
+            carDetailsMap.values.first; // Access the first car detail
 
         return Padding(
           padding: const EdgeInsets.all(8.0),
@@ -90,7 +93,8 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
               Text('Year: ${firstCarDetail['year'] ?? 'N/A'}'),
               Text('Fuel Type: ${firstCarDetail['fuelType'] ?? 'N/A'}'),
               Text('Color: ${firstCarDetail['color'] ?? 'N/A'}'),
-              Text('Transmission Type: ${firstCarDetail['transmissionType'] ?? 'N/A'}'),
+              Text(
+                  'Transmission Type: ${firstCarDetail['transmissionType'] ?? 'N/A'}'),
             ],
           ),
         );
