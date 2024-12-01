@@ -122,7 +122,7 @@ class _GoogleMapWidgetState extends State<GoogleMapWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Container(
+      child: SizedBox(
         height: MediaQuery.of(context).size.height * 1,
         child: GoogleMap(
           initialCameraPosition: _cameraPosition,
