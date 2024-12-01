@@ -6,7 +6,6 @@ import 'package:logger/logger.dart';
 
 class CarDetails extends StatefulWidget {
   final List<CarDetailsModel> carDetails;
-
   const CarDetails({super.key, this.carDetails = const []});
 
   @override
@@ -17,6 +16,7 @@ class _CarDetailsState extends State<CarDetails> {
   late List<CarDetailsModel> carDetails;
   late CarDetailsService carDetailsService;
   final logger = Logger();
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -48,10 +48,22 @@ class _CarDetailsState extends State<CarDetails> {
   }
 
   Future<void> _fetchCarDetails() async {
-    final fetchedCarDetails = await carDetailsService.fetchCarDetails();
     setState(() {
-      carDetails = fetchedCarDetails;
+      isLoading = true;
     });
+
+    try {
+      final fetchedCarDetails = await carDetailsService.fetchCarDetails();
+      setState(() {
+        carDetails = fetchedCarDetails;
+      });
+    } catch (e) {
+      logger.i('Error fetching car details: $e');
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void _showDeleteConfirmationDialog(int index) {
@@ -96,6 +108,7 @@ class _CarDetailsState extends State<CarDetails> {
       },
     );
   }
+
   //Helper function to get color from color name
   Color _getColorFromName(String colorName) {
     switch (colorName.toLowerCase()) {
@@ -376,8 +389,12 @@ class _CarDetailsState extends State<CarDetails> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: carDetails.isEmpty
-          ? const Center(child: Text('No car details. Add a new car.'))
+      body:isLoading // Check loading state
+          ? const Center(child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)
+      )) // Show spinner
+          : carDetails.isEmpty
+          ? const Center(child: Text('No car details found'))
           : ListView.builder(
               itemCount: carDetails.length,
               itemBuilder: (context, index) {
@@ -390,15 +407,14 @@ class _CarDetailsState extends State<CarDetails> {
                         color: car.isDefault
                             ? Colors.orange.shade900
                             : Colors
-                            .transparent, // Change 2: Orange border if default
+                                .transparent, // Change 2: Orange border if default
                         width: 2, // Optional: Set the
                       ),
                       borderRadius: BorderRadius.circular(
                           8), // Optional: Add rounded corners
                     ),
                     elevation: 8,
-                    color:
-                    car.isDefault ? Colors.white : Colors.grey.shade200,
+                    color: car.isDefault ? Colors.white : Colors.grey.shade200,
                     child: ListTile(
                       title: Text('${car.brand} ${car.model}'),
                       subtitle: Column(
