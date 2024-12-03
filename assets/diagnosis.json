@@ -1,0 +1,241 @@
+{
+  "diagnosis": [
+    {
+      "title": "WHAT IS YOUR CAR CONCERN?",
+      "choices": [
+        {
+          "choice": "MY CAR IS NOT STARTING",
+          "sub_questions": [
+            {
+              "title": "ARE YOU ABLE TO TURN THE IGNITION KEY?",
+              "choices": [
+                {
+                  "choice": "NO, KEY DOES NOT TURN",
+                  "sub_questions": [
+                    {
+                      "title": "WHAT TYPE OF KEY DO YOU HAVE?",
+                      "choices": [
+                        "REGULAR METAL KEY",
+                        "PUSH BUTTON"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "choice": "YES, I AM ABLE TO TURN THE KEY",
+                  "sub_questions": [
+                    {
+                      "title": "WHEN YOU TURN THE KEY, DO YOU HEAR THE ENGINE TRYING TO START? (WHINING NOISE FROM ENGINE)",
+                      "choices": [
+                        "YES, I HEAR A NOISE FROM ENGINE",
+                        "NO, I DON'T HEAR A NOISE FROM ENGINE"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "MY CAR'S WARNING LIGHT IS ON",
+          "sub_questions": [
+            {
+              "title": "Engine Management System (ECM or ECU) has found some faults in the vehicle, Perform engine scanning?",
+              "choices": [
+                "Check Engine",
+                "Low Oil Pressure",
+                "Brake Warning",
+                "Change Engine Oil",
+                "Worn Brake Pad Warning",
+                "Battery",
+                "Anti-Lock Braking System",
+                "Temperature or Coolant Level",
+                "Electronic Parking Brake",
+                "Throttle Warning",
+                "Traction Control Warning",
+                "Stability Control",
+                "Power Steering System",
+                "Security Warning",
+                "Tire Pressure Warning",
+                "Cruise Control",
+                "Overdrive Indicator"
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "THERE ARE FLUIDS LEAKING FROM MY CAR",
+          "sub_questions": [
+            {
+              "title": "WHERE DO YOU SEE FLUID LEAKING?",
+              "choices": [
+                {
+                  "choice": "INSIDE THE CAR (near the engine)",
+                  "sub_questions": [
+                    {
+                      "title": "WHAT IS THE COLOR OF THE FLUID?",
+                      "choices": [
+                        "COLORLESS"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "choice": "OUTSIDE THE CAR (under the car)",
+                  "sub_questions": [
+                    {
+                      "title": "WHAT IS THE COLOR OF THE FLUID?",
+                      "choices": [
+                        "COLORLESS",
+                        "BROWNISH (GOLDEN OR DARK BROWN)",
+                        "COLORLESS TO YELLOWISH",
+                        "LIGHT BROWN",
+                        "BLACK",
+                        "REDDISH BROWN",
+                        "BLUE",
+                        "RED",
+                        "PINK",
+                        "GREEN",
+                        "ORANGE"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "MY CAR IS SHAKING/VIBRATING",
+          "sub_questions": [
+            {
+              "title": "DOES THIS HAPPEN WHEN YOU APPLY BRAKES?",
+              "choices": [
+                "YES, THIS ONLY HAPPENS WHEN I APPLY BRAKES",
+                "NO, THIS ONLY HAPPENS WHEN I DRIVE SLOW (5-20 MPH)",
+                "NO, THIS ONLY HAPPENS WHEN I DRIVE FAST (55-75 MPH)"
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "MY CAR'S BRAKES ARE SQUEAKING",
+          "sub_questions": [
+            {
+              "title": "WHEN WAS THE LAST TIME BRAKES WERE REPLACED?",
+              "choices": [
+                "WITHIN THE LAST MONTH",
+                "NOT RECENTLY/I DON’T KNOW"
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "SMOKE OR STEAM IS COMING OUT OF MY CAR",
+          "sub_questions": [
+            {
+              "title": "WHERE IS THE SMOKE COMING FROM?",
+              "choices": [
+                {
+                  "choice": "FRONT OF THE CAR (ENGINE)",
+                  "sub_questions": [
+                    {
+                      "title": "WHAT IS THE COLOR OF THE SMOKE?",
+                      "choices": [
+                        "WHITE",
+                        "THICK WHITE",
+                        "BLUE OR BLUISH GRAY",
+                        "THICK WHITE OR GRAY",
+                        "BLACK"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "choice": "BACK OF THE CAR (EXHAUST)",
+                  "sub_questions": [
+                    {
+                      "title": "WHAT IS THE COLOR OF THE SMOKE?",
+                      "choices": [
+                        "WHITE",
+                        "THICK WHITE",
+                        "BLUE OR BLUISH GRAY",
+                        "THICK WHITE OR GRAY",
+                        "BLACK"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "MY CAR IS OVERHEATING",
+          "sub_questions": [
+            {
+              "title": "WHEN DOES THIS HAPPEN?",
+              "choices": [
+                "ALL THE TIME",
+                "ON VERY HOT DAYS",
+                "WHEN I DRIVE UPHILL"
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "MY CAR AIRCON IS NOT WORKING WELL",
+          "sub_questions": [
+            {
+              "title": "WHAT IS THE PROBLEM WITH YOUR HEATING AND AC SYSTEM?",
+              "choices": [
+                "HEATER IS NOT WORKING AT ALL",
+                "IT’S NOT GETTING HOT ENOUGH",
+                "DEFROSTER IS NOT WORKING",
+                "AC IS NOT WORKING AT ALL",
+                "IT’S NOT GETTING COLD ENOUGH",
+                "FAN SPEEDS ARE NOT WORKING",
+                "AIR IS NOT COMING OUT OF THE RIGHT PLACE"
+              ]
+            }
+          ]
+        },
+        {
+          "choice": "MY WINDOWS ARE NOT MOVING",
+          "sub_questions": [
+            {
+              "title": "ARE ALL THE WINDOWS NOT MOVING?",
+              "choices": [
+                {
+                  "choice": "YES, ALL THE WINDOWS ARE NOT MOVING",
+                  "sub_questions": [
+                    {
+                      "title": "WHEN YOU TRY TO CLOSE OR OPEN THE WINDOW, DO YOU HEAR A WHINING NOISE AS IF MOTOR WAS TRYING TO MOVE THE WINDOW?",
+                      "choices": [
+                        "YES, I HEAR A NOISE",
+                        "NO, I DON'T HEAR ANY NOISE"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "choice": "NO, ONLY SOME OF THE WINDOWS ARE NOT MOVING",
+                  "sub_questions": [
+                    {
+                      "title": "WHEN YOU TRY TO CLOSE OR OPEN THE WINDOW, DO YOU HEAR A WHINING NOISE AS IF MOTOR WAS TRYING TO MOVE THE WINDOW?",
+                      "choices": [
+                        "YES, I HEAR A NOISE",
+                        "NO, I DON'T HEAR ANY NOISE"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
