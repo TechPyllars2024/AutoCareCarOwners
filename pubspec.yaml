@@ -93,6 +93,8 @@ flutter:
     - lib/Authentication/assets/images/icons/
     - assets/images/
     - lib/ProfileManagement/assets/
+    - assets/diagnosis.json
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
