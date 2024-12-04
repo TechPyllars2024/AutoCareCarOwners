@@ -1,6 +1,5 @@
 import 'package:autocare_carowners/Home%20Page%20Management/widgets/automotiveShopsWidget.dart';
 import 'package:flutter/material.dart';
-import '../widgets/gasolineShopWidget.dart';
 
 class NearbyServices extends StatefulWidget {
   const NearbyServices({super.key});
