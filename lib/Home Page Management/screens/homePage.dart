@@ -1,5 +1,7 @@
 import 'package:autocare_carowners/Home%20Page%20Management/screens/carDiagnosis.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/gasolineStation.dart';
+import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyRoadsideAssistance.dart';
+import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyServices.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/card.dart';
@@ -132,13 +134,27 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             icon: Icons.home_repair_service_rounded,
                             foregroundColor: Colors.orange.shade900,
                             title: 'Repair\nShops',
-                            onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      const NearbyServices()),
+                                );
+                              }
                           ),
                           CardWidget(
                             icon: Icons.warning_amber_rounded,
                             foregroundColor: Colors.orange.shade900,
                             title: 'Road Assistance',
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const NearbyRoadsideServices()),
+                              );
+                            },
                           ),
                         ],
                       ),
