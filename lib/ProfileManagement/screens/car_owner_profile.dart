@@ -234,8 +234,8 @@ class _CarOwnerProfileState extends State<CarOwnerProfile> {
                                     child: Text(
                                       '${defaultAddress.houseNumberandStreet}, ${defaultAddress.baranggay}, ${defaultAddress.city}, ${defaultAddress.province}',
                                       style: const TextStyle(
-                                        color: Colors.black87,
-                                        fontSize: 14,
+                                        color: Colors.black,
+                                        fontSize: 16,
                                       ),
                                       overflow: TextOverflow.visible,
                                     ),
