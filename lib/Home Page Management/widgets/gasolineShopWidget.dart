@@ -140,7 +140,14 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
     }
   }
 
-  void _showDetails(String name, String rating, String address, String openingHours, String? photos, String priceLevel, String businessStatus) {
+  void _showDetails(
+      String name,
+      String rating,
+      String address,
+      String openingHours,
+      String? photos,
+      String priceLevel,
+      String businessStatus) {
     const apiKey = 'AIzaSyCrbgW2yWOxrm932ZOoVV1_vw1ImfRLMDM';
     showModalBottomSheet(
       context: context,
@@ -153,7 +160,8 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
             children: [
               Text(
                 name,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               if (photos != null)
                 SizedBox(
@@ -162,6 +170,33 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                   child: Image.network(
                     'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=$photos&key=$apiKey',
                     fit: BoxFit.cover,
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) {
+                        // Image fully loaded, return the image
+                        return child;
+                      } else {
+                        // While loading, show a CircularProgressIndicator
+                        return Center(
+                          child: CircularProgressIndicator(
+                            valueColor: const AlwaysStoppedAnimation<Color>(
+                                Colors.orange),
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    (loadingProgress.expectedTotalBytes ?? 1)
+                                : null,
+                          ),
+                        );
+                      }
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      // Fallback for failed image loading
+                      return const Icon(
+                        Icons.broken_image,
+                        size: 50,
+                        color: Colors.grey,
+                      );
+                    },
                   ),
                 ),
               const SizedBox(height: 8),
@@ -261,7 +296,9 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                         TextSpan(
                           text: businessStatus,
                           style: TextStyle(
-                            color: businessStatus == 'OPEN' ? Colors.green : Colors.red,
+                            color: businessStatus == 'OPEN'
+                                ? Colors.green
+                                : Colors.red,
                           ),
                         ),
                       ],

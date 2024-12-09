@@ -204,9 +204,48 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
                 child: SizedBox(
                   width: 200,
                   height: 200,
-                  child: Image.network(
-                    profileImage,
-                    fit: BoxFit.cover,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // CircularProgressIndicator for loading
+                      const CircularProgressIndicator(),
+                      // Image widget with loadingBuilder
+                      Image.network(
+                        profileImage,
+                        fit: BoxFit.cover,
+                        width: 200,
+                        height: 200,
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            // Image fully loaded, return the image
+                            return child;
+                          } else {
+                            // While loading, keep showing progress indicator
+                            return Center(
+                              child: CircularProgressIndicator(
+                                valueColor: const AlwaysStoppedAnimation<Color>(
+                                    Colors.orange),
+                                value: loadingProgress.expectedTotalBytes !=
+                                        null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        (loadingProgress.expectedTotalBytes ??
+                                            1)
+                                    : null,
+                              ),
+                            );
+                          }
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          // Fallback for failed image loading
+                          return const Icon(
+                            Icons.broken_image,
+                            size: 50,
+                            color: Colors.grey,
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
