@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'dart:ui' as ui;
-
 import '../../Service Directory Management/screens/shop_profile.dart';
 
 class AutomotiveShopsWidget extends StatefulWidget {
@@ -24,6 +25,12 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
   bool _isLoading = false;
   bool _hasError = false;
   String _errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeLocationAndFetchShops();
+  }
 
   Future<void> _initializeLocationAndFetchShops() async {
     setState(() {
@@ -82,15 +89,26 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
         return;
       }
 
-      // Loop through all the documents in the markers collection
+      // Define a mapping of categories to asset paths
+      final categoryIcons = {
+        'Electrical Works': 'assets/images/electricalWorks.png',
+        'Mechanical Works': 'assets/images/mechanicalWorks.png',
+        'Paint and Body Works': 'assets/images/painWorks.png',
+        'Air-conditioning Services': 'assets/images/airconServices.png',
+        'Installation of Accessories Services':
+            'assets/images/installationServices.png',
+        'Car Wash': 'assets/images/carWash.png',
+        'Auto Detailing Services': 'assets/images/autoDetailing.png',
+        'Roadside Assistance Services': 'assets/images/roadsideAssisstance.png',
+      };
+
       for (var doc in querySnapshot.docs) {
         final data = doc.data();
         final latitude = data['latitude'];
         final longitude = data['longitude'];
         final serviceProviderUid = data['serviceProviderUid'];
-        final snippet = data['snippet'];
 
-        // Fetch additional shop details from the automotiveShops_profile collection
+        // Fetch additional shop details
         final shopSnapshot = await firestore
             .collection('automotiveShops_profile')
             .doc(serviceProviderUid)
@@ -98,34 +116,49 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
 
         if (!shopSnapshot.exists ||
             shopSnapshot.data()?['verificationStatus'] != 'Verified') {
-          // Skip unverified shops
           continue;
         }
 
-        // Access the shop details
         final shopData = shopSnapshot.data()!;
         final shopName = shopData['shopName'];
         final location = shopData['location'];
         final profileImage = shopData['profileImage'];
+        final categories =
+            List<String>.from(shopData['serviceSpecialization'] ?? []);
 
-        // Create the marker icon
-        final customIcon = await iconDataToBitmapDescriptor(localGasStation,
-            color: Colors.orange.shade900, size: 120);
+        if (categories.isNotEmpty) {
+          // Get the first specialization
+          final String category = categories.first;
 
-        // Add marker to the map
-        setState(() {
-          _marker.add(Marker(
-            markerId: MarkerId(doc.id),
-            position: LatLng(latitude, longitude),
-            icon: customIcon,
-            infoWindow: InfoWindow(
-              title: shopName,
-              snippet: snippet,
-            ),
-            onTap: () => _showShopDetails(
-                serviceProviderUid, shopName, location, profileImage),
-          ));
-        });
+          // Get the correct icon for the category
+          String? assetPath = categoryIcons[category];
+          if (assetPath == null) {
+            logger.w("No icon defined for category: $category");
+            return;
+          }
+
+          // Resize the asset for marker customization
+          final customIcon = await resizeAssetBitmapDescriptor(
+            assetPath,
+            150,
+            150,
+          );
+
+          // Add the marker
+          setState(() {
+            _marker.add(Marker(
+              markerId: MarkerId(doc.id),
+              position: LatLng(latitude, longitude),
+              icon: customIcon,
+              infoWindow: InfoWindow(
+                title: shopName,
+                snippet: category,
+              ),
+              onTap: () => _showShopDetails(serviceProviderUid, shopName,
+                  location, categories, profileImage),
+            ));
+          });
+        }
       }
     } catch (e) {
       logger.e("Error fetching verified automotive shops: $e");
@@ -136,34 +169,26 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
     }
   }
 
-  Future<BitmapDescriptor> iconDataToBitmapDescriptor(IconData iconData,
-      {Color color = Colors.orange, double size = 150}) async {
-    final pictureRecorder = ui.PictureRecorder();
-    final canvas = Canvas(pictureRecorder);
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
-
-    // Customize the icon with a larger size and color
-    textPainter.text = TextSpan(
-      text: String.fromCharCode(iconData.codePoint),
-      style: TextStyle(
-        fontFamily: iconData.fontFamily,
-        fontSize: size,
-        color: color,
-      ),
+  Future<BitmapDescriptor> resizeAssetBitmapDescriptor(
+      String assetPath, int width, int height) async {
+    // Load the image from assets
+    ByteData data = await rootBundle.load(assetPath);
+    ui.Codec codec = await ui.instantiateImageCodec(
+      data.buffer.asUint8List(),
+      targetWidth: width,
+      targetHeight: height,
     );
-    textPainter.layout();
-    textPainter.paint(canvas, const Offset(0.0, 0.0));
+    ui.FrameInfo frameInfo = await codec.getNextFrame();
+    final resizedImage = await frameInfo.image.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
 
-    // Convert to image and get bytes
-    final picture = pictureRecorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
-    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-
-    return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
+    // Convert the resized image to BitmapDescriptor
+    return BitmapDescriptor.fromBytes(resizedImage!.buffer.asUint8List());
   }
 
   void _showShopDetails(String serviceProviderUid, String shopName,
-      String location, String profileImage) {
+      String location, List<String> categories, String profileImage) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -189,6 +214,27 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
               ),
               const SizedBox(height: 15),
               // Display the location
+              Padding(
+                padding: const EdgeInsets.only(left: 15.0),
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[700],
+                    ),
+                    children: [
+                      const TextSpan(
+                        text: 'Specialization: ',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(text: categories.join(', ')),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: RichText(
@@ -226,11 +272,17 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
                   ),
                 );
               },
-              child: Text('View Shop Profile', style: TextStyle(color: Colors.orange.shade900),), // Button text for viewing details
+              child: Text(
+                'View Shop Profile',
+                style: TextStyle(color: Colors.orange.shade900),
+              ), // Button text for viewing details
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close', style: TextStyle(color: Colors.grey[700]),),
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.grey[700]),
+              ),
             ),
           ],
         );
@@ -249,12 +301,6 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _initializeLocationAndFetchShops();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -270,7 +316,9 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
         ),
         if (_isLoading)
           const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+            ),
           ),
         if (_hasError)
           Align(
