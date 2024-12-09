@@ -20,8 +20,6 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
   final Completer<GoogleMapController> _controller = Completer();
   final List<Marker> _marker = [];
   final Logger logger = Logger();
-  static const IconData localGasStation =
-      IconData(0xf5f3, fontFamily: 'MaterialIcons');
   bool _isLoading = false;
   bool _hasError = false;
   String _errorMessage = '';
