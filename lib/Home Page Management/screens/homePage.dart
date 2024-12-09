@@ -3,7 +3,6 @@ import 'package:autocare_carowners/Home%20Page%20Management/screens/gasolineStat
 import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyRoadsideAssistance.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyServices.dart';
 import 'package:flutter/material.dart';
-
 import '../widgets/card.dart';
 import '../widgets/diagnosisField.dart';
 
@@ -64,7 +63,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                   // Text content
                   Padding(
-                    padding: EdgeInsets.only(top: 40.0, left: 18.0),
+                    padding: const EdgeInsets.only(top: 40.0, left: 18.0),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Column(
@@ -85,7 +84,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                 fontWeight: FontWeight.bold,
                                 color: Colors.orange.shade900),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           const Text(
@@ -121,6 +120,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             icon: Icons.local_gas_station_rounded,
                             foregroundColor: Colors.orange.shade900,
                             title: 'Gasoline Station',
+                            textColor: Colors.black,
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -131,9 +131,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             },
                           ),
                           CardWidget(
-                            icon: Icons.home_repair_service_rounded,
+                            icon: Icons.car_crash,
                             foregroundColor: Colors.orange.shade900,
-                            title: 'Repair\nShops',
+                            title: 'Automotive\nServices',
+                            textColor: Colors.black,
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -147,6 +148,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             icon: Icons.warning_amber_rounded,
                             foregroundColor: Colors.orange.shade900,
                             title: 'Road Assistance',
+                            textColor: Colors.black,
                             onTap: () {
                               Navigator.push(
                                 context,
