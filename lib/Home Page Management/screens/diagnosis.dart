@@ -6,6 +6,7 @@ import 'package:logger/logger.dart';
 import '../../Booking Management/services/booking_service.dart';
 import '../widgets/CarDetailsWidget.dart';
 import '../../Booking Management/services/booking_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Diagnosis extends StatefulWidget {
   const Diagnosis({super.key});
@@ -82,13 +83,23 @@ class _DiagnosisState extends State<Diagnosis> {
       }
 
       String questionId = currentQuestion['title'];
-      String selectedChoice = (choice is String) ? choice : choice['choice'];
+
+      // Safely handle the choice to ensure it's not null
+      String selectedChoice = (choice != null && choice is String)
+          ? choice
+          : (choice != null && choice['choice'] != null ? choice['choice'] : '');
+
+      if (selectedChoice.isEmpty) {
+        logger.e("Selected choice is null or empty.");
+        return;
+      }
+
       selectedChoices[questionId] = selectedChoice;
 
       var selectedChoiceMap = currentQuestion['choices']
           .firstWhere(
             (c) => (c is String ? c : c['choice']) == selectedChoice,
-        orElse: () => null,
+        orElse: () => '',
       );
 
       if (selectedChoiceMap != null && selectedChoiceMap['sub_questions'] != null) {
@@ -117,6 +128,16 @@ class _DiagnosisState extends State<Diagnosis> {
         }
       }
     });
+  }
+
+  // Function to launch a URL
+  void launchURL(String url) async {
+    final Uri _url = Uri.parse(url);
+    if (await canLaunchUrl(_url)) {
+      await launchUrl(_url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   @override
@@ -215,33 +236,70 @@ class _DiagnosisState extends State<Diagnosis> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           for (var choice in _currentQuestions[i]['choices'] ?? [])
-                            RadioListTile<String>(
-                              title: Text(choice is String
-                                  ? choice
-                                  : choice['choice']),
-                              value: choice is String
-                                  ? choice
-                                  : choice['choice'],
-                              groupValue:
-                              selectedChoices[_currentQuestions[i]['title']],
-                              onChanged: (value) {
-                                _selectChoice(i, choice);
-                              },
-                              activeColor: Colors.orange.shade900,
-                            ),
+                          // Check if choice has name and display the name
+                            if (choice is Map && choice.containsKey('name'))
+                              Column(
+                                children: [
+                                  // Wrap Image.network with a Container to control size
+                                  if (choice.containsKey('image_url'))
+                                    Container(
+                                      width: 100.0, // Set the width to your desired size
+                                      height: 100.0, // Set the height to your desired size
+                                      child: Image.network(
+                                        choice['image_url'],
+                                        fit: BoxFit.contain, // Adjust the image fit as needed (e.g., BoxFit.cover)
+                                      ),
+                                    ),
+                                  RadioListTile<String>(
+                                    title: Text(choice['name'] ?? 'No name available'),
+                                    value: choice['name'] ?? '',
+                                    groupValue: selectedChoices[_currentQuestions[i]['title']],
+                                    onChanged: (value) {
+                                      _selectChoice(i, choice);
+                                    },
+                                    activeColor: Colors.orange.shade900,
+                                  ),
+                                ],
+                              )
+                            // For choices without names, display text from 'choice'
+                            else
+                              RadioListTile<String>(
+                                title: Text(choice is String ? choice : choice['choice'] ?? 'Unknown choice'),
+                                value: choice is String ? choice : choice['choice'] ?? '',
+                                groupValue: selectedChoices[_currentQuestions[i]['title']],
+                                onChanged: (value) {
+                                  _selectChoice(i, choice);
+                                },
+                                activeColor: Colors.orange.shade900,
+                              ),
+                          // Display links if link is present in choices
+                          if (_currentQuestions[i]['choices'] != null &&
+                              _currentQuestions[i]['choices'] is List &&
+                              _currentQuestions[i]['choices'][0] is Map &&
+                              _currentQuestions[i]['choices'][0].containsKey('link'))
+                            Column(
+                              children: [
+                                for (var choice in _currentQuestions[i]['choices'])
+                                  if (choice is Map && choice.containsKey('link'))
+                                    TextButton(
+                                      onPressed: () => launchURL(choice['link']),
+                                      child: const Text(
+                                        'View more',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                    )
+                              ],
+                            )
                         ],
                       ),
-                      isActive: _currentStep == i + 1,
-                      state: _currentStep == i + 1
-                          ? StepState.editing
-                          : StepState.indexed,
                     ),
                 ]
                     : [],
               ),
             ),
-          if (_isAnalyzing)
-            const Center(child: Text('Analyzing the problem')),
         ],
       ),
     );
