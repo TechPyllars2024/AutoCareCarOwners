@@ -13,6 +13,8 @@ import '../models/services_model.dart';
 import '../services/categories_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
+import 'mapView.dart';
+
 class ShopProfile extends StatefulWidget {
   final String serviceProviderUid;
   final Widget? child;
@@ -30,12 +32,16 @@ class _ShopProfileState extends State<ShopProfile> {
   bool isExpanded = false;
   final ChatService _chatService = ChatService();
   late Future<Map<String, dynamic>> _providerData;
+  bool isLoading = false;
+  late double latitude = 0.0;
+  late double longitude = 0.0;
 
   @override
   void initState() {
     super.initState();
     _providerData =
         CategoriesService().fetchProviderByUid(widget.serviceProviderUid);
+    _fetchLocationByUid();
   }
 
   void bookingRoute() {
@@ -47,6 +53,31 @@ class _ShopProfileState extends State<ShopProfile> {
         ),
       ),
     );
+  }
+
+  Future<void> _fetchLocationByUid() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      // Fetch the location details using the service provider's UID
+      final location = await CategoriesService().fetchLocationByUid(widget.serviceProviderUid);
+
+      if (location.isNotEmpty) {
+        setState(() {
+          latitude = location['latitude'] ?? 0.0;
+          longitude = location['longitude'] ?? 0.0;
+        });
+      } else {
+        logger.w('No location data found for UID:');
+      }
+    } catch (e) {
+      logger.e("Error fetching location for UID: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> _startConversation(BuildContext context) async {
@@ -359,37 +390,6 @@ class _ShopProfileState extends State<ShopProfile> {
             ),
           ),
           SizedBox(
-            width: 50,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const CallingScreen()),
-                    );
-                  },
-                  child:
-                      Icon(Icons.call, color: Colors.orange.shade900, size: 25),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    'Call',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
             width: 120,
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -417,12 +417,25 @@ class _ShopProfileState extends State<ShopProfile> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.location_on,
-                    color: Colors.orange.shade900, size: 25),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MapViewScreen(
+                          latitude: latitude,
+                          longitude: longitude,
+                          serviceProviderUid: widget.serviceProviderUid,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.location_on, color: Colors.orange.shade900, size: 25),
+                ),
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
-                    "Direction",
+                    "View in Map",
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
