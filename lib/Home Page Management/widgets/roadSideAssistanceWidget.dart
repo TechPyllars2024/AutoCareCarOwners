@@ -1,29 +1,35 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:logger/logger.dart';
 import 'dart:ui' as ui;
-
 import '../../Service Directory Management/screens/shop_profile.dart';
 
 class RoadSideAssistanceWidget extends StatefulWidget {
   const RoadSideAssistanceWidget({super.key});
 
   @override
-  State<RoadSideAssistanceWidget> createState() => _RoadSideAssistanceWidgetState();
+  State<RoadSideAssistanceWidget> createState() =>
+      _RoadSideAssistanceWidgetState();
 }
 
 class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
   final Completer<GoogleMapController> _controller = Completer();
   final List<Marker> _marker = [];
   final Logger logger = Logger();
-  static const IconData localGasStation =
-  IconData(0xf5f3, fontFamily: 'MaterialIcons');
+  final assetPath = 'assets/images/roadsideAssisstance.png';
   bool _isLoading = false;
   bool _hasError = false;
   String _errorMessage = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeLocationAndFetchShops();
+  }
 
   Future<void> _initializeLocationAndFetchShops() async {
     setState(() {
@@ -88,7 +94,6 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
         final latitude = data['latitude'];
         final longitude = data['longitude'];
         final serviceProviderUid = data['serviceProviderUid'];
-        final snippet = data['snippet'];
 
         // Fetch additional shop details from the 'automotiveShops_profile' collection
         final shopSnapshot = await firestore
@@ -110,15 +115,19 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
         final operationTime = shopData['operationTime'];
 
         // Check if the shop has "Roadside Assistance Services" in its serviceSpecialization
-        final serviceSpecialization = List<String>.from(shopData['serviceSpecialization']);
+        final serviceSpecialization =
+            List<String>.from(shopData['serviceSpecialization']);
         if (!serviceSpecialization.contains("Roadside Assistance Services")) {
           // Skip this shop if it does not provide Roadside Assistance Services
           continue;
         }
 
         // Create the marker icon
-        final customIcon = await iconDataToBitmapDescriptor(localGasStation,
-            color: Colors.orange.shade900, size: 120);
+        final customIcon = await resizeAssetBitmapDescriptor(
+          assetPath,
+          150,
+          150,
+        );
 
         // Add marker to the map
         setState(() {
@@ -128,10 +137,10 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
             icon: customIcon,
             infoWindow: InfoWindow(
               title: shopName,
-              snippet: snippet,
+              snippet: operationTime,
             ),
-            onTap: () => _showShopDetails(
-                serviceProviderUid, shopName, location, profileImage, operationTime),
+            onTap: () => _showShopDetails(serviceProviderUid, shopName,
+                location, profileImage, operationTime),
           ));
         });
       }
@@ -144,31 +153,22 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
     }
   }
 
-
-  Future<BitmapDescriptor> iconDataToBitmapDescriptor(IconData iconData,
-      {Color color = Colors.orange, double size = 150}) async {
-    final pictureRecorder = ui.PictureRecorder();
-    final canvas = Canvas(pictureRecorder);
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
-
-    // Customize the icon with a larger size and color
-    textPainter.text = TextSpan(
-      text: String.fromCharCode(iconData.codePoint),
-      style: TextStyle(
-        fontFamily: iconData.fontFamily,
-        fontSize: size,
-        color: color,
-      ),
+  Future<BitmapDescriptor> resizeAssetBitmapDescriptor(
+      String assetPath, int width, int height) async {
+    // Load the image from assets
+    ByteData data = await rootBundle.load(assetPath);
+    ui.Codec codec = await ui.instantiateImageCodec(
+      data.buffer.asUint8List(),
+      targetWidth: width,
+      targetHeight: height,
     );
-    textPainter.layout();
-    textPainter.paint(canvas, const Offset(0.0, 0.0));
+    ui.FrameInfo frameInfo = await codec.getNextFrame();
+    final resizedImage = await frameInfo.image.toByteData(
+      format: ui.ImageByteFormat.png,
+    );
 
-    // Convert to image and get bytes
-    final picture = pictureRecorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
-    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-
-    return BitmapDescriptor.fromBytes(byteData!.buffer.asUint8List());
+    // Convert the resized image to BitmapDescriptor
+    return BitmapDescriptor.fromBytes(resizedImage!.buffer.asUint8List());
   }
 
   void _showShopDetails(String serviceProviderUid, String shopName,
@@ -220,7 +220,9 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
                 padding: const EdgeInsets.only(left: 15.0),
                 child: RichText(
@@ -253,16 +255,23 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
                   context,
                   MaterialPageRoute(
                     builder: (context) => ShopProfile(
-                      serviceProviderUid: serviceProviderUid,  // Passing UID to the ShopProfile
+                      serviceProviderUid:
+                          serviceProviderUid, // Passing UID to the ShopProfile
                     ),
                   ),
                 );
               },
-              child: Text('View Shop Profile', style: TextStyle(color: Colors.orange.shade900),), // Button text for viewing details
+              child: Text(
+                'View Shop Profile',
+                style: TextStyle(color: Colors.orange.shade900),
+              ),
             ),
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text('Close', style: TextStyle(color: Colors.grey[700]),),
+              child: Text(
+                'Close',
+                style: TextStyle(color: Colors.grey[700]),
+              ),
             ),
           ],
         );
@@ -281,12 +290,6 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _initializeLocationAndFetchShops();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -302,7 +305,9 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
         ),
         if (_isLoading)
           const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+            ),
           ),
         if (_hasError)
           Align(
