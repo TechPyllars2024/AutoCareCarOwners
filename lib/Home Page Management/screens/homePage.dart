@@ -1,7 +1,8 @@
 import 'package:autocare_carowners/Home%20Page%20Management/screens/carDiagnosis.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/gasolineStation.dart';
+import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyRoadsideAssistance.dart';
+import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyServices.dart';
 import 'package:flutter/material.dart';
-
 import '../widgets/card.dart';
 import '../widgets/diagnosisField.dart';
 
@@ -25,11 +26,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
           children: [
             const Text(
               'Auto',
-              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+              style:
+                  TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
             ),
             Text(
               'Care',
-              style: TextStyle(fontWeight: FontWeight.w900, color: Colors.orange.shade900),
+              style: TextStyle(
+                  fontWeight: FontWeight.w900, color: Colors.orange.shade900),
             ),
           ],
         ),
@@ -60,7 +63,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                   // Text content
                   Padding(
-                    padding: EdgeInsets.only(top:40.0, left: 18.0),
+                    padding: const EdgeInsets.only(top: 40.0, left: 18.0),
                     child: Align(
                       alignment: Alignment.topLeft,
                       child: Column(
@@ -68,22 +71,36 @@ class _HomePageScreenState extends State<HomePageScreen> {
                         children: [
                           const Text(
                             "One",
-                            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.black, height: .5),
+                            style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                height: .5),
                           ),
                           Text(
                             "Destination.",
-                            style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.orange.shade900),
+                            style: TextStyle(
+                                fontSize: 45,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange.shade900),
                           ),
-
-                          SizedBox(height: 20,),
-
+                          const SizedBox(
+                            height: 20,
+                          ),
                           const Text(
                             "All Car",
-                            style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.black, height: .5),
+                            style: TextStyle(
+                                fontSize: 35,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                height: .5),
                           ),
                           Text(
                             "Solutions.",
-                            style: TextStyle(fontSize: 45, fontWeight: FontWeight.bold, color: Colors.orange.shade900),
+                            style: TextStyle(
+                                fontSize: 45,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.orange.shade900),
                           ),
                         ],
                       ),
@@ -103,24 +120,43 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             icon: Icons.local_gas_station_rounded,
                             foregroundColor: Colors.orange.shade900,
                             title: 'Gasoline Station',
+                            textColor: Colors.black,
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const GasolineStation()),
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const GasolineStation()),
                               );
                             },
                           ),
                           CardWidget(
-                            icon: Icons.home_repair_service_rounded,
+                            icon: Icons.car_crash,
                             foregroundColor: Colors.orange.shade900,
-                            title: 'Repair\nShops',
-                            onTap: () {},
+                            title: 'Automotive\nServices',
+                            textColor: Colors.black,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                      const NearbyServices()),
+                                );
+                              }
                           ),
                           CardWidget(
                             icon: Icons.warning_amber_rounded,
                             foregroundColor: Colors.orange.shade900,
                             title: 'Road Assistance',
-                            onTap: () {},
+                            textColor: Colors.black,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const NearbyRoadsideServices()),
+                              );
+                            },
                           ),
                         ],
                       ),
@@ -133,12 +169,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
               padding: const EdgeInsets.only(bottom: 25.0),
               child: DiagnosisField(
                 title: 'DIAGNOSE MY CAR',
-                subtitle: 'Not sure of what is wrong with your car? Let us help you through our diagnosis.',
+                subtitle:
+                    'Not sure of what is wrong with your car? Let us help you through our diagnosis.',
                 onTap: () {
-
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Cardiagnosis()),
+                    MaterialPageRoute(
+                        builder: (context) => const Cardiagnosis()),
                   );
                 },
               ),

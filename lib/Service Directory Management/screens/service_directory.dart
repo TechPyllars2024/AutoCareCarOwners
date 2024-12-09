@@ -1,9 +1,9 @@
 import 'package:autocare_carowners/Service%20Directory%20Management/screens/shops_directory.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // For Firebase
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:autocare_carowners/Service%20Directory%20Management/services/categories_service.dart';
-import 'package:logger/logger.dart'; // Import CategoriesService
+import 'package:logger/logger.dart';
 
 class Service {
   final String name;
@@ -61,6 +61,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
 
   final CategoriesService categoriesService = CategoriesService();
   List<String> availableCategories = [];
+  bool isLoading = true;
 
   // Update availability based on category match
   void updateServiceAvailability(List<String> availableServices) {
@@ -71,6 +72,7 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
         service.isAvailable = isAvailable;
         logger.i('Service ${service.name} is available: $isAvailable');
       }
+      isLoading = false;
     });
   }
 
@@ -159,90 +161,98 @@ class _AutomotiveServicesState extends State<ServiceDirectoryScreen> {
         actions: const [],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 1.0),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 2,
-                childAspectRatio: 2 / .8,
-              ),
-              itemCount: availableServices.length,
-              itemBuilder: (context, index) => GestureDetector(
-                onTap: () {
-                  // Navigate to ShopsDirectory with service name as argument
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShopsDirectory(
-                          serviceName: availableServices[index].name),
+        child: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                ),
+              )
+            : Padding(
+                padding: const EdgeInsets.only(bottom: 1.0),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 2,
+                      childAspectRatio: 2 / .8,
                     ),
-                  );
-                },
-                child: Card(
-                  color: Colors.white,
-                  elevation: 8,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(15.0),
-                            bottomLeft: Radius.circular(15.0),
+                    itemCount: availableServices.length,
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: () {
+                        // Navigate to ShopsDirectory with service name as argument
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ShopsDirectory(
+                                serviceName: availableServices[index].name),
                           ),
-                          child: CachedNetworkImage(
-                            imageUrl: availableServices[index].imageUrl,
-                            placeholder: (context, url) => Center(
+                        );
+                      },
+                      child: Card(
+                        color: Colors.white,
+                        elevation: 8,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0),
+                        ),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 1,
+                              child: ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(15.0),
+                                  bottomLeft: Radius.circular(15.0),
+                                ),
+                                child: CachedNetworkImage(
+                                  imageUrl: availableServices[index].imageUrl,
+                                  placeholder: (context, url) => Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(50.0),
+                                      child: SizedBox(
+                                        height: 18,
+                                        width: 18,
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  Colors.orange.shade900),
+                                          strokeWidth: 3.0,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
                               child: Padding(
-                                padding: const EdgeInsets.all(50.0),
-                                child: SizedBox(
-                                  height: 18,
-                                  width: 18,
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.orange.shade900),
-                                    strokeWidth: 3.0,
+                                padding: const EdgeInsets.all(6.0),
+                                child: Text(
+                                  availableServices[index].name,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                               ),
                             ),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                            height: double.infinity,
-                          ),
+                          ],
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(6.0),
-                          child: Text(
-                            availableServices[index].name,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ),
-        ),
       ),
     );
   }

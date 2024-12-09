@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 class CardWidget extends StatelessWidget {
   final String title;
   final IconData? icon;
-  final Color foregroundColor; // Added foreground color property
+  final Color foregroundColor;
   final VoidCallback onTap;
+  final Color textColor;
 
   const CardWidget({
     super.key,
     required this.icon,
     required this.title,
     required this.onTap,
-    this.foregroundColor = Colors.black, // Default foreground color
+    this.foregroundColor = Colors.black,
+    required this.textColor
   });
 
   @override
@@ -37,14 +39,14 @@ class CardWidget extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(icon, size: 50, color: foregroundColor), // Applied foreground color to the icon
+                  Icon(icon, size: 50, color: foregroundColor),
                   const SizedBox(height: 10),
                   Text(
                     title,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: foregroundColor, // Applied foreground color to the text
+                      color: textColor,
                     ),
                     textAlign: TextAlign.center,
                   ),

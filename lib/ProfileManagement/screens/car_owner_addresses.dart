@@ -288,92 +288,99 @@ class _CarOwnerAddressState extends State<CarOwnerAddress> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: addresses.isEmpty
-          ? const Center(child: Text('No addresses. Add a new address.'))
-          : Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemCount: addresses.length,
-                itemBuilder: (context, index) {
-                  final address = addresses[index];
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+              ), // Show loader while loading
+            )
+          : addresses.isEmpty
+              ? const Center(child: Text('No addresses. Add a new address.'))
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.builder(
+                    itemCount: addresses.length,
+                    itemBuilder: (context, index) {
+                      final address = addresses[index];
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: address.isDefault
+                                ? Colors.orange.shade900
+                                : Colors
+                                    .transparent, // Change 2: Orange border if default
+                            width: 2, // Optional: Set the
+                          ),
+                          borderRadius: BorderRadius.circular(
+                              8), // Optional: Add rounded corners
+                        ),
+                        elevation: 8,
                         color: address.isDefault
-                            ? Colors.orange.shade900
-                            : Colors
-                            .transparent, // Change 2: Orange border if default
-                        width: 2, // Optional: Set the
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          8), // Optional: Add rounded corners
-                    ),
-                    elevation: 8,
-                    color:
-                        address.isDefault ? Colors.white : Colors.grey.shade200,
-                    child: ListTile(
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(address.nearestLandmark),
-                          Text(address.houseNumberandStreet),
-                          Text(address.baranggay),
-                          Text(address.city),
-                          Text(address.province),
-                          if (address.isDefault)
-                            Text('Default Address',
-                                style: TextStyle(
-                                    color: Colors.orange.shade900,
-                                    fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.edit,
-                                color: Colors.grey.shade600, size: 18),
-                            onPressed: () {
-                              _showAddressDialog(
-                                  address: address, index: index);
-                            },
+                            ? Colors.white
+                            : Colors.grey.shade200,
+                        child: ListTile(
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(address.nearestLandmark),
+                              Text(address.houseNumberandStreet),
+                              Text(address.baranggay),
+                              Text(address.city),
+                              Text(address.province),
+                              if (address.isDefault)
+                                Text('Default Address',
+                                    style: TextStyle(
+                                        color: Colors.orange.shade900,
+                                        fontWeight: FontWeight.bold)),
+                            ],
                           ),
-                          IconButton(
-                            icon: Icon(Icons.delete,
-                                color: Colors.grey.shade600, size: 18),
-                            onPressed: () {
-                              _showDeleteConfirmationDialog(index);
-                            },
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit,
+                                    color: Colors.grey.shade600, size: 18),
+                                onPressed: () {
+                                  _showAddressDialog(
+                                      address: address, index: index);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete,
+                                    color: Colors.grey.shade600, size: 18),
+                                onPressed: () {
+                                  _showDeleteConfirmationDialog(index);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  address.isDefault
+                                      ? Icons.star
+                                      : Icons.star_border,
+                                  size: 18,
+                                  color: address.isDefault
+                                      ? Colors.orange.shade900
+                                      : Colors.grey.shade600,
+                                ),
+                                onPressed: () async {
+                                  setState(() {
+                                    for (int i = 0; i < addresses.length; i++) {
+                                      addresses[i].isDefault = i == index;
+                                    }
+                                  });
+                                  await addressService.setDefaultAddress(
+                                      index, addresses);
+                                  _fetchAddresses();
+                                },
+                              ),
+                            ],
                           ),
-                          IconButton(
-                            icon: Icon(
-                              address.isDefault
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              size: 18,
-                              color: address.isDefault
-                                  ? Colors.orange.shade900
-                                  : Colors.grey.shade600,
-                            ),
-                            onPressed: () async {
-                              setState(() {
-                                for (int i = 0; i < addresses.length; i++) {
-                                  addresses[i].isDefault = i == index;
-                                }
-                              });
-                              await addressService.setDefaultAddress(
-                                  index, addresses);
-                              _fetchAddresses();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange.shade900,
         onPressed: () {
