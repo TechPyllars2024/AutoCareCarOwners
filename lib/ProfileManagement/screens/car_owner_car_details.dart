@@ -443,7 +443,7 @@ class _CarDetailsState extends State<CarDetails> {
                           ),
                           IconButton(
                             icon: Icon(
-                              car.isDefault ? Icons.star : Icons.star_border,
+                              car.isDefault ? Icons.car_repair_rounded : Icons.car_repair_rounded,
                               color: car.isDefault
                                   ? Colors.orange.shade900
                                   : Colors.grey,
