@@ -1,4 +1,5 @@
 import 'package:autocare_carowners/Home%20Page%20Management/screens/carDiagnosis.dart';
+import 'package:autocare_carowners/Home%20Page%20Management/screens/diagnosis.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/gasolineStation.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyRoadsideAssistance.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyServices.dart';
@@ -174,8 +175,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const Cardiagnosis()),
+                    MaterialPageRoute(builder: (context) =>  const Diagnosis()),
+
                   );
                 },
               ),
