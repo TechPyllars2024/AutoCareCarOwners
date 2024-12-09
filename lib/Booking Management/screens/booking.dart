@@ -8,6 +8,7 @@ import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/checklist.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/time_selection.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/date_selection.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -46,6 +47,8 @@ class _BookingState extends State<Booking> {
   late final int standardBookingsPerHour;
   Map<String, int> availableSlotsPerHour = {};
   Map<String, int> remainingSlots = {};
+  late final double latitude;
+  late final double longitude;
 
   @override
   void initState() {
@@ -63,6 +66,7 @@ class _BookingState extends State<Booking> {
     _fetchDaysOfTheWeek();
     _fetchNumberOfBookingsPerHour();
     fetchBookingsForDate(selectedDate);
+    getCurrentLocation();
   }
 
   Future<void> fetchTimeData() async {
@@ -82,7 +86,6 @@ class _BookingState extends State<Booking> {
   }
 
   Future<String> fetchStartTime() async {
-    // Assuming _providerData is a Future<Map<String, dynamic>>
     Map<String, dynamic> providerData = await _providerData;
 
     String operationTime = providerData['operationTime'];
@@ -93,7 +96,6 @@ class _BookingState extends State<Booking> {
   }
 
   Future<String> fetchEndTime() async {
-    // Assuming _providerData is a Future<Map<String, dynamic>>
     Map<String, dynamic> providerData = await _providerData;
 
     String operationTime = providerData['operationTime'];
@@ -132,16 +134,16 @@ class _BookingState extends State<Booking> {
       // Adjust for AM/PM
       String period = timeParts[1].toUpperCase();
       if (period == 'PM' && hour != 12) {
-        hour += 12; // Convert PM times except 12 PM to 24-hour format
+        hour += 12;
       } else if (period == 'AM' && hour == 12) {
-        hour = 0; // Midnight case (12 AM)
+        hour = 0;
       }
 
       // Return valid TimeOfDay object
       return TimeOfDay(hour: hour, minute: minute);
     } catch (e) {
       logger.e("Error parsing time string '$timeString': $e");
-      return TimeOfDay.now(); // Default to current time in case of an error
+      return TimeOfDay.now();
     }
   }
 
@@ -149,7 +151,7 @@ class _BookingState extends State<Booking> {
     // Parse the date string
     DateTime parsedDate = DateTime.parse(date);
     // Format to a more readable format
-    return "${parsedDate.day}/${parsedDate.month}/${parsedDate.year}"; // Change format as needed
+    return "${parsedDate.day}/${parsedDate.month}/${parsedDate.year}";
   }
 
   // Convert TimeOfDay to formatted time string (e.g., "9:00 AM")
@@ -164,7 +166,7 @@ class _BookingState extends State<Booking> {
     try {
       // Fetch default car details instead of all car details
       Map<String, dynamic> fetchedCarDetails = await BookingService()
-          .fetchDefaultCarDetails(user!.uid); // Call the new function
+          .fetchDefaultCarDetails(user!.uid);
 
       if (fetchedCarDetails.isEmpty) {
         logger.i('No default car found for this user.');
@@ -172,14 +174,14 @@ class _BookingState extends State<Booking> {
         logger.i('Default Car Data: $fetchedCarDetails');
       }
 
-      return fetchedCarDetails; // Return the fetched car details
+      return fetchedCarDetails;
     } catch (e) {
       logger.e('Error fetching car details: $e');
-      return {}; // Return empty map in case of error
+      return {};
     }
   }
 
-  // Load services and calculate total price
+  // Load services
   void loadServices() async {
     dropdownController.clearSelection();
     List<Map<String, dynamic>> fetchedServices =
@@ -258,13 +260,52 @@ class _BookingState extends State<Booking> {
     });
   }
 
+  Future<Position?> _getUserCurrentLocation() async {
+    try {
+      await Geolocator.requestPermission();
+      return await Geolocator.getCurrentPosition();
+    } catch (e) {
+      logger.i("Error getting location: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, double>?> getCurrentLocation() async {
+    try {
+      // Request location permission if not already granted
+      await Geolocator.requestPermission();
+
+      // Fetch the current location
+      Position? position = await _getUserCurrentLocation();
+
+      if (position != null) {
+        // Return the latitude and longitude as a map
+
+        setState(() {
+          latitude = position.latitude;
+          longitude = position.longitude;
+        });
+        return {
+          'latitude': position.latitude,
+          'longitude': position.longitude,
+        };
+      } else {
+        // If position is null, return null
+        return null;
+      }
+    } catch (e) {
+      // Log any error that occurs while fetching the location
+      logger.i("Error getting location: $e");
+      return null;
+    }
+  }
+
   void navigateToCarDetails() async {
     // Navigate to the CarDetails screen and wait for the result
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const CarDetails()),
     );
-    // After returning from the CarDetails screen, fetch the updated car details
     setState(() {
       carDetailsData = fetchDefaultCarDetails();
     });
@@ -296,8 +337,8 @@ class _BookingState extends State<Booking> {
               child: ListView(
                 padding: const EdgeInsets.only(bottom: 8),
                 children: [
-                  buildTopSection(providerData, top), // Pass provider data
-                  buildShopName(providerData), // Pass provider data
+                  buildTopSection(providerData, top),
+                  buildShopName(providerData),
                   const Padding(
                     padding: EdgeInsets.only(
                       right: 16.0,
@@ -379,7 +420,7 @@ class _BookingState extends State<Booking> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                providerData['shopName'], // Use shopName from Booking
+                providerData['shopName'],
                 style:
                     const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
@@ -474,29 +515,40 @@ class _BookingState extends State<Booking> {
 
   // Widget to display the checklist of services
   Widget pickService() => Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Select Service',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Select Service',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            services.isNotEmpty
+                ? Checklist(
+                    options: services
+                        .map((service) =>
+                            service['name'] as String? ?? 'Unknown')
+                        .toList(),
+                    hintText: 'Select Services',
+                    controller: dropdownController,
+                    onSelectionChanged: (selectedOptions) {
+                      // Handle selection changes if needed
+                    },
+                  )
+                : const Text(
+                    'No services available at the moment.',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 16,
+                    ),
+                  ),
+          ],
         ),
-        Checklist(
-          options: services.map((service) => service['name'] as String).toList(),
-          hintText: 'Select Services',
-          controller: dropdownController,
-          onSelectionChanged: (selectedOptions) {
-            // Handle selection changes if needed
-          },
-        ),
-      ],
-    ),
-  );
+      );
 
   Widget carDetails() => FutureBuilder<Map<String, dynamic>>(
         future: carDetailsData,
@@ -629,7 +681,7 @@ class _BookingState extends State<Booking> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.grey[100], // Light grey background for the row
+        color: Colors.grey[100],
         boxShadow: const [
           BoxShadow(
             color: Colors.black12,
@@ -645,7 +697,7 @@ class _BookingState extends State<Booking> {
           Row(
             children: [
               Icon(icon,
-                  color: Colors.orange.shade900), // Icon next to the label
+                  color: Colors.orange.shade900),
               const SizedBox(width: 4), // Space between icon and label
               Text(
                 label,
@@ -658,7 +710,7 @@ class _BookingState extends State<Booking> {
             ],
           ),
           Text(
-            value ?? 'N/A', // Display 'N/A' if value is null
+            value ?? 'N/A',
             style: const TextStyle(
                 fontSize: 13,
                 color: Colors.black54,
@@ -686,7 +738,7 @@ class _BookingState extends State<Booking> {
 
           // Collecting information from the fetched car details
           String brand = carDetails['brand'] ?? '';
-          String model = carDetails['model'] ?? '';
+          String  model = carDetails['model'] ?? '';
           String year = carDetails['year']?.toString() ?? '';
           String fuelType = carDetails['fuelType'] ?? '';
           String color = carDetails['color'] ?? '';
@@ -695,7 +747,6 @@ class _BookingState extends State<Booking> {
           String bookingDate = formatBookingDate(selectedDate.toString());
           String bookingTime = formatTimeOfDay(selectedTime);
 
-          // Assuming dropdownController.selectedOptions is a list of selected services
           List<String> selectedServices = dropdownController.selectedOptionList;
 
           // Validate the input
@@ -705,10 +756,12 @@ class _BookingState extends State<Booking> {
           if (year.isEmpty) errorMessage += 'Year is required.\n';
           if (fuelType.isEmpty) errorMessage += 'Fuel Type is required.\n';
           if (color.isEmpty) errorMessage += 'Color is required.\n';
-          if (transmission.isEmpty)
+          if (transmission.isEmpty) {
             errorMessage += 'Transmission is required.\n';
-          if (selectedServices.isEmpty)
+          }
+          if (selectedServices.isEmpty) {
             errorMessage += 'Please select at least one service.\n';
+          }
 
           // Year validation
           if (year.isNotEmpty &&
@@ -778,6 +831,8 @@ class _BookingState extends State<Booking> {
                   totalPrice: totalPrice,
                   shopAddress: shopAddress,
                   shopName: shopName,
+                  latitude: latitude,
+                  longitude: longitude,
                 );
 
                 // Update the service provider's remainingSlots in Firestore
@@ -870,7 +925,7 @@ class _BookingState extends State<Booking> {
 // Helper function to parse time string into DateTime
   DateTime _parseTime(String time) {
     // Example format: '9:00 AM' or '4:00 PM'
-    final format = DateFormat.jm(); // 'jm' stands for 'hour:minute AM/PM'
+    final format = DateFormat.jm();
     return format.parse(time);
   }
 
@@ -981,7 +1036,7 @@ class _BookingState extends State<Booking> {
 // Function to snap TimeOfDay to the nearest hour
   TimeOfDay _snapToNearestHour(TimeOfDay time) {
     int roundedHour = time.minute >= 30 ? time.hour + 1 : time.hour;
-    return TimeOfDay(hour: roundedHour % 24, minute: 0); // Ensure hour is valid
+    return TimeOfDay(hour: roundedHour % 24, minute: 0);
   }
 
   Future<Map<String, int>> fetchRemainingSlots(
@@ -1016,7 +1071,7 @@ class _BookingState extends State<Booking> {
         return slotsForDate ?? {};
       } else {
         logger.i('No slots found for the date: $formattedDate');
-        return {}; // Return empty map if no slots found for the date
+        return {};
       }
     } else {
       logger.e('Profile not found for UID: $serviceProviderUid');

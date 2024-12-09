@@ -102,6 +102,57 @@ class CategoriesService {
     }
   }
 
+  // Fetch latitude and longitude by service provider UID
+  Future<Map<String, double>> fetchLocationByUid(String uid) async {
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('markers')
+          .where('serviceProviderUid', isEqualTo: uid)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final data = querySnapshot.docs.first.data() as Map<String, dynamic>;
+        final latitude = data['latitude'] as double;
+        final longitude = data['longitude'] as double;
+
+        return {'latitude': latitude, 'longitude': longitude};
+      } else {
+        logger.i('No provider found with UID: $uid');
+        return {};
+      }
+    } catch (e) {
+      logger.i('Error fetching location by UID $uid: $e');
+      return {};
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchShopDetails(String uid) async {
+    try {
+      DocumentSnapshot providerSnapshot = await FirebaseFirestore.instance
+          .collection('automotiveShops_profile')
+          .doc(uid)
+          .get();
+
+      if (providerSnapshot.exists) {
+        final data = providerSnapshot.data() as Map<String, dynamic>;
+        final shopName = data['shopName'] as String;
+        final location = data['location'] as String;
+
+        return {
+          'shopName': shopName,
+          'location': location
+        };
+      } else {
+        logger.i('No provider found with UID: $uid');
+        return {};
+      }
+    } catch (e) {
+      logger.i('Error fetching location by UID $uid: $e');
+      return {};
+    }
+  }
+
+
 
   // Fetch all services for a particular service provider
   Stream<List<ServiceModel>> fetchServices(String serviceProviderId) {
