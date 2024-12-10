@@ -1,4 +1,3 @@
-import 'package:autocare_carowners/Home%20Page%20Management/screens/carDiagnosis.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/diagnosis.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/gasolineStation.dart';
 import 'package:autocare_carowners/Home%20Page%20Management/screens/nearbyRoadsideAssistance.dart';
@@ -132,19 +131,18 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             },
                           ),
                           CardWidget(
-                            icon: Icons.car_crash,
-                            foregroundColor: Colors.orange.shade900,
-                            title: 'Automotive\nServices',
-                            textColor: Colors.black,
+                              icon: Icons.directions_car_rounded,
+                              foregroundColor: Colors.orange.shade900,
+                              title: 'Automotive\nServices',
+                              textColor: Colors.black,
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                      const NearbyServices()),
+                                          const NearbyServices()),
                                 );
-                              }
-                          ),
+                              }),
                           CardWidget(
                             icon: Icons.warning_amber_rounded,
                             foregroundColor: Colors.orange.shade900,
@@ -155,7 +153,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                    const NearbyRoadsideServices()),
+                                        const NearbyRoadsideServices()),
                               );
                             },
                           ),
@@ -175,8 +173,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) =>  const Diagnosis()),
-
+                    MaterialPageRoute(builder: (context) => const Diagnosis()),
                   );
                 },
               ),
