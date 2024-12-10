@@ -2,17 +2,18 @@ import 'package:autocare_carowners/Home%20Page%20Management/widgets/CarDetailsWi
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-
 import '../../Booking Management/services/booking_service.dart';
 
-class Cardiagnosis extends StatefulWidget {
-  const Cardiagnosis({super.key});
+class CarDiagnosis extends StatefulWidget {
+  const CarDiagnosis({super.key, this.child});
+
+  final Widget? child;
 
   @override
-  State<Cardiagnosis> createState() => _CardiagnosisState();
+  State<CarDiagnosis> createState() => _CarDiagnosisState();
 }
 
-class _CardiagnosisState extends State<Cardiagnosis> {
+class _CarDiagnosisState extends State<CarDiagnosis> {
   int _currentStep = 0;
   final user = FirebaseAuth.instance.currentUser;
   final Logger logger = Logger();
@@ -21,7 +22,7 @@ class _CardiagnosisState extends State<Cardiagnosis> {
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
       Map<String, dynamic> fetchedCarDetails =
-      await BookingService().fetchDefaultCarDetails(user!.uid);
+          await BookingService().fetchDefaultCarDetails(user!.uid);
 
       logger.i('Car Owner Data: $fetchedCarDetails');
       return fetchedCarDetails;
@@ -40,7 +41,7 @@ class _CardiagnosisState extends State<Cardiagnosis> {
   }
 
   // Track the selected item index for each step
-  Map<int, int?> _selectedOptions = {};
+  final Map<int, int?> _selectedOptions = {};
 
   // Helper Methods for Diagnosing Car Issues
   List<Map<String, dynamic>> getCarIsNotStartingChecklist() {
@@ -101,8 +102,9 @@ class _CardiagnosisState extends State<Cardiagnosis> {
         child: Theme(
           data: Theme.of(context).copyWith(
             colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: Colors.orange.shade900, // Sets the current step circle color
-            ),
+                  primary: Colors
+                      .orange.shade900, // Sets the current step circle color
+                ),
           ),
           child: Stepper(
             type: StepperType.vertical,
@@ -171,7 +173,8 @@ class _CardiagnosisState extends State<Cardiagnosis> {
                             },
                           ),
                           RadioListTile<int>(
-                            title: const Text('Air conditioning is not working'),
+                            title:
+                                const Text('Air conditioning is not working'),
                             value: 2,
                             groupValue: _selectedOptions[0],
                             onChanged: (int? value) {
@@ -218,12 +221,12 @@ class _CardiagnosisState extends State<Cardiagnosis> {
                 title: const Text('Step 3: Diagnosis'),
                 content: Container(
                   alignment: Alignment.centerLeft,
-                  child: Column(
+                  child: const Column(
                     children: [
-                      const Text('Analyzing the problem.'),
-                      const SizedBox(height: 16),
+                      Text('Analyzing the problem.'),
+                      SizedBox(height: 16),
                     ],
-                  ),//
+                  ), //
                 ),
               ),
             ],
