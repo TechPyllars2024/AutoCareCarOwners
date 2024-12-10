@@ -246,21 +246,28 @@ class _DiagnosisState extends State<Diagnosis> {
                   carDetailsData: fetchCarDetails(),
                   navigateToCarDetails: navigateToCarDetails,
                 ),
+                const SizedBox(height: 10),
                 if (carDetails != null)
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentStep = 1;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange.shade900,
+                  Padding(
+                    padding: const EdgeInsets.only(right: 25.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _currentStep = 1;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange.shade900,
+                        ),
+                        child: const Text('Proceed', style: TextStyle(color: Colors.white)),
+                      ),
                     ),
-                    child: const Text('Next',
-                        style: TextStyle(color: Colors.white)),
                   ),
               ],
             )
+
           else
             Expanded(
               child: Stepper(
