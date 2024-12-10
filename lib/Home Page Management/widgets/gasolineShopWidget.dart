@@ -114,7 +114,7 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
               icon: customIcon,
               infoWindow: InfoWindow(
                 title: name,
-                snippet: '📍 Address: $address\n⭐ Rating: $rating',
+                snippet: '📍 Address: $address',
               ),
               onTap: () => _showDetails(
                 name,
@@ -206,8 +206,17 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                   RichText(
                     text: TextSpan(
                       children: [
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.star, // Use the desired icon
+                            color: Colors.orange.shade900,
+                            size: 18, // Adjust the size to match the text
+                          ),
+                          alignment: PlaceholderAlignment
+                              .middle, // Aligns the icon with text
+                        ),
                         TextSpan(
-                          text: '⭐ Rating: ',
+                          text: ' Rating: ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.orange.shade900,
@@ -226,8 +235,16 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                   RichText(
                     text: TextSpan(
                       children: [
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.location_on,
+                            color: Colors.orange.shade900,
+                            size: 18,
+                          ),
+                          alignment: PlaceholderAlignment.middle,
+                        ),
                         TextSpan(
-                          text: '📍 Address: ',
+                          text: ' Address: ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.orange.shade900,
@@ -246,8 +263,16 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                   RichText(
                     text: TextSpan(
                       children: [
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.access_time,
+                            color: Colors.orange.shade900,
+                            size: 18,
+                          ),
+                          alignment: PlaceholderAlignment.middle,
+                        ),
                         TextSpan(
-                          text: '🕒 Status: ',
+                          text: ' Status: ',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.orange.shade900,
@@ -266,6 +291,13 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                   RichText(
                     text: TextSpan(
                       children: [
+                        WidgetSpan(
+                          child: Icon(
+                            Icons.php_rounded,
+                            size: 16,
+                            color: Colors.orange.shade900,
+                          ),
+                        ),
                         TextSpan(
                           text: 'Price Level: ',
                           style: TextStyle(
@@ -286,6 +318,17 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                   RichText(
                     text: TextSpan(
                       children: [
+                        WidgetSpan(
+                          child: Icon(
+                            businessStatus == 'OPERATIONAL'
+                                ? Icons.check_circle
+                                : Icons.cancel,
+                            size: 16,
+                            color: businessStatus == 'OPERATIONAL'
+                                ? Colors.orange.shade900
+                                : Colors.red,
+                          ),
+                        ),
                         TextSpan(
                           text: 'Business Status: ',
                           style: TextStyle(
@@ -303,7 +346,7 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                         ),
                       ],
                     ),
-                  ),
+                  )
                 ],
               )
             ],
