@@ -250,19 +250,15 @@ class _CarDetailsState extends State<CarDetails> {
                           child: Row(
                             children: [
                               Container(
-                                width: 24, // Size of the color swatch
+                                width: 24,
                                 height: 24,
-                                margin: const EdgeInsets.only(
-                                    right: 8), // Space between swatch and text
+                                margin: const EdgeInsets.only(right: 8),
                                 decoration: BoxDecoration(
-                                  shape: BoxShape
-                                      .circle, // Change to BoxShape.rectangle for square
-                                  color: _getColorFromName(
-                                      colorName), // Get color from helper function
+                                  shape: BoxShape.circle,
+                                  color: _getColorFromName(colorName),
                                 ),
                               ),
-                              Text(
-                                  colorName), // Display color name beside the swatch
+                              Text(colorName),
                             ],
                           ),
                         );
@@ -389,83 +385,86 @@ class _CarDetailsState extends State<CarDetails> {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body:isLoading // Check loading state
-          ? const Center(child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)
-      )) // Show spinner
+      body: isLoading // Check loading state
+          ? const Center(
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)))
           : carDetails.isEmpty
-          ? const Center(child: Text('No car details found'))
-          : ListView.builder(
-              itemCount: carDetails.length,
-              itemBuilder: (context, index) {
-                final car = carDetails[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        color: car.isDefault
-                            ? Colors.orange.shade900
-                            : Colors
-                                .transparent, // Change 2: Orange border if default
-                        width: 2, // Optional: Set the
-                      ),
-                      borderRadius: BorderRadius.circular(
-                          8), // Optional: Add rounded corners
-                    ),
-                    elevation: 8,
-                    color: car.isDefault ? Colors.white : Colors.grey.shade200,
-                    child: ListTile(
-                      title: Text('${car.brand} ${car.model}'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Year: ${car.year}'),
-                          Text('Color: ${car.color}'),
-                          Text('Transmission: ${car.transmissionType}'),
-                          Text('Fuel: ${car.fuelType}'),
-                        ],
-                      ),
-                      trailing: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit),
-                            onPressed: () {
-                              _showCarDetailsDialog(car: car, index: index);
-                            },
+              ? const Center(child: Text('No car details found'))
+              : ListView.builder(
+                  itemCount: carDetails.length,
+                  itemBuilder: (context, index) {
+                    final car = carDetails[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: car.isDefault
+                                ? Colors.orange.shade900
+                                : Colors.transparent,
+                            width: 2, // Optional: Set the
                           ),
-                          IconButton(
-                            icon: const Icon(Icons.delete),
-                            onPressed: () {
-                              _showDeleteConfirmationDialog(index);
-                            },
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        elevation: 8,
+                        color:
+                            car.isDefault ? Colors.white : Colors.grey.shade200,
+                        child: ListTile(
+                          title: Text('${car.brand} ${car.model}'),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Year: ${car.year}'),
+                              Text('Color: ${car.color}'),
+                              Text('Transmission: ${car.transmissionType}'),
+                              Text('Fuel: ${car.fuelType}'),
+                            ],
                           ),
-                          IconButton(
-                            icon: Icon(
-                              car.isDefault ? Icons.car_repair_rounded : Icons.car_repair_rounded,
-                              color: car.isDefault
-                                  ? Colors.orange.shade900
-                                  : Colors.grey,
-                            ),
-                            onPressed: () async {
-                              setState(() {
-                                for (int i = 0; i < carDetails.length; i++) {
-                                  carDetails[i].isDefault = i == index;
-                                }
-                              });
-                              await carDetailsService.setDefaultCar(
-                                  index, carDetails); // Set this car as default
-                              _fetchCarDetails(); // Re-fetch car details to update UI
-                            },
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.edit),
+                                onPressed: () {
+                                  _showCarDetailsDialog(car: car, index: index);
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete),
+                                onPressed: () {
+                                  _showDeleteConfirmationDialog(index);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(
+                                  car.isDefault
+                                      ? Icons.directions_car_filled_rounded
+                                      : Icons.directions_car_filled_rounded,
+                                  color: car.isDefault
+                                      ? Colors.orange.shade900
+                                      : Colors.grey,
+                                ),
+                                onPressed: () async {
+                                  setState(() {
+                                    for (int i = 0;
+                                        i < carDetails.length;
+                                        i++) {
+                                      carDetails[i].isDefault = i == index;
+                                    }
+                                  });
+                                  await carDetailsService.setDefaultCar(
+                                      index, carDetails);
+                                  _fetchCarDetails();
+                                },
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                );
-              },
-            ),
+                    );
+                  },
+                ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.orange.shade900,
         onPressed: () {
