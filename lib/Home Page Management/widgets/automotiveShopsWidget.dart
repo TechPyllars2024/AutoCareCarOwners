@@ -193,7 +193,7 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
         return AlertDialog(
           title: Text(
             shopName,
-            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,10 +260,18 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
                       color: Colors.grey[700],
                     ),
                     children: [
-                      const TextSpan(
+                      WidgetSpan(
+                        child: Icon(
+                          Icons.star,
+                          color: Colors.orange.shade900,
+                          size: 16,
+                        ),
+                      ),
+                      TextSpan(
                         text: 'Specialization: ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: Colors.orange.shade900,
                         ),
                       ),
                       TextSpan(text: categories.join(', ')),
@@ -281,10 +289,18 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
                       color: Colors.grey[700],
                     ),
                     children: [
-                      const TextSpan(
+                      WidgetSpan(
+                        child: Icon(
+                          Icons.location_on, // Replace with your desired icon
+                          color: Colors.orange.shade900,
+                          size: 16,
+                        ),
+                      ),
+                      TextSpan(
                         text: 'Location: ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: Colors.orange.shade900,
                         ),
                       ),
                       TextSpan(
