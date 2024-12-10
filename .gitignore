@@ -41,3 +41,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# API KEY
+lib/Home Page Management/widgets/api_key.dart
