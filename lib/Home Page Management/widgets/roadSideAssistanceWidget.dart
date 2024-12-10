@@ -179,7 +179,7 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
         return AlertDialog(
           title: Text(
             shopName,
-            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           content: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,10 +245,18 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
                       color: Colors.grey[700],
                     ),
                     children: [
-                      const TextSpan(
+                      WidgetSpan(
+                        child: Icon(
+                          Icons.location_on,
+                          color: Colors.orange.shade900,
+                          size: 16,
+                        ),
+                      ),
+                      TextSpan(
                         text: 'Location: ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: Colors.orange.shade900,
                         ),
                       ),
                       TextSpan(
@@ -270,10 +278,18 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
                       color: Colors.grey[700],
                     ),
                     children: [
-                      const TextSpan(
+                      WidgetSpan(
+                        child: Icon(
+                          Icons.schedule,
+                          color: Colors.orange.shade900,
+                          size: 16,
+                        ),
+                      ),
+                      TextSpan(
                         text: 'Operation Time: ',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: Colors.orange.shade900,
                         ),
                       ),
                       TextSpan(
