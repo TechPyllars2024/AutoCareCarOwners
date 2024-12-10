@@ -77,9 +77,9 @@ Provide your analysis in the following format:
       appBar: AppBar(
         title: const Text(
           "Diagnosis Analysis",
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.white),
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
         ),
-        backgroundColor: Colors.orange.shade900,
+        backgroundColor: Colors.grey.shade100,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
@@ -128,7 +128,7 @@ Provide your analysis in the following format:
       style: TextStyle(
         fontSize: 22,
         fontWeight: FontWeight.bold,
-        color: Colors.grey.shade800,
+        color: Colors.orange.shade900,
       ),
     );
   }
