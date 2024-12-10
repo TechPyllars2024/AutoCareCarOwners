@@ -4,12 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:logger/logger.dart';
 import '../../Booking Management/services/booking_service.dart';
+import '../../ProfileManagement/screens/car_owner_car_details.dart';
 import '../widgets/CarDetailsWidget.dart';
-import '../../Booking Management/services/booking_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Diagnosis extends StatefulWidget {
-  const Diagnosis({super.key});
+  const Diagnosis({super.key, this.child});
+
+  final Widget? child;
 
   @override
   State<Diagnosis> createState() => _DiagnosisState();
@@ -29,7 +31,7 @@ class _DiagnosisState extends State<Diagnosis> {
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
       Map<String, dynamic> fetchedCarDetails =
-      await BookingService().fetchDefaultCarDetails(user!.uid);
+          await BookingService().fetchDefaultCarDetails(user!.uid);
 
       logger.i('Car Owner Data: $fetchedCarDetails');
       return fetchedCarDetails;
@@ -39,12 +41,19 @@ class _DiagnosisState extends State<Diagnosis> {
     }
   }
 
-  void navigateToAddCarDetails() {
-    // Navigate to the "Add Car Details" screen
-    Navigator.push(
+  void navigateToCarDetails() async {
+    // Navigate to the CarDetails screen and wait for the result
+    await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const Placeholder()),
+      MaterialPageRoute(builder: (context) => const CarDetails()),
     );
+    setState(() {
+      fetchCarDetails().then((details) {
+        setState(() {
+          carDetails = details;
+        });
+      });
+    });
   }
 
   @override
@@ -59,7 +68,8 @@ class _DiagnosisState extends State<Diagnosis> {
   }
 
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/diagnosis.json');
+    final String response =
+        await rootBundle.loadString('assets/diagnosis.json');
     final data = json.decode(response) as Map<String, dynamic>;
     setState(() {
       _questions = data['diagnosis'] as List<dynamic>;
@@ -71,7 +81,8 @@ class _DiagnosisState extends State<Diagnosis> {
 
   void _selectChoice(int questionIndex, dynamic choice) {
     setState(() {
-      if (_currentQuestionsStack.isEmpty || questionIndex >= _currentQuestionsStack.length) {
+      if (_currentQuestionsStack.isEmpty ||
+          questionIndex >= _currentQuestionsStack.length) {
         logger.e("Invalid question index or empty questions stack.");
         return;
       }
@@ -87,7 +98,9 @@ class _DiagnosisState extends State<Diagnosis> {
       // Safely handle the choice to ensure it's not null
       String selectedChoice = (choice != null && choice is String)
           ? choice
-          : (choice != null && choice['choice'] != null ? choice['choice'] : '');
+          : (choice != null && choice['choice'] != null
+              ? choice['choice']
+              : '');
 
       if (selectedChoice.isEmpty) {
         logger.e("Selected choice is null or empty.");
@@ -96,16 +109,17 @@ class _DiagnosisState extends State<Diagnosis> {
 
       selectedChoices[questionId] = selectedChoice;
 
-      var selectedChoiceMap = currentQuestion['choices']
-          .firstWhere(
-            (c) => (c is String ? c : c['choice']) == selectedChoice,
+      var selectedChoiceMap = currentQuestion['choices'].firstWhere(
+        (c) => (c is String ? c : c['choice']) == selectedChoice,
         orElse: () => '',
       );
 
-      if (selectedChoiceMap != null && selectedChoiceMap['sub_questions'] != null) {
+      if (selectedChoiceMap != null &&
+          selectedChoiceMap['sub_questions'] != null) {
         _currentQuestionsStack.add(selectedChoiceMap['sub_questions']);
         _isAnalyzing = false;
-        _isNextButtonEnabled = false; // Disable Next button while sub-questions exist
+        _isNextButtonEnabled =
+            false; // Disable Next button while sub-questions exist
       } else {
         _isAnalyzing = true;
         _isNextButtonEnabled = true; // Enable Next button if no sub-questions
@@ -113,7 +127,8 @@ class _DiagnosisState extends State<Diagnosis> {
     });
   }
 
-  List<dynamic> get _currentQuestions => _currentQuestionsStack.isNotEmpty ? _currentQuestionsStack.last : [];
+  List<dynamic> get _currentQuestions =>
+      _currentQuestionsStack.isNotEmpty ? _currentQuestionsStack.last : [];
 
   void _goBack() {
     setState(() {
@@ -132,9 +147,9 @@ class _DiagnosisState extends State<Diagnosis> {
 
   // Function to launch a URL
   void launchURL(String url) async {
-    final Uri _url = Uri.parse(url);
-    if (await canLaunchUrl(_url)) {
-      await launchUrl(_url);
+    final Uri url0 = Uri.parse(url);
+    if (await canLaunchUrl(url0)) {
+      await launchUrl(url0);
     } else {
       throw 'Could not launch $url';
     }
@@ -145,7 +160,8 @@ class _DiagnosisState extends State<Diagnosis> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Text('Diagnosis'),
+        title: const Text('Diagnosis',
+            style: TextStyle(fontWeight: FontWeight.w900)),
         backgroundColor: Colors.grey.shade100,
       ),
       body: Column(
@@ -155,14 +171,14 @@ class _DiagnosisState extends State<Diagnosis> {
               children: [
                 CarDetailsWidget(
                   carDetailsData: fetchCarDetails(),
-                  navigateToCarDetails: navigateToAddCarDetails,
+                  navigateToCarDetails: navigateToCarDetails,
                 ),
                 // Only show the 'Next' button when car details are fetched
                 if (carDetails != null)
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        _currentStep = 1; // Move to stepper
+                        _currentStep = 1;
                       });
                     },
                     style: ElevatedButton.styleFrom(
@@ -198,11 +214,14 @@ class _DiagnosisState extends State<Diagnosis> {
                   }
                 },
                 onStepCancel: _goBack,
-                controlsBuilder: (BuildContext context, ControlsDetails details) {
+                controlsBuilder:
+                    (BuildContext context, ControlsDetails details) {
                   return Row(
                     children: [
                       ElevatedButton(
-                        onPressed: _isNextButtonEnabled ? details.onStepContinue : null,
+                        onPressed: _isNextButtonEnabled
+                            ? details.onStepContinue
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange.shade900,
                         ),
@@ -227,76 +246,90 @@ class _DiagnosisState extends State<Diagnosis> {
                 },
                 steps: _currentQuestions.isNotEmpty
                     ? [
-                  for (var i = 0; i < _currentQuestions.length; i++)
-                    Step(
-                      title: Text(
-                        _currentQuestions[i]['title'] ?? 'No title',
-                      ),
-                      content: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          for (var choice in _currentQuestions[i]['choices'] ?? [])
-                          // Check if choice has name and display the name
-                            if (choice is Map && choice.containsKey('name'))
-                              Column(
-                                children: [
-                                  // Wrap Image.network with a Container to control size
-                                  if (choice.containsKey('image_url'))
-                                    Container(
-                                      width: 100.0, // Set the width to your desired size
-                                      height: 100.0, // Set the height to your desired size
-                                      child: Image.network(
-                                        choice['image_url'],
-                                        fit: BoxFit.contain, // Adjust the image fit as needed (e.g., BoxFit.cover)
-                                      ),
-                                    ),
-                                  RadioListTile<String>(
-                                    title: Text(choice['name'] ?? 'No name available'),
-                                    value: choice['name'] ?? '',
-                                    groupValue: selectedChoices[_currentQuestions[i]['title']],
-                                    onChanged: (value) {
-                                      _selectChoice(i, choice);
-                                    },
-                                    activeColor: Colors.orange.shade900,
-                                  ),
-                                ],
-                              )
-                            // For choices without names, display text from 'choice'
-                            else
-                              RadioListTile<String>(
-                                title: Text(choice is String ? choice : choice['choice'] ?? 'Unknown choice'),
-                                value: choice is String ? choice : choice['choice'] ?? '',
-                                groupValue: selectedChoices[_currentQuestions[i]['title']],
-                                onChanged: (value) {
-                                  _selectChoice(i, choice);
-                                },
-                                activeColor: Colors.orange.shade900,
-                              ),
-                          // Display links if link is present in choices
-                          if (_currentQuestions[i]['choices'] != null &&
-                              _currentQuestions[i]['choices'] is List &&
-                              _currentQuestions[i]['choices'][0] is Map &&
-                              _currentQuestions[i]['choices'][0].containsKey('link'))
-                            Column(
+                        for (var i = 0; i < _currentQuestions.length; i++)
+                          Step(
+                            title: Text(
+                              _currentQuestions[i]['title'] ?? 'No title',
+                            ),
+                            content: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                for (var choice in _currentQuestions[i]['choices'])
-                                  if (choice is Map && choice.containsKey('link'))
-                                    TextButton(
-                                      onPressed: () => launchURL(choice['link']),
-                                      child: const Text(
-                                        'View more',
-                                        style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 16,
+                                for (var choice
+                                    in _currentQuestions[i]['choices'] ?? [])
+                                  // Check if choice has name and display the name
+                                  if (choice is Map &&
+                                      choice.containsKey('name'))
+                                    Column(
+                                      children: [
+                                        // Wrap Image.network with a Container to control size
+                                        if (choice.containsKey('image_url'))
+                                          Container(
+                                            width: 100.0,
+                                            height: 100.0,
+                                            child: Image.network(
+                                              choice['image_url'],
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                        RadioListTile<String>(
+                                          title: Text(choice['name'] ??
+                                              'No name available'),
+                                          value: choice['name'] ?? '',
+                                          groupValue: selectedChoices[
+                                              _currentQuestions[i]['title']],
+                                          onChanged: (value) {
+                                            _selectChoice(i, choice);
+                                          },
+                                          activeColor: Colors.orange.shade900,
                                         ),
-                                      ),
+                                      ],
                                     )
+                                  // For choices without names, display text from 'choice'
+                                  else
+                                    RadioListTile<String>(
+                                      title: Text(choice is String
+                                          ? choice
+                                          : choice['choice'] ??
+                                              'Unknown choice'),
+                                      value: choice is String
+                                          ? choice
+                                          : choice['choice'] ?? '',
+                                      groupValue: selectedChoices[
+                                          _currentQuestions[i]['title']],
+                                      onChanged: (value) {
+                                        _selectChoice(i, choice);
+                                      },
+                                      activeColor: Colors.orange.shade900,
+                                    ),
+                                // Display links if link is present in choices
+                                if (_currentQuestions[i]['choices'] != null &&
+                                    _currentQuestions[i]['choices'] is List &&
+                                    _currentQuestions[i]['choices'][0] is Map &&
+                                    _currentQuestions[i]['choices'][0]
+                                        .containsKey('link'))
+                                  Column(
+                                    children: [
+                                      for (var choice in _currentQuestions[i]
+                                          ['choices'])
+                                        if (choice is Map &&
+                                            choice.containsKey('link'))
+                                          TextButton(
+                                            onPressed: () =>
+                                                launchURL(choice['link']),
+                                            child: const Text(
+                                              'View more',
+                                              style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          )
+                                    ],
+                                  )
                               ],
-                            )
-                        ],
-                      ),
-                    ),
-                ]
+                            ),
+                          ),
+                      ]
                     : [],
               ),
             ),
