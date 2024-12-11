@@ -31,7 +31,6 @@ class ChatService {
         return "Error: ${response.statusCode}";
       }
     } catch (e) {
-      print("error $e");
       return "Error: $e";
     }
   }
