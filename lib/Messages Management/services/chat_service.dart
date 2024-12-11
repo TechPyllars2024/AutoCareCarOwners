@@ -44,6 +44,16 @@ class ChatService {
         .toList());
   }
 
+  Stream<List<StartConversationModel>> getUserConversationsService(String userId) {
+    return _firestore
+        .collection('conversations')
+        .where('receiverId', isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => StartConversationModel.fromMap(doc.data()))
+        .toList());
+  }
+
   Future<String> initializeConversation(String currentUserId, String serviceProviderUid) async {
     StartConversationModel? existingConversation = await getExistingConversation(currentUserId, serviceProviderUid);
 
