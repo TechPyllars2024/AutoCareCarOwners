@@ -89,7 +89,7 @@
                 },
                 {
                   "choice": "Stability Control",
-                  "image_url": "https://example.com/stability_control_image.jpg"
+                  "image_url": "https://static.thenounproject.com/png/828761-200.png"
                 },
                 {
                   "choice": "Power Steering System",
@@ -106,10 +106,6 @@
                 {
                   "choice": "Cruise Control",
                   "image_url": "https://cdn1.iconfinder.com/data/icons/car-parts-and-accessories-volume-01/32/cruise-control-car-indicator-512.png"
-                },
-                {
-                  "choice": "Overdrive Indicator",
-                  "image_url": "https://example.com/overdrive_indicator_image.jpg"
                 }
               ]
             }

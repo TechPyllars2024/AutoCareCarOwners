@@ -50,7 +50,8 @@ class _DiagnosisState extends State<Diagnosis> {
       logger.w('Car details are not available.');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Car details are not loaded yet. Please try again later.'),
+          content:
+              Text('Car details are not loaded yet. Please try again later.'),
         ),
       );
       return;
@@ -59,7 +60,11 @@ class _DiagnosisState extends State<Diagnosis> {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: Text('Summary', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.orange.shade900)),
+        title: Text('Summary',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                color: Colors.orange.shade900)),
         content: Container(
           constraints: const BoxConstraints(maxHeight: 300.0),
           child: SingleChildScrollView(
@@ -100,7 +105,8 @@ class _DiagnosisState extends State<Diagnosis> {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => OpenAIEntryScreen(summary: summary, carDetails: carDetails),
+                  builder: (context) => OpenAIEntryScreen(
+                      summary: summary, carDetails: carDetails),
                 ),
               );
             },
@@ -113,7 +119,6 @@ class _DiagnosisState extends State<Diagnosis> {
       ),
     );
   }
-
 
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
@@ -173,7 +178,9 @@ class _DiagnosisState extends State<Diagnosis> {
       String questionId = currentQuestion['title'];
       String selectedChoice = choice is String
           ? choice
-          : (choice is Map && choice['choice'] is String ? choice['choice'] : '');
+          : (choice is Map && choice['choice'] is String
+              ? choice['choice']
+              : '');
 
       if (selectedChoice.isEmpty) {
         logger.e("Empty choice selected for question: $questionId");
@@ -183,7 +190,7 @@ class _DiagnosisState extends State<Diagnosis> {
       selectedChoices[questionId] = selectedChoice;
 
       var selectedChoiceMap = currentQuestion['choices'].firstWhere(
-            (c) => (c is String ? c : c['choice']) == selectedChoice,
+        (c) => (c is String ? c : c['choice']) == selectedChoice,
         orElse: () => null, // Return null instead of ''
       );
 
@@ -199,7 +206,6 @@ class _DiagnosisState extends State<Diagnosis> {
       }
     });
   }
-
 
   List<dynamic> get _currentQuestions =>
       _currentQuestionsStack.isNotEmpty ? _currentQuestionsStack.last : [];
@@ -261,13 +267,13 @@ class _DiagnosisState extends State<Diagnosis> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange.shade900,
                         ),
-                        child: const Text('Proceed', style: TextStyle(color: Colors.white)),
+                        child: const Text('Proceed',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                   ),
               ],
             )
-
           else
             Expanded(
               child: Stepper(
@@ -280,18 +286,18 @@ class _DiagnosisState extends State<Diagnosis> {
                   });
                 },
                 onStepContinue: () {
-                setState(() {
-                  if (_currentStep < _currentQuestions.length) {
-                    // Proceed to the next step if available
-                    if (_isNextButtonEnabled) {
-                      _currentStep++;
+                  setState(() {
+                    if (_currentStep < _currentQuestions.length) {
+                      // Proceed to the next step if available
+                      if (_isNextButtonEnabled) {
+                        _currentStep++;
+                      }
+                    } else {
+                      // All steps are completed, show the diagnosis summary
+                      _showDiagnosisSummary(context);
                     }
-                  } else {
-                    // All steps are completed, show the diagnosis summary
-                    _showDiagnosisSummary(context);
-                  }
-                });
-              },
+                  });
+                },
                 onStepCancel: _goBack,
                 controlsBuilder:
                     (BuildContext context, ControlsDetails details) {
@@ -316,7 +322,6 @@ class _DiagnosisState extends State<Diagnosis> {
                         child: const Text('Next',
                             style: TextStyle(color: Colors.white)),
                       ),
-
                     ],
                   );
                 },
@@ -337,8 +342,8 @@ class _DiagnosisState extends State<Diagnosis> {
                                       children: [
                                         if (choice.containsKey('image_url'))
                                           SizedBox(
-                                            width: 100.0,
-                                            height: 100.0,
+                                            width: 60.0,
+                                            height: 60.0,
                                             child: Image.network(
                                               choice['image_url'],
                                               fit: BoxFit.contain,
