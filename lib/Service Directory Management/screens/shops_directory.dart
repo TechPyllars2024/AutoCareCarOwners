@@ -118,7 +118,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                       itemCount: services.length,
                       itemBuilder: (context, index) {
                         final service =
-                            services[index]; // Get the service details
+                            services[index];
                         bool isExpanded = isTextExpanded[index] ?? false;
 
                         return GestureDetector(
