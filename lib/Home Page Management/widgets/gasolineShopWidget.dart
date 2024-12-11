@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:autocare_carowners/Home%20Page%20Management/widgets/api_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -148,7 +149,7 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
       String? photos,
       String priceLevel,
       String businessStatus) {
-    const apiKey = 'AIzaSyCrbgW2yWOxrm932ZOoVV1_vw1ImfRLMDM';
+    const apiKey = ApiKey.googleApiKey;
     showModalBottomSheet(
       context: context,
       builder: (context) {
