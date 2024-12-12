@@ -1,6 +1,8 @@
+import 'package:autocare_carowners/Home%20Page%20Management/services/carDiagnosisData.dart';
 import 'package:flutter/material.dart';
-import '../services/categories_service.dart';
-import 'shop_profile.dart';
+import 'package:logger/logger.dart';
+import '../../Service Directory Management/screens/shop_profile.dart';
+import '../../Service Directory Management/services/categories_service.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 
 class ShopsDirectory extends StatefulWidget {
@@ -19,10 +21,8 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
   CategoriesService service = CategoriesService();
   int limit = 10;
   bool hasMoreServices = true;
-
-  // Cache for fetched services by category
-  Map<String, List<Map<String, dynamic>>> serviceCache = {};
   Map<int, bool> isTextExpanded = {};
+  final logger = Logger();
 
   @override
   void initState() {
@@ -30,62 +30,69 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
     getServicesForCategory(widget.serviceName);
   }
 
-  void getServicesForCategory(String category, {bool refresh = false}) async {
-    if (isLoading || !hasMoreServices) return;
+  List<String> normalizeServiceNames(String serviceNames) {
+    if (serviceNames.isEmpty) return [];
+
+    List<String> splitNames = serviceNames.split(RegExp(r'\d+\.\s+|\n+'));
+
+    // Normalize each service name and filter out empty entries
+    return splitNames
+        .map((name) => name.trim())
+        .where((name) => name.isNotEmpty)
+        .toList();
+  }
+
+  void getServicesForCategory(String serviceName,
+      {bool refresh = false}) async {
+    if (isLoading) return;
     setState(() {
       isLoading = true;
     });
 
-    // Check if services are already cached
-    if (!refresh && serviceCache.containsKey(category)) {
-      services = serviceCache[category]!;
+    try {
+      // Split and normalize service names
+      List<String> serviceNames = normalizeServiceNames(serviceName);
+
+      List<Map<String, dynamic>> allFetchedServices =
+          (await CarDiagnosis().fetchVerifiedServiceDetails());
+
+      for (var name in serviceNames) {
+        List<Map<String, dynamic>> filteredServices =
+            allFetchedServices.where((service) {
+          return service['name'] != null && service['name'] == name;
+        }).toList();
+
+        if (filteredServices.isEmpty) {
+          logger.i('No services found for the service name: $name');
+        } else {
+          for (var serviceData in filteredServices) {
+            var providerDetails =
+                await CarDiagnosis().fetchProviderByUid(serviceData['uid']);
+            services.add({
+              ...serviceData,
+              'shopName': providerDetails['shopName'] ?? 'Unknown',
+              'location': providerDetails['location'] ?? 'Unknown location',
+              'operationTime': providerDetails['operationTime'] ?? 'Unknown',
+              'profileImage': providerDetails['profileImage'] ?? '',
+              'coverImage': providerDetails['coverImage'] ?? '',
+              'serviceSpecialization':
+                  providerDetails['serviceSpecialization'] ?? 'Not specified',
+              'daysOfTheWeek':
+                  providerDetails['daysOfTheWeek'] ?? 'Not specified',
+              'verificationStatus':
+                  providerDetails['verificationStatus'] ?? 'Not verified',
+              'totalRatings': providerDetails['totalRatings'] ?? 0,
+              'numberOfRatings': providerDetails['numberOfRatings'] ?? 0,
+            });
+          }
+        }
+      }
+    } catch (e) {
+      logger.e('An error occurred while fetching services: $e');
+    } finally {
       setState(() {
         isLoading = false;
       });
-      return;
-    }
-
-    List<Map<String, dynamic>> fetchedServices = await service
-        .fetchServicesByCategory(category, refresh: refresh, limit: limit);
-
-    // If no more services are fetched, set hasMoreServices to false
-    if (fetchedServices.isEmpty) {
-      hasMoreServices = false;
-    } else {
-      // Fetch service providers that match the service uid
-      for (var serviceData in fetchedServices) {
-        var providerDetails =
-            await service.fetchProviderByUid(serviceData['uid']);
-
-        // Combine the service data with the provider data
-        services.add({
-          ...serviceData,
-          'shopName': providerDetails['shopName'],
-          'location': providerDetails['location'],
-          'operationTime': providerDetails['operationTime'],
-          'profileImage': providerDetails['profileImage'],
-          'coverImage': providerDetails['coverImage'],
-          'serviceSpecialization': providerDetails['serviceSpecialization'],
-          'daysOfTheWeek': providerDetails['daysOfTheWeek'],
-          'verificationStatus': providerDetails['verificationStatus'],
-          'totalRatings': providerDetails['totalRatings'],
-          'numberOfRatings': providerDetails['numberOfRatings'],
-        });
-      }
-
-      // Cache the fetched services
-      serviceCache[category] = List.from(services);
-    }
-
-    setState(() {
-      isLoading = false; // Reset loading state
-    });
-  }
-
-  // Call this method to load more services when needed (e.g., on scroll)
-  void loadMoreServices() {
-    if (!isLoading && hasMoreServices) {
-      getServicesForCategory(widget.serviceName);
     }
   }
 
@@ -96,7 +103,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
       appBar: AppBar(
         backgroundColor: Colors.grey.shade100,
         title: Text(
-          widget.serviceName,
+          "Suggested Available Shops",
           style:
               TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
         ),
@@ -113,17 +120,15 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                         crossAxisCount: 1,
                         crossAxisSpacing: 5,
                         mainAxisSpacing: 8,
-                        childAspectRatio: 2 / .8, // 2:1 aspect ratio
+                        childAspectRatio: 2 / .8,
                       ),
                       itemCount: services.length,
                       itemBuilder: (context, index) {
-                        final service =
-                            services[index];
+                        final service = services[index];
                         bool isExpanded = isTextExpanded[index] ?? false;
 
                         return GestureDetector(
                           onTap: () {
-                            // Navigate to ShopProfile and pass service details
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -150,7 +155,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                           bottomLeft: Radius.circular(16.0),
                                         ),
                                         child: Image.network(
-                                          service['servicePicture'],
+                                          service['profileImage'] ?? '',
                                           height: double.infinity,
                                           fit: BoxFit.cover,
                                         ),
@@ -166,7 +171,6 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            // Service name with icon
                                             Row(
                                               children: [
                                                 const SizedBox(width: 4),
@@ -174,7 +178,6 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                        // Toggle expand/collapse state
                                                         isTextExpanded[index] =
                                                             !(isTextExpanded[
                                                                     index] ??
@@ -182,7 +185,8 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                       });
                                                     },
                                                     child: Text(
-                                                      service['name'] ?? '',
+                                                      service['name'] ??
+                                                          'No name',
                                                       style: TextStyle(
                                                         fontSize: 18,
                                                         fontWeight:
@@ -201,18 +205,17 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                               ],
                                             ),
                                             const SizedBox(height: 3.0),
-                                            // Service location with icon
                                             Row(
                                               children: [
                                                 Icon(Icons.store,
                                                     size: 15,
-                                                    color: Colors.grey[600]),
+                                                    color:
+                                                        Colors.orange.shade900),
                                                 const SizedBox(width: 4),
                                                 Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                        // Toggle expand/collapse state
                                                         isTextExpanded[index] =
                                                             !(isTextExpanded[
                                                                     index] ??
@@ -220,11 +223,12 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                       });
                                                     },
                                                     child: Text(
-                                                      service['shopName'] ?? '',
+                                                      service['shopName'] ??
+                                                          'No shop name',
                                                       style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.grey[600],
-                                                      ),
+                                                          fontSize: 12,
+                                                          color:
+                                                              Colors.grey[600]),
                                                       maxLines:
                                                           isExpanded ? null : 1,
                                                       overflow: isExpanded
@@ -237,18 +241,17 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                               ],
                                             ),
                                             const SizedBox(height: 3.0),
-                                            // Service name with icon
                                             Row(
                                               children: [
                                                 Icon(Icons.location_on,
                                                     size: 15,
-                                                    color: Colors.grey[600]),
+                                                    color:
+                                                        Colors.orange.shade900),
                                                 const SizedBox(width: 4),
                                                 Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       setState(() {
-                                                        // Toggle expand/collapse state
                                                         isTextExpanded[index] =
                                                             !(isTextExpanded[
                                                                     index] ??
@@ -256,11 +259,12 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                                       });
                                                     },
                                                     child: Text(
-                                                      service['location'] ?? '',
+                                                      service['location'] ??
+                                                          'No location',
                                                       style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.grey[600],
-                                                      ),
+                                                          fontSize: 12,
+                                                          color:
+                                                              Colors.grey[600]),
                                                       maxLines:
                                                           isExpanded ? null : 1,
                                                       overflow: isExpanded
@@ -273,16 +277,18 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                               ],
                                             ),
                                             const SizedBox(height: 3.0),
-                                            // Price with icon
                                             Row(
                                               children: [
+                                                Icon(Icons.people,
+                                                    size: 15,
+                                                    color:
+                                                        Colors.orange.shade900),
                                                 const SizedBox(width: 4),
                                                 Text(
-                                                  'Starts at: Php ${service['price']}',
+                                                  'Number of Ratings: ${service['numberOfRatings']}',
                                                   style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey[600],
-                                                  ),
+                                                      fontSize: 12,
+                                                      color: Colors.grey[600]),
                                                 ),
                                               ],
                                             ),
@@ -292,7 +298,6 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                     ),
                                   ],
                                 ),
-                                // Align the rating at the bottom right
                                 Positioned(
                                   bottom: 8,
                                   right: 12,
@@ -306,16 +311,13 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                                         : 0.0,
                                     direction: Axis.horizontal,
                                     items: List.generate(
-                                        5,
-                                        (index) => RatingWidget(
-                                              selectedColor:
-                                                  Colors.orange.shade900,
-                                              unSelectedColor: Colors.grey,
-                                              child: const Icon(
-                                                Icons.star,
-                                                size: 14,
-                                              ),
-                                            )),
+                                      5,
+                                      (index) => RatingWidget(
+                                        selectedColor: Colors.orange.shade900,
+                                        unSelectedColor: Colors.grey,
+                                        child: const Icon(Icons.star, size: 14),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ],
@@ -324,15 +326,12 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                         );
                       },
                     )
-                  : const Center(
-                      child: Text(''),
-                    ),
+                  : const Center(child: Text('')),
             ),
             if (isLoading)
               const Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
-                ),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)),
               ),
           ],
         ),

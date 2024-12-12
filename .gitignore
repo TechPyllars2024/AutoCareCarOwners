@@ -42,5 +42,10 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Add these lines to .gitignore
+.env
+*.env
+.env.local
+
 # API KEY
 /lib/Home Page Management/widgets/api_key.dart

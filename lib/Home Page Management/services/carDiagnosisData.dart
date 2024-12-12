@@ -41,33 +41,41 @@ class CarDiagnosis {
     }
   }
 
-  // Fetch all unique categories from the services collection
-  Future<List<String>> fetchServiceCategories() async {
+  // Fetch all service names, descriptions, and service IDs from the services collection that have verified providers
+  Future<List<Map<String, dynamic>>> fetchVerifiedServiceDetails() async {
     try {
-      QuerySnapshot querySnapshot =
-          await firestore.collection('services').get();
+      QuerySnapshot querySnapshot = await firestore.collection('services').get();
 
-      // Extract categories from each document and flatten the list
-      List<String> categories = querySnapshot.docs
-          .map((doc) => List<String>.from(doc['category']))
-          .expand((categoryList) => categoryList)
-          .toList();
+      // Extract and filter the list of service details
+      List<Map<String, dynamic>> verifiedServiceDetails = [];
 
-      // Remove duplicates
-      categories = categories.toSet().toList();
+      for (var doc in querySnapshot.docs) {
+        var serviceData = doc.data() as Map<String, dynamic>;
 
-      return categories;
+        // Check if the provider for this service is verified
+        bool isVerified = await isProviderVerified(doc['uid']);
+
+        if (isVerified) {
+          verifiedServiceDetails.add({
+            'name': serviceData['name'].toString(),
+            'description': serviceData['description'].toString(),
+            'serviceID': doc.id,
+            'uid' : serviceData['uid'].toString(),
+          });
+        }
+      }
+
+      return verifiedServiceDetails;
     } catch (e) {
-      logger.i('Error fetching service categories: $e');
+      logger.i('Error fetching verified service details: $e');
       return [];
     }
   }
 
-  // Fetch all unique categories from the services collection
   Future<List<String>> fetchServiceNames() async {
     try {
       QuerySnapshot querySnapshot =
-          await firestore.collection('services').get();
+      await firestore.collection('services').get();
 
       // Extract categories from each document and flatten the list
       List<String> serviceNames = querySnapshot.docs
@@ -83,5 +91,38 @@ class CarDiagnosis {
       logger.i('Error fetching service categories: $e');
       return [];
     }
+  }
+
+  Future<Map<String, dynamic>> fetchProviderByUid(String uid) async {
+    try {
+      DocumentSnapshot providerSnapshot = await FirebaseFirestore.instance
+          .collection('automotiveShops_profile')
+          .doc(uid)
+          .get();
+
+      return providerSnapshot.data() as Map<String, dynamic>;
+    } catch (e) {
+      logger.i('Error fetching provider by UID $uid: $e');
+      return {};
+    }
+  }
+
+
+  // Helper function to check if a provider is verified
+  Future<bool> isProviderVerified(String uid) async {
+    try {
+      DocumentSnapshot providerSnapshot = await firestore
+          .collection('automotiveShops_profile')
+          .doc(uid)
+          .get();
+
+      if (providerSnapshot.exists) {
+        var providerData = providerSnapshot.data() as Map<String, dynamic>;
+        return providerData['verificationStatus'] == 'Verified';
+      }
+    } catch (e) {
+      logger.i('Error checking provider verification status for UID $uid: $e');
+    }
+    return false; // Return false if the provider does not exist or an error occurs
   }
 }
