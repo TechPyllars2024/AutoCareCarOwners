@@ -73,7 +73,7 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
   }
 
   Future<void> _getNearbyGasStations(double latitude, double longitude) async {
-    var apiKey = ApiKey.googleApiKey;
+    var apiKey = 'AIzaSyCrbgW2yWOxrm932ZOoVV1_vw1ImfRLMDM';
     final url = Uri.parse(
         'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=$latitude,$longitude&radius=5000&type=gas_station&key=$apiKey');
 
@@ -149,7 +149,7 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
       String? photos,
       String priceLevel,
       String businessStatus) {
-    var apiKey = ApiKey.googleApiKey;
+    var apiKey = 'AIzaSyCrbgW2yWOxrm932ZOoVV1_vw1ImfRLMDM';
     showModalBottomSheet(
       context: context,
       builder: (context) {
