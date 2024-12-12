@@ -51,24 +51,28 @@ class ChatService {
     return null;
   }
 
-  Stream<List<StartConversationModel>> getUserConversations(String userId) {
-    return _firestore
+  Stream<List<StartConversationModel>> getUserConversations(String shopId) {
+    final receiverStream = _firestore
         .collection('conversations')
-        .where('senderId', isEqualTo: userId)
+        .where('receiverId', isEqualTo: shopId)
         .snapshots()
         .map((snapshot) => snapshot.docs
         .map((doc) => StartConversationModel.fromMap(doc.data()))
         .toList());
-  }
 
-  Stream<List<StartConversationModel>> getUserConversationsService(String userId) {
-    return _firestore
+    final senderStream = _firestore
         .collection('conversations')
-        .where('receiverId', isEqualTo: userId)
+        .where('senderId', isEqualTo: shopId)
         .snapshots()
         .map((snapshot) => snapshot.docs
         .map((doc) => StartConversationModel.fromMap(doc.data()))
         .toList());
+
+    // Combine the two streams manually
+    return receiverStream.asyncMap((receiverList) async {
+      final senderList = await senderStream.first;
+      return [...receiverList, ...senderList];
+    });
   }
 
   Future<String> initializeConversation(String currentUserId, String serviceProviderUid) async {
