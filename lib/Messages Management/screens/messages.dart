@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:logger/logger.dart';
 
 import '../services/chat_service.dart';
 import '../models/startConversation_model.dart';
@@ -17,7 +18,8 @@ class CarOwnerMessagesScreen extends StatefulWidget {
 
 class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
   final ChatService _chatService = ChatService();
-  String _currentUserId = '';
+  String? _currentUserId;
+  final Logger logger = Logger();
 
   @override
   void initState() {
@@ -34,12 +36,17 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
     }
   }
 
-  Stream<DocumentSnapshot> _listenToShopDetails(String shopId) {
+  Stream<DocumentSnapshot> _listenToShopDetails(String senderId, String receiverId, String currentUserId) {
+    // Determine which ID represents the shop
+    String shopId = senderId == currentUserId ? receiverId : senderId;
+
+    // Listen to shop details based on the identified shopId
     return FirebaseFirestore.instance
         .collection('automotiveShops_profile')
         .doc(shopId)
         .snapshots();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +60,12 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
           style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
         ),
       ),
-      body: _currentUserId.isEmpty
+      body: _currentUserId!.isEmpty
           ? const Center(
               child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)))
           : StreamBuilder<List<StartConversationModel>>(
-              stream: _chatService.getUserConversationsService(_currentUserId),
+              stream: _chatService.getUserConversations(_currentUserId!),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -83,10 +90,8 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
                   itemBuilder: (context, index) {
                     final conversation = conversations[index];
                     final isRead = conversation.isRead;
-
-                    // Listen for real-time shop details updates
                     return StreamBuilder<DocumentSnapshot>(
-                      stream: _listenToShopDetails(conversation.receiverId),
+                      stream: _listenToShopDetails(conversation.receiverId, conversation.senderId, _currentUserId!),
                       builder: (context, shopSnapshot) {
                         if (shopSnapshot.connectionState ==
                             ConnectionState.waiting) {
@@ -98,7 +103,6 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
                             subtitle: Text(conversation.lastMessage),
                           );
                         }
-
                         if (shopSnapshot.hasError) {
                           return ListTile(
                             leading: const CircleAvatar(
@@ -108,7 +112,6 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
                             subtitle: Text(conversation.lastMessage),
                           );
                         }
-
                         if (shopSnapshot.hasData) {
                           var shopData =
                               shopSnapshot.data!.data() as Map<String, dynamic>;
@@ -117,7 +120,6 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
                           String updatedShopProfile =
                               shopData['profileImage'] ??
                                   conversation.shopProfilePhoto;
-
                           return ListTile(
                             leading: CircleAvatar(
                               backgroundImage: updatedShopProfile.isNotEmpty
@@ -156,7 +158,9 @@ class _CarOwnerMessagesScreenState extends State<CarOwnerMessagesScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ChatScreen(
-                                    serviceProviderUid: conversation.receiverId,
+                                    serviceProviderUid: conversation.senderId == _currentUserId
+                                        ? conversation.receiverId
+                                        : conversation.senderId,
                                     conversationId: conversation.conversationId,
                                   ),
                                 ),
