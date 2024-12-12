@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
       _currentUserId = currentUser.uid;
     }
 
-    if (widget.conversationId != null) {
+    if (widget.conversationId.isNotEmpty) {
       setState(() {
         _conversationId = widget.conversationId;
       });
@@ -120,52 +120,43 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: Colors.orange[900],
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: FutureBuilder<Map<String, dynamic>>(
-          future: _providerData,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...',
-                  style: TextStyle(color: Colors.white));
-            } else if (snapshot.hasError) {
-              return const Text('Error loading provider');
-            } else if (snapshot.hasData) {
-              final data = snapshot.data!;
-              _shopName = data['shopName'] ?? 'Unknown Shop';
-              _shopProfilePhoto = data['profileImage'] ?? '';
+          backgroundColor: Colors.orange[900],
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: FutureBuilder<Map<String, dynamic>>(
+            future: _providerData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('Loading...',
+                    style: TextStyle(color: Colors.white));
+              } else if (snapshot.hasError) {
+                return const Text('Error loading provider');
+              } else if (snapshot.hasData) {
+                final data = snapshot.data!;
+                _shopName = data['shopName'] ?? 'Unknown Shop';
+                _shopProfilePhoto = data['profileImage'] ?? '';
 
-              return Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: _shopProfilePhoto.isNotEmpty
-                        ? NetworkImage(_shopProfilePhoto)
-                        : null,
-                    child: _shopProfilePhoto.isEmpty
-                        ? const Icon(Icons.person)
-                        : null,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    _shopName,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ],
-              );
-            } else {
-              return const Text('No provider data found');
-            }
-          },
-        ),
-        // actions: [
-        //   IconButton(
-        //     icon: const Icon(Icons.call, color: Colors.white),
-        //     onPressed: () {
-        //       // Handle call action
-        //     },
-        //   ),
-        // ],
-      ),
+                return Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: _shopProfilePhoto.isNotEmpty
+                          ? NetworkImage(_shopProfilePhoto)
+                          : null,
+                      child: _shopProfilePhoto.isEmpty
+                          ? const Icon(Icons.person)
+                          : null,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      _shopName,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ],
+                );
+              } else {
+                return const Text('No provider data found');
+              }
+            },
+          )),
       body: Column(
         children: [
           Expanded(
