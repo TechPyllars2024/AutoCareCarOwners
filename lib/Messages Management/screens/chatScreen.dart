@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-
 import '../models/message_model.dart';
 import '../models/startConversation_model.dart';
 import '../services/chat_service.dart';
@@ -14,7 +12,11 @@ class ChatScreen extends StatefulWidget {
   final String serviceProviderUid;
   final String conversationId;
 
-  const ChatScreen({super.key, this.child, required this.serviceProviderUid, required this.conversationId});
+  const ChatScreen(
+      {super.key,
+      this.child,
+      required this.serviceProviderUid,
+      required this.conversationId});
 
   final Widget? child;
 
@@ -40,7 +42,8 @@ class _ChatScreenState extends State<ChatScreen> {
     super.initState();
     _fetchCurrentUser();
     _providerData = ChatService().fetchProviderByUid(widget.serviceProviderUid);
-    _conversationData = _chatService.fetchStartConversationById(widget.conversationId);
+    _conversationData =
+        _chatService.fetchStartConversationById(widget.conversationId);
     _initializeConversation();
   }
 
@@ -60,12 +63,13 @@ class _ChatScreenState extends State<ChatScreen> {
       _currentUserId = currentUser.uid;
     }
 
-    if (widget.conversationId != null) {
+    if (widget.conversationId.isNotEmpty) {
       setState(() {
         _conversationId = widget.conversationId;
       });
     } else {
-      final conversationId = await _chatService.initializeConversation(_currentUserId, widget.serviceProviderUid);
+      final conversationId = await _chatService.initializeConversation(
+          _currentUserId, widget.serviceProviderUid);
       setState(() {
         _conversationId = conversationId;
       });
@@ -106,7 +110,9 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   bool isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
   }
 
   @override
@@ -114,51 +120,43 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        backgroundColor: Colors.orange[900],
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: FutureBuilder<Map<String, dynamic>>(
-          future: _providerData,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Loading...');
-            } else if (snapshot.hasError) {
-              return const Text('Error loading provider');
-            } else if (snapshot.hasData) {
-              final data = snapshot.data!;
-              _shopName = data['shopName'] ?? 'Unknown Shop';
-              _shopProfilePhoto = data['profileImage'] ?? '';
+          backgroundColor: Colors.orange[900],
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: FutureBuilder<Map<String, dynamic>>(
+            future: _providerData,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('Loading...',
+                    style: TextStyle(color: Colors.white));
+              } else if (snapshot.hasError) {
+                return const Text('Error loading provider');
+              } else if (snapshot.hasData) {
+                final data = snapshot.data!;
+                _shopName = data['shopName'] ?? 'Unknown Shop';
+                _shopProfilePhoto = data['profileImage'] ?? '';
 
-              return Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: _shopProfilePhoto.isNotEmpty
-                        ? NetworkImage(_shopProfilePhoto)
-                        : null,
-                    child: _shopProfilePhoto.isEmpty
-                        ? const Icon(Icons.person)
-                        : null,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    _shopName,
-                    style: const TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ],
-              );
-            } else {
-              return const Text('No provider data found');
-            }
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.call, color: Colors.white),
-            onPressed: () {
-              // Handle call action
+                return Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: _shopProfilePhoto.isNotEmpty
+                          ? NetworkImage(_shopProfilePhoto)
+                          : null,
+                      child: _shopProfilePhoto.isEmpty
+                          ? const Icon(Icons.person)
+                          : null,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      _shopName,
+                      style: const TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ],
+                );
+              } else {
+                return const Text('No provider data found');
+              }
             },
-          ),
-        ],
-      ),
+          )),
       body: Column(
         children: [
           Expanded(
@@ -166,7 +164,10 @@ class _ChatScreenState extends State<ChatScreen> {
               stream: _chatService.getMessages(widget.conversationId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                  ));
                 }
 
                 if (snapshot.hasError) {
@@ -174,14 +175,17 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
 
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text("Welcome!\nWe're ready to assist with\nwhatever your car needs.",
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(fontSize: 20, color: Colors.black)));
+                  return const Center(
+                      child: Text(
+                          "Welcome!\nWe're ready to assist with\nwhatever your car needs.",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 20, color: Colors.black)));
                 }
-
                 final messages = snapshot.data!;
                 final allImageUrls = messages
-                    .where((message) => message.imageUrl != null && message.imageUrl!.isNotEmpty)
+                    .where((message) =>
+                        message.imageUrl != null &&
+                        message.imageUrl!.isNotEmpty)
                     .map((message) => message.imageUrl!)
                     .toList();
 
@@ -190,8 +194,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
                     final message = messages[index];
-                    final previousMessage = index < messages.length - 1 ? messages[index + 1] : null;
-                    final isNewDay = previousMessage == null || !isSameDay(message.timestamp, previousMessage.timestamp);
+                    final previousMessage = index < messages.length - 1
+                        ? messages[index + 1]
+                        : null;
+                    final isNewDay = previousMessage == null ||
+                        !isSameDay(
+                            message.timestamp, previousMessage.timestamp);
 
                     return Column(
                       children: [
@@ -199,11 +207,17 @@ class _ChatScreenState extends State<ChatScreen> {
                           Padding(
                             padding: const EdgeInsets.only(top: 20, bottom: 10),
                             child: Text(
-                              DateFormat('MMMM d, yyyy').format(message.timestamp),
-                              style: const TextStyle(color: Colors.black54, fontWeight: FontWeight.bold),
+                              DateFormat('MMMM d, yyyy')
+                                  .format(message.timestamp),
+                              style: const TextStyle(
+                                  color: Colors.black54,
+                                  fontWeight: FontWeight.bold),
                             ),
                           ),
-                        MessageBubble(message: message, isMe: message.senderId == _senderId, allImageUrls: allImageUrls),
+                        MessageBubble(
+                            message: message,
+                            isMe: message.senderId == _senderId,
+                            allImageUrls: allImageUrls),
                       ],
                     );
                   },
@@ -232,7 +246,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       child: Container(
                         color: Colors.black.withOpacity(0.5),
                         child: const Center(
-                          child: CircularProgressIndicator(),
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
                         ),
                       ),
                     ),
@@ -241,7 +258,8 @@ class _ChatScreenState extends State<ChatScreen> {
                     top: 0,
                     right: 0,
                     child: Container(
-                      margin: const EdgeInsets.all(8.0), // Adjust for padding inside the container
+                      margin: const EdgeInsets.all(
+                          8.0), // Adjust for padding inside the container
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: Colors.orange.shade900,
@@ -263,9 +281,21 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               const SizedBox(height: 20),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 1),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                 child: Container(
-                  color: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(25.0),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        blurRadius: 5,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
                   child: Row(
                     children: [
                       IconButton(
@@ -273,7 +303,8 @@ class _ChatScreenState extends State<ChatScreen> {
                         onPressed: () => _pickImage(ImageSource.gallery),
                       ),
                       IconButton(
-                        icon: Icon(Icons.camera_alt, color: Colors.orange.shade900),
+                        icon: Icon(Icons.camera_alt,
+                            color: Colors.orange.shade900),
                         onPressed: () => _pickImage(ImageSource.camera),
                       ),
                       Expanded(
@@ -288,11 +319,14 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                       IconButton(
                         icon: Icon(Icons.send, color: Colors.orange.shade900),
-                        onPressed: () {
-                          if (_pickedImage != null || _messageController.text.trim().isNotEmpty) {
-                            _sendMessage(imageFile: _pickedImage); // Send message or image
-                          }
-                        },
+                        onPressed: _isLoading
+                            ? null
+                            : () {
+                                if (_pickedImage != null ||
+                                    _messageController.text.trim().isNotEmpty) {
+                                  _sendMessage(imageFile: _pickedImage);
+                                }
+                              },
                       ),
                     ],
                   ),

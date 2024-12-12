@@ -34,7 +34,6 @@ class DiagnosisField extends StatelessWidget {
               padding: const EdgeInsets.all(5.0),
               child: Row(
                 children: [
-
                   Container(
                     width: screenWidth * 0.5,
                     padding: const EdgeInsets.all(5.0),
@@ -43,14 +42,12 @@ class DiagnosisField extends StatelessWidget {
                         subtitle,
                         style: const TextStyle(
                           fontSize: 12,
-
                         ),
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.visible,
                       ),
                     ),
                   ),
-
                   Container(
                     width: screenWidth * 0.35,
                     padding: const EdgeInsets.all(8.0),
@@ -58,10 +55,9 @@ class DiagnosisField extends StatelessWidget {
                       child: Text(
                         title,
                         style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.orange.shade900
-                        ),
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange.shade900),
                         textAlign: TextAlign.center,
                       ),
                     ),

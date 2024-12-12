@@ -1,10 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-
-import '../widgets/gasolineStationMap.dart';
+import '../widgets/gasolineShopWidget.dart';
 
 class GasolineStation extends StatefulWidget {
   const GasolineStation({super.key});
@@ -30,9 +25,8 @@ class _GasolineStationState extends State<GasolineStation> {
       ),
       body: Column(
         children: [
-
-          Expanded(
-            child: GoogleMapWidget(),
+          const Expanded(
+            child: GasolineShopsWidget(),
           ),
           // Fixed height for ConvertCoordinates
           Container(

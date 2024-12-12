@@ -7,7 +7,7 @@ class DropdownController extends GetxController {
 
   // Method to clear selected options
   void clearSelection() {
-    selectedOptionList.clear();
+    selectedOptionList = <String>[].obs;
     selectedOption.value = '';
   }
 }
