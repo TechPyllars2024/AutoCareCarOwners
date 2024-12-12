@@ -90,25 +90,21 @@ class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
       String summary, List<Map<String, dynamic>> fetchedServiceDetails) {
     return '''
 You are an expert auto mechanic at a professional repair shop. A customer has brought their car for a diagnostic evaluation.
-
 Based on the Diagnosis Summary and the List of Available Services (considering service names and descriptions), provide the most relevant services to address the identified issues. Ensure your recommendations are precise, tailored to the customer’s needs, and limited to the services listed.
 
-Inputs:
-Diagnosis Summary:
-$summary
-
-Available Services:
-$fetchedServiceDetails
+Diagnostic Input:
+- Diagnosis Summary: $summary
+- Available Services: $fetchedServiceDetails
 
 **Response Requirements:**
 - List up to 10 applicable services based on the diagnosis.
-- Clearly state: "No applicable services available" if no services match the diagnosis.
+- Clearly state: "No applicable services available." if no services match the diagnosis.
 - Use only the provided services—do not create or include non-existent services.
 - Consider both the service names and their descriptions carefully.
 - Include services from different providers if applicable.
 
-Output Format:
-1. [Service Name]
+**Format Your Response as Follows:**
+1. [Service Name ONLY]
   ''';
   }
 
@@ -118,10 +114,9 @@ Output Format:
 You are an expert car mechanic at an auto repair shop. A customer has brought in their car for a diagnostic check. 
 Analyze the following diagnosis summary and provided car details to identify the most probable causes of the issue. Ensure your analysis is accurate, relevant, and tailored to the specific vehicle.
 
-Diagnosis Summary:  
-$summary  
-
-${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
+Diagnostic Input:  
+- Summary: $summary  
+- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
 
 **Response Requirements:**
 - Focus on causes that align directly with the car's make, model, year, fuel type, and transmission type.
@@ -144,10 +139,9 @@ ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key
 You are an expert car mechanic at an auto repair shop. A customer has brought in their car for a diagnostic check. 
 Analyze the following diagnosis summary and provided car details to deliver tailored recommendations that directly address the likely issues. Ensure your suggestions are precise, actionable, and relevant to the specific vehicle.
 
-Diagnosis Summary:  
-$summary  
-
-${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
+Diagnostic Input:  
+- Summary: $summary  
+- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
 
 **Response Requirements:**
 - Provide recommendations that address the most likely cause(s) of the problem, with a focus on the car’s specific make, model, year, fuel type, and transmission type.
@@ -170,10 +164,9 @@ ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key
 You are an expert car mechanic at an auto repair shop. A customer has brought in their car for a diagnostic check. 
 Analyze the following diagnosis summary and consider the provided car details. Identify any parts that need to be replaced, ensuring that your recommendations are precise, necessary, and relevant to the specific vehicle.
 
-Diagnosis Summary:  
-$summary  
-
-${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
+Diagnostic Input:  
+- Summary: $summary  
+- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}
 
 **Response Requirements:**
 - Only recommend parts that are essential to resolving the diagnosed issue.
@@ -187,9 +180,6 @@ ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key
 
 1. [Name of the part that requires replacement.]:
    - [Why the part needs replacement and how it relates to the diagnosis.Limit it to 20 words per part.]
-
-2. [Name of the part that requires replacement.]:
-   - [Why the part needs replacement and how it relates to the diagnosis. Limit it to 20 words per part.]
   ''';
   }
 
