@@ -166,6 +166,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  chat_gpt_sdk:
+    dependency: "direct main"
+    description:
+      name: chat_gpt_sdk
+      sha256: db99209316cdfe8643efc7eb99125981d70e89bbbf46f3446877427891e44a24
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.3"
   checked_yaml:
     dependency: transitive
     description:
@@ -182,14 +190,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.2"
-  chat_gpt_sdk:
-    dependency: "direct main"
-    description:
-      name: chat_gpt_sdk
-      sha256: db99209316cdfe8643efc7eb99125981d70e89bbbf46f3446877427891e44a24
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.3"
   clock:
     dependency: transitive
     description:
