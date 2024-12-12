@@ -1,32 +1,48 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/request_model.dart';
-import '../models/response_model.dart';
-import 'api_key.dart';
 
 class ChatService {
+  // Updated to use Gemini 1.5 Pro model
   static final Uri chatUri = Uri.parse(
-      'https://api.openai.com/v1/chat/completions');
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.0-pro-001:generateContent');
 
   static final Map<String, String> headers = {
     'Content-Type': 'application/json',
-    'Authorization': 'Bearer ${ApiKey.openAIApiKey}',
+    'x-goog-api-key': "AIzaSyDZau_OXuWr78iQMtNIAib_ognrPLPpE0A",
   };
 
-  Future<String?> request(String prompt) async {
+  Future<String?> request(String prompt, {
+    int maxOutputTokens = 500,
+    double temperature = 0.7,
+  }) async {
     try {
-      ChatRequest request = ChatRequest(
-        model: "gpt-4o-mini",
-        maxTokens: 500,
-        messages: [Message(role: "user", content: prompt)],
-      );
+      final requestBody = {
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {"text": prompt}
+            ]
+          }
+        ],
+        "generationConfig": {
+          "maxOutputTokens": maxOutputTokens,
+          "temperature": temperature,
+          "topP": 0.8,
+          "topK": 20
+        },
+      };
+
       http.Response response = await http.post(
         chatUri,
         headers: headers,
-        body: request.toJson(),
+        body: jsonEncode(requestBody),
       );
+
       if (response.statusCode == 200) {
-        ChatResponse chatResponse = ChatResponse.fromResponse(response);
-        return chatResponse.choices?[0].message?.content?.trim();
+        final jsonResponse = jsonDecode(response.body);
+        return jsonResponse['candidates'][0]['content']['parts'][0]['text']
+            ?.trim();
       } else {
         return "Error: ${response.statusCode}";
       }
