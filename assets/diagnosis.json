@@ -41,75 +41,71 @@
           "choice": "MY CAR'S WARNING LIGHT IS ON",
           "sub_questions": [
             {
-              "title": "Engine Management System (ECM or ECU) has found some faults in the vehicle, Perform engine scanning?",
+              "title": "Engine Management System (ECM or ECU) has found some faults in the vehicle",
               "choices": [
                 {
-                  "name": "Check Engine",
+                  "choice": "Check Engine",
                   "image_url": "https://lezebre.lu/images/detailed/25/65097-sticker-voyant-moteur.png"
                 },
                 {
-                  "name": "Low Oil Pressure",
+                  "choice": "Low Oil Pressure",
                   "image_url": "https://cdn1.iconfinder.com/data/icons/car-engine-dashboard-lights-outline-set-1/91/Car_Engine_-_Dashboard_Lights_59-512.png"
                 },
                 {
-                  "name": "Brake Warning",
+                  "choice": "Brake Warning",
                   "image_url": "https://approachschoolofmotoring.co.uk/wp/wp-content/uploads/2018/12/kisspng-car-parking-brake-computer-icons-dashboard-phone-icon-5b0fd127c4c349.729086101527763239806.png"
                 },
                 {
-                  "name": "Change Engine Oil",
+                  "choice": "Change Engine Oil",
                   "image_url": "https://www.pngall.com/wp-content/uploads/15/Check-Engine-Light-PNG-Image.png"
                 },
                 {
-                  "name": "Worn Brake Pad Warning",
+                  "choice": "Worn Brake Pad Warning",
                   "image_url": "https://beckerservicecenter.com/wp-content/uploads/2024/01/brake-light.webp"
                 },
                 {
-                  "name": "Battery",
+                  "choice": "Battery",
                   "image_url": "https://cdn-icons-png.flaticon.com/512/21/21182.png"
                 },
                 {
-                  "name": "Anti-Lock Braking System",
+                  "choice": "Anti-Lock Braking System",
                   "image_url": "https://cdn4.iconfinder.com/data/icons/automotive-maintenance/100/auto_warning-abs-512.png"
                 },
                 {
-                  "name": "Temperature or Coolant Level",
+                  "choice": "Temperature or Coolant Level",
                   "image_url": "https://static.thenounproject.com/png/490822-200.png"
                 },
                 {
-                  "name": "Electronic Parking Brake",
+                  "choice": "Electronic Parking Brake",
                   "image_url": "https://cdn-icons-png.flaticon.com/512/3556/3556314.png"
                 },
                 {
-                  "name": "Throttle Warning",
+                  "choice": "Throttle Warning",
                   "image_url": "https://static.thenounproject.com/png/17637-200.png"
                 },
                 {
-                  "name": "Traction Control Warning",
+                  "choice": "Traction Control Warning",
                   "image_url": "https://static-00.iconduck.com/assets.00/car-traction-control-icon-465x512-ie4qc0ou.png"
                 },
                 {
-                  "name": "Stability Control",
-                  "image_url": "https://example.com/stability_control_image.jpg"
+                  "choice": "Stability Control",
+                  "image_url": "https://static.thenounproject.com/png/828761-200.png"
                 },
                 {
-                  "name": "Power Steering System",
+                  "choice": "Power Steering System",
                   "image_url": "https://static.thenounproject.com/png/1353204-200.png"
                 },
                 {
-                  "name": "Security Warning",
+                  "choice": "Security Warning",
                   "image_url": "https://www.clipartmax.com/png/middle/31-317299_vehicle-security-icon-vehicle.png"
                 },
                 {
-                  "name": "Tire Pressure Warning",
+                  "choice": "Tire Pressure Warning",
                   "image_url": "https://static.thenounproject.com/png/1353190-200.png"
                 },
                 {
-                  "name": "Cruise Control",
+                  "choice": "Cruise Control",
                   "image_url": "https://cdn1.iconfinder.com/data/icons/car-parts-and-accessories-volume-01/32/cruise-control-car-indicator-512.png"
-                },
-                {
-                  "name": "Overdrive Indicator",
-                  "image_url": "https://example.com/overdrive_indicator_image.jpg"
                 }
               ]
             }

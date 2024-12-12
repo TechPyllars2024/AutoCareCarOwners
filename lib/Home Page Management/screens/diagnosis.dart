@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:autocare_carowners/Home%20Page%20Management/screens/diagnosis_analysis.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,11 +29,101 @@ class _DiagnosisState extends State<Diagnosis> {
   final Logger logger = Logger();
   Map<String, dynamic>? carDetails;
 
+  @override
+  void initState() {
+    super.initState();
+    fetchCarDetails().then((details) {
+      setState(() {
+        carDetails = details;
+      });
+    });
+    readJson();
+  }
+
+  void _showDiagnosisSummary(BuildContext context) {
+    final summary = selectedChoices.entries.map((entry) {
+      return "${entry.key}: ${entry.value}";
+    }).join('\n');
+
+    // Ensure carDetails is not null before proceeding
+    if (carDetails == null) {
+      logger.w('Car details are not available.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Car details are not loaded yet. Please try again later.'),
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: Text('Summary',
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+                color: Colors.orange.shade900)),
+        content: Container(
+          constraints: const BoxConstraints(maxHeight: 300.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: selectedChoices.entries.map((entry) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          "${entry.key}:",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(entry.value),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange.shade900,
+            ),
+            child: const Text('Close', style: TextStyle(color: Colors.white)),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => OpenAIEntryScreen(
+                      summary: summary, carDetails: carDetails),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.orange.shade900,
+            ),
+            child: const Text('Analyse', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<Map<String, dynamic>> fetchCarDetails() async {
     try {
       Map<String, dynamic> fetchedCarDetails =
           await BookingService().fetchDefaultCarDetails(user!.uid);
-
       logger.i('Car Owner Data: $fetchedCarDetails');
       return fetchedCarDetails;
     } catch (e) {
@@ -42,7 +133,6 @@ class _DiagnosisState extends State<Diagnosis> {
   }
 
   void navigateToCarDetails() async {
-    // Navigate to the CarDetails screen and wait for the result
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const CarDetails()),
@@ -56,54 +146,44 @@ class _DiagnosisState extends State<Diagnosis> {
     });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    fetchCarDetails().then((details) {
-      setState(() {
-        carDetails = details;
-      });
-    });
-    readJson();
-  }
-
   Future<void> readJson() async {
-    final String response =
-        await rootBundle.loadString('assets/diagnosis.json');
-    final data = json.decode(response) as Map<String, dynamic>;
-    setState(() {
-      _questions = data['diagnosis'] as List<dynamic>;
-      _currentQuestionsStack = [_questions];
-      _isAnalyzing = false;
-      _isNextButtonEnabled = false;
-    });
+    try {
+      final String response =
+          await rootBundle.loadString('assets/diagnosis.json');
+      final data = json.decode(response) as Map<String, dynamic>;
+      setState(() {
+        _questions = data['diagnosis'] as List<dynamic>;
+        _currentQuestionsStack = [_questions];
+        _isAnalyzing = false;
+        _isNextButtonEnabled = false;
+      });
+    } catch (e) {
+      logger.e('Error reading JSON file: $e');
+    }
   }
 
   void _selectChoice(int questionIndex, dynamic choice) {
     setState(() {
-      if (_currentQuestionsStack.isEmpty ||
-          questionIndex >= _currentQuestionsStack.length) {
-        logger.e("Invalid question index or empty questions stack.");
+      if (questionIndex < 0 || questionIndex >= _currentQuestions.length) {
+        logger.e("Invalid question index: $questionIndex");
         return;
       }
 
-      var currentQuestion = _currentQuestionsStack.last[questionIndex];
-      if (currentQuestion is! Map || !currentQuestion.containsKey('title')) {
-        logger.e("Invalid question format or missing 'title'.");
+      var currentQuestion = _currentQuestions[questionIndex];
+      if (currentQuestion is! Map || currentQuestion['title'] is! String) {
+        logger.e("Invalid question structure at index $questionIndex");
         return;
       }
 
       String questionId = currentQuestion['title'];
-
-      // Safely handle the choice to ensure it's not null
-      String selectedChoice = (choice != null && choice is String)
+      String selectedChoice = choice is String
           ? choice
-          : (choice != null && choice['choice'] != null
+          : (choice is Map && choice['choice'] is String
               ? choice['choice']
               : '');
 
       if (selectedChoice.isEmpty) {
-        logger.e("Selected choice is null or empty.");
+        logger.e("Empty choice selected for question: $questionId");
         return;
       }
 
@@ -111,18 +191,18 @@ class _DiagnosisState extends State<Diagnosis> {
 
       var selectedChoiceMap = currentQuestion['choices'].firstWhere(
         (c) => (c is String ? c : c['choice']) == selectedChoice,
-        orElse: () => '',
+        orElse: () => null, // Return null instead of ''
       );
 
       if (selectedChoiceMap != null &&
+          selectedChoiceMap is Map &&
           selectedChoiceMap['sub_questions'] != null) {
         _currentQuestionsStack.add(selectedChoiceMap['sub_questions']);
         _isAnalyzing = false;
-        _isNextButtonEnabled =
-            false; // Disable Next button while sub-questions exist
+        _isNextButtonEnabled = false;
       } else {
         _isAnalyzing = true;
-        _isNextButtonEnabled = true; // Enable Next button if no sub-questions
+        _isNextButtonEnabled = true;
       }
     });
   }
@@ -145,13 +225,12 @@ class _DiagnosisState extends State<Diagnosis> {
     });
   }
 
-  // Function to launch a URL
   void launchURL(String url) async {
-    final Uri url0 = Uri.parse(url);
-    if (await canLaunchUrl(url0)) {
-      await launchUrl(url0);
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      logger.e('Could not launch URL: $url');
     }
   }
 
@@ -173,20 +252,24 @@ class _DiagnosisState extends State<Diagnosis> {
                   carDetailsData: fetchCarDetails(),
                   navigateToCarDetails: navigateToCarDetails,
                 ),
-                // Only show the 'Next' button when car details are fetched
+                const SizedBox(height: 10),
                 if (carDetails != null)
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        _currentStep = 1;
-                      });
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange.shade900,
-                    ),
-                    child: const Text(
-                      'Next',
-                      style: TextStyle(color: Colors.white),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 25.0),
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _currentStep = 1;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange.shade900,
+                        ),
+                        child: const Text('Proceed',
+                            style: TextStyle(color: Colors.white)),
+                      ),
                     ),
                   ),
               ],
@@ -203,15 +286,17 @@ class _DiagnosisState extends State<Diagnosis> {
                   });
                 },
                 onStepContinue: () {
-                  if (_isNextButtonEnabled) {
-                    setState(() {
-                      if (_currentStep < _currentQuestions.length) {
+                  setState(() {
+                    if (_currentStep < _currentQuestions.length) {
+                      // Proceed to the next step if available
+                      if (_isNextButtonEnabled) {
                         _currentStep++;
-                      } else {
-                        _isAnalyzing = true;
                       }
-                    });
-                  }
+                    } else {
+                      // All steps are completed, show the diagnosis summary
+                      _showDiagnosisSummary(context);
+                    }
+                  });
                 },
                 onStepCancel: _goBack,
                 controlsBuilder:
@@ -219,27 +304,23 @@ class _DiagnosisState extends State<Diagnosis> {
                   return Row(
                     children: [
                       ElevatedButton(
+                        onPressed: details.onStepCancel,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange.shade900,
+                        ),
+                        child: const Text('Back',
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                      const SizedBox(width: 8),
+                      ElevatedButton(
                         onPressed: _isNextButtonEnabled
                             ? details.onStepContinue
                             : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange.shade900,
                         ),
-                        child: const Text(
-                          'Next',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: details.onStepCancel,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange.shade900,
-                        ),
-                        child: const Text(
-                          'Back',
-                          style: TextStyle(color: Colors.white),
-                        ),
+                        child: const Text('Next',
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ],
                   );
@@ -249,32 +330,29 @@ class _DiagnosisState extends State<Diagnosis> {
                         for (var i = 0; i < _currentQuestions.length; i++)
                           Step(
                             title: Text(
-                              _currentQuestions[i]['title'] ?? 'No title',
-                            ),
+                                _currentQuestions[i]['title'] ?? 'No title'),
                             content: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 for (var choice
                                     in _currentQuestions[i]['choices'] ?? [])
-                                  // Check if choice has name and display the name
                                   if (choice is Map &&
-                                      choice.containsKey('name'))
+                                      choice.containsKey('choice'))
                                     Column(
                                       children: [
-                                        // Wrap Image.network with a Container to control size
                                         if (choice.containsKey('image_url'))
-                                          Container(
-                                            width: 100.0,
-                                            height: 100.0,
+                                          SizedBox(
+                                            width: 60.0,
+                                            height: 60.0,
                                             child: Image.network(
                                               choice['image_url'],
                                               fit: BoxFit.contain,
                                             ),
                                           ),
                                         RadioListTile<String>(
-                                          title: Text(choice['name'] ??
+                                          title: Text(choice['choice'] ??
                                               'No name available'),
-                                          value: choice['name'] ?? '',
+                                          value: choice['choice'] ?? '',
                                           groupValue: selectedChoices[
                                               _currentQuestions[i]['title']],
                                           onChanged: (value) {
@@ -284,13 +362,12 @@ class _DiagnosisState extends State<Diagnosis> {
                                         ),
                                       ],
                                     )
-                                  // For choices without names, display text from 'choice'
                                   else
                                     RadioListTile<String>(
                                       title: Text(choice is String
                                           ? choice
                                           : choice['choice'] ??
-                                              'Unknown choice'),
+                                              'No choice available'),
                                       value: choice is String
                                           ? choice
                                           : choice['choice'] ?? '',
@@ -301,34 +378,9 @@ class _DiagnosisState extends State<Diagnosis> {
                                       },
                                       activeColor: Colors.orange.shade900,
                                     ),
-                                // Display links if link is present in choices
-                                if (_currentQuestions[i]['choices'] != null &&
-                                    _currentQuestions[i]['choices'] is List &&
-                                    _currentQuestions[i]['choices'][0] is Map &&
-                                    _currentQuestions[i]['choices'][0]
-                                        .containsKey('link'))
-                                  Column(
-                                    children: [
-                                      for (var choice in _currentQuestions[i]
-                                          ['choices'])
-                                        if (choice is Map &&
-                                            choice.containsKey('link'))
-                                          TextButton(
-                                            onPressed: () =>
-                                                launchURL(choice['link']),
-                                            child: const Text(
-                                              'View more',
-                                              style: TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 16,
-                                              ),
-                                            ),
-                                          )
-                                    ],
-                                  )
                               ],
                             ),
-                          ),
+                          )
                       ]
                     : [],
               ),
