@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class CallScreen extends StatefulWidget {
   @override
-  _CallScreenState createState() => _CallScreenState();
+  State<CallScreen> createState() => _CallScreenState();
 }
 
 class _CallScreenState extends State<CallScreen> {
