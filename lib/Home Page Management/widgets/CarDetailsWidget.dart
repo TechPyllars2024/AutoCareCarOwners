@@ -153,7 +153,7 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       const Divider(),
                       const SizedBox(height: 15),
                       _buildDetailRow(
