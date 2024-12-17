@@ -180,8 +180,8 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                         // While loading, show a CircularProgressIndicator
                         return Center(
                           child: CircularProgressIndicator(
-                            valueColor: const AlwaysStoppedAnimation<Color>(
-                                Colors.orange),
+                            valueColor:  AlwaysStoppedAnimation<Color>(
+                                Colors.orange.shade900),
                             value: loadingProgress.expectedTotalBytes != null
                                 ? loadingProgress.cumulativeBytesLoaded /
                                     (loadingProgress.expectedTotalBytes ?? 1)
@@ -400,9 +400,9 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
           },
         ),
         if (_isLoading)
-          const Center(
+           Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
             ),
           ),
         if (_hasError)
