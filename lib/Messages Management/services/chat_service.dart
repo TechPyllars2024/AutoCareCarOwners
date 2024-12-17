@@ -21,27 +21,58 @@ class ChatService {
   }
 
   Future<StartConversationModel?> getExistingConversation(String senderId, String receiverId) async {
+    // Check if the conversation exists where senderId is the shop and receiverId is the car owner
     final querySnapshot = await _firestore
         .collection('conversations')
         .where('senderId', isEqualTo: senderId)
         .where('receiverId', isEqualTo: receiverId)
         .get();
 
+    // If no conversation found, check the reverse case where senderId is the car owner and receiverId is the shop
+    if (querySnapshot.docs.isEmpty) {
+      final reverseQuerySnapshot = await _firestore
+          .collection('conversations')
+          .where('senderId', isEqualTo: receiverId)
+          .where('receiverId', isEqualTo: senderId)
+          .get();
+
+      // If found, return the reverse conversation
+      if (reverseQuerySnapshot.docs.isNotEmpty) {
+        return StartConversationModel.fromMap(reverseQuerySnapshot.docs.first.data());
+      }
+    }
+
+    // If a conversation is found in the first query or reverse query
     if (querySnapshot.docs.isNotEmpty) {
       return StartConversationModel.fromMap(querySnapshot.docs.first.data());
     }
 
+    // Return null if no conversation found in either case
     return null;
   }
 
-  Stream<List<StartConversationModel>> getUserConversations(String userId) {
-    return _firestore
+  Stream<List<StartConversationModel>> getUserConversations(String shopId) {
+    final receiverStream = _firestore
         .collection('conversations')
-        .where('senderId', isEqualTo: userId)
+        .where('receiverId', isEqualTo: shopId)
         .snapshots()
         .map((snapshot) => snapshot.docs
         .map((doc) => StartConversationModel.fromMap(doc.data()))
         .toList());
+
+    final senderStream = _firestore
+        .collection('conversations')
+        .where('senderId', isEqualTo: shopId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+        .map((doc) => StartConversationModel.fromMap(doc.data()))
+        .toList());
+
+    // Combine the two streams manually
+    return receiverStream.asyncMap((receiverList) async {
+      final senderList = await senderStream.first;
+      return [...receiverList, ...senderList];
+    });
   }
 
   Future<String> initializeConversation(String currentUserId, String serviceProviderUid) async {

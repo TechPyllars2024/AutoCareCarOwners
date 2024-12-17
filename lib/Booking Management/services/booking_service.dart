@@ -275,6 +275,8 @@ class BookingService {
     required double totalPrice,
     required String shopName,
     required String shopAddress,
+    required double latitude,
+    required double longitude,
   }) async {
     try {
       // Create a booking ID using Firestore's document ID generation
@@ -302,6 +304,8 @@ class BookingService {
         shopName: shopName,
         shopAddress: shopAddress,
         isFeedbackSubmitted: false,
+        latitude: latitude,
+        longitude: longitude,
       );
 
       // Store the booking in Firestore

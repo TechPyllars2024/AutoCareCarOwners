@@ -8,15 +8,23 @@ class CarOwnerCarProfileScreen extends StatefulWidget {
   final Widget? child;
 
   @override
-  State<CarOwnerCarProfileScreen> createState() => _CarOwnerCarProfileScreenState();
+  State<CarOwnerCarProfileScreen> createState() =>
+      _CarOwnerCarProfileScreenState();
 }
 
 class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
   final carBrandController = TextEditingController();
   final carModelController = TextEditingController();
   final carYearController = TextEditingController();
-
   List<String> cars = List.generate(4, (index) => 'CAR ${index + 1}');
+  bool isLoading = true;
+
+  Future<void> _loadData() async {
+    await Future.delayed(const Duration(seconds: 2)); // Simulate delay
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   void _editCar(int index) {
     showDialog(
@@ -34,8 +42,7 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
                 TextField(
                   controller: carBrandController,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Brand'),
+                      border: OutlineInputBorder(), hintText: 'Brand'),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
                     CapitalizeEachWordFormatter()
@@ -46,8 +53,7 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
                   child: TextField(
                     controller: carModelController,
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Model'),
+                        border: OutlineInputBorder(), hintText: 'Model'),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z\s]')),
                       CapitalizeEachWordFormatter()
@@ -57,8 +63,7 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
                 TextField(
                   controller: carYearController,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText: 'Year'),
+                      border: OutlineInputBorder(), hintText: 'Year'),
                   inputFormatters: [
                     FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
                   ],
@@ -71,7 +76,13 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child:  Text('Save', style: TextStyle(color: Colors.orange.shade900, fontWeight: FontWeight.w900, fontSize: 15),),
+              child: Text(
+                'Save',
+                style: TextStyle(
+                    color: Colors.orange.shade900,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 15),
+              ),
             ),
           ],
         );
@@ -90,58 +101,60 @@ class _CarOwnerCarProfileScreenState extends State<CarOwnerCarProfileScreen> {
           style: TextStyle(fontWeight: FontWeight.w900),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
-        child: GridView.builder(
-
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-              childAspectRatio: 1 / 1),
-          itemCount: cars.length,
-          itemBuilder: (context, index) => Card(
-            elevation: 8,
-            color: Colors.orange.shade200,
-            child: Stack(
-              children: [
-                Center(
-                  child: Text(
-                    cars[index],
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator()) // Show loader
+          : Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4),
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 2,
+                    mainAxisSpacing: 2,
+                    childAspectRatio: 1 / 1),
+                itemCount: cars.length,
+                itemBuilder: (context, index) => Card(
+                  elevation: 8,
+                  color: Colors.orange.shade200,
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Text(
+                          cars[index],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 18),
                         ),
-                        minimumSize: const Size(150, 40),
-                        backgroundColor: Colors.orange.shade900,
                       ),
-                      onPressed: () {
-                        _editCar(index);
-                      },
-                      child: const Text(
-                        'Edit',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            fontSize: 20),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10.0),
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              minimumSize: const Size(150, 40),
+                              backgroundColor: Colors.orange.shade900,
+                            ),
+                            onPressed: () {
+                              _editCar(index);
+                            },
+                            child: const Text(
+                              'Edit',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

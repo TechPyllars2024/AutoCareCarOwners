@@ -19,7 +19,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
   final Logger logger = Logger();
   List<BookingModel> bookings = [];
   bool isLoading = true;
-  Timer? _timer; // Timer for auto-refresh
+  Timer? _timer;
 
   @override
   void initState() {
@@ -206,8 +206,8 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                 ),
                               ),
                               TextSpan(
-                                text:
-                                    booking.status.toUpperCase(), // Capitalized status
+                                text: booking.status
+                                    .toUpperCase(), // Capitalized status
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -246,7 +246,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
       ),
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)
+              ),
             ) // Display loader when fetching data
           : bookings.isEmpty
               ? const Center(
@@ -449,7 +451,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                             const SizedBox(
                                 height: 8.0), // Spacing before the button
                             // Align the button to the right side
-                            if (booking.status == 'done' && booking.isFeedbackSubmitted == false) // Check if status is 'done' and feedback not submitted
+                            if (booking.status == 'done' &&
+                                booking.isFeedbackSubmitted ==
+                                    false) // Check if status is 'done' and feedback not submitted
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

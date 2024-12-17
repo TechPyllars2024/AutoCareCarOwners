@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:logger/logger.dart';
 import '../../Messages Management/models/startConversation_model.dart';
-import '../../Messages Management/screens/callingScreen.dart';
 import '../../Messages Management/screens/chatScreen.dart';
 import '../../Messages Management/services/chat_service.dart';
 import '../../Ratings and Feedback Management/models/feedback_model.dart';
 import '../models/services_model.dart';
 import '../services/categories_service.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+
+import 'mapView.dart';
 
 class ShopProfile extends StatefulWidget {
   final String serviceProviderUid;
@@ -29,14 +30,17 @@ class _ShopProfileState extends State<ShopProfile> {
   final double profileHeight = 100;
   bool isExpanded = false;
   final ChatService _chatService = ChatService();
-
   late Future<Map<String, dynamic>> _providerData;
+  bool isLoading = false;
+  late double latitude = 0.0;
+  late double longitude = 0.0;
 
   @override
   void initState() {
     super.initState();
     _providerData =
         CategoriesService().fetchProviderByUid(widget.serviceProviderUid);
+    _fetchLocationByUid();
   }
 
   void bookingRoute() {
@@ -50,19 +54,47 @@ class _ShopProfileState extends State<ShopProfile> {
     );
   }
 
+  Future<void> _fetchLocationByUid() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      // Fetch the location details using the service provider's UID
+      final location = await CategoriesService().fetchLocationByUid(widget.serviceProviderUid);
+
+      if (location.isNotEmpty) {
+        setState(() {
+          latitude = location['latitude'] ?? 0.0;
+          longitude = location['longitude'] ?? 0.0;
+        });
+      } else {
+        logger.w('No location data found for UID:');
+      }
+    } catch (e) {
+      logger.e("Error fetching location for UID: $e");
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   Future<void> _startConversation(BuildContext context) async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       String senderId = user.uid;
       String receiverId = widget.serviceProviderUid;
 
-      StartConversationModel? existingConversation = await _chatService.getExistingConversation(senderId, receiverId);
+      StartConversationModel? existingConversation =
+          await _chatService.getExistingConversation(senderId, receiverId);
 
       if (existingConversation != null) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(serviceProviderUid: widget.serviceProviderUid, conversationId: existingConversation.conversationId),
+            builder: (context) => ChatScreen(
+                serviceProviderUid: widget.serviceProviderUid,
+                conversationId: existingConversation.conversationId),
           ),
         );
       } else {
@@ -97,7 +129,9 @@ class _ShopProfileState extends State<ShopProfile> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(serviceProviderUid: widget.serviceProviderUid, conversationId: conversationId),
+            builder: (context) => ChatScreen(
+                serviceProviderUid: widget.serviceProviderUid,
+                conversationId: conversationId),
           ),
         );
       }
@@ -110,10 +144,10 @@ class _ShopProfileState extends State<ShopProfile> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: Text('Shop Profile',
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
-        )
-      ),
+          title: Text(
+        'Shop Profile',
+        style: TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
+      )),
       body: SafeArea(
         child: FutureBuilder<Map<String, dynamic>>(
           future: _providerData,
@@ -135,8 +169,11 @@ class _ShopProfileState extends State<ShopProfile> {
                     buildShopName(data),
                     shopInformation(data),
                     const Padding(
-                      padding:
-                      EdgeInsets.only(right: 16.0,left: 16, top: 20,),
+                      padding: EdgeInsets.only(
+                        right: 16.0,
+                        left: 16,
+                        top: 20,
+                      ),
                       child: Divider(thickness: 1, color: Colors.grey),
                     ),
                     servicesCarousel(),
@@ -153,17 +190,16 @@ class _ShopProfileState extends State<ShopProfile> {
   }
 
   Widget bookingButton() => WideButtons(
-    onTap: bookingRoute,
-    text: 'Book Now!',
-  );
+        onTap: bookingRoute,
+        text: 'Book Now!',
+      );
 
   Widget buildTopSection(Map<String, dynamic> data, double top) {
-    double rating =
-        data['totalRatings'] ?? 0;
-    int numberOfRating =
-        data['numberOfRatings'] ?? 0;
+    double rating = data['totalRatings'] ?? 0;
+    int numberOfRating = data['numberOfRatings'] ?? 0;
 
-    double normalizedRating = numberOfRating > 0 ? (rating / numberOfRating) : 0;
+    double normalizedRating =
+        numberOfRating > 0 ? (rating / numberOfRating) : 0;
 
     logger.i('Rating: $rating');
 
@@ -189,7 +225,7 @@ class _ShopProfileState extends State<ShopProfile> {
                 rate: normalizedRating,
                 items: List.generate(
                   5,
-                      (index) =>  RatingWidget(
+                  (index) => RatingWidget(
                     selectedColor: Colors.orange.shade900,
                     unSelectedColor: Colors.grey,
                     child: const Icon(
@@ -203,7 +239,7 @@ class _ShopProfileState extends State<ShopProfile> {
               Text(
                 '$numberOfRating ratings',
                 style:
-                const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
               ),
             ],
           ),
@@ -213,86 +249,69 @@ class _ShopProfileState extends State<ShopProfile> {
   }
 
   Widget buildCoverImage(Map<String, dynamic> data) => Container(
-    color: Colors.grey,
-    child: Image.network(
-      data['coverImage'] ?? 'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
-      width: double.infinity,
-      height: coverHeight,
-      fit: BoxFit.cover,
-    ),
-  );
+        color: Colors.grey,
+        child: Image.network(
+          data['coverImage'] ??
+              'https://mewitti.com/wp-content/themes/miyazaki/assets/images/default-fallback-image.png',
+          width: double.infinity,
+          height: coverHeight,
+          fit: BoxFit.cover,
+        ),
+      );
 
   Widget buildProfileImage(Map<String, dynamic> data) => CircleAvatar(
-    radius: profileHeight / 2,
-    backgroundColor: Colors.grey.shade800,
-    backgroundImage:
-    NetworkImage(data['profileImage'] ?? 'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
-  );
+        radius: profileHeight / 2,
+        backgroundColor: Colors.grey.shade800,
+        backgroundImage: NetworkImage(data['profileImage'] ??
+            'https://t4.ftcdn.net/jpg/05/49/98/39/360_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.jpg'),
+      );
 
   Widget buildShopName(Map<String, dynamic> data) => Padding(
-    padding: const EdgeInsets.all(16.0),
-    child: Align(
-      alignment: Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            data['shopName'] ?? 'Unknown Shop',
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Icon(Icons.location_on, color: Colors.orange.shade900, size: 15,),
-              const SizedBox(width: 4),
-              Text(
-                data['location'] ?? 'Location details',
-                //  style: const TextStyle(fontSize: 13),
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Row(
+        padding: const EdgeInsets.all(16.0),
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(Icons.calendar_month, color: Colors.orange.shade900, size: 15,),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data['daysOfTheWeek'].join(', ') ?? 'Operating Days',
-                      style: const TextStyle(fontSize: 15),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      softWrap: true,
-                    ),
-                  ],
-                ),
+              Text(
+                data['shopName'] ?? 'Unknown Shop',
+                style:
+                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-            ],
-          ),
-
-          const SizedBox(height: 5),
-          Column(
-            children: [
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.orange.shade900,
+                    size: 15,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    data['location'] ?? 'Location details',
+                    //  style: const TextStyle(fontSize: 13),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 5),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.check, color: Colors.orange.shade900, size: 15,),
+                  Icon(
+                    Icons.calendar_month,
+                    color: Colors.orange.shade900,
+                    size: 15,
+                  ),
                   const SizedBox(width: 4),
                   Expanded(
-
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          data['serviceSpecialization'].join(', ') ??
-                              'Specialization',
+                          data['daysOfTheWeek'].join(', ') ?? 'Operating Days',
                           style: const TextStyle(fontSize: 15),
                           overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
+                          maxLines: 1,
                           softWrap: true,
                         ),
                       ],
@@ -300,12 +319,41 @@ class _ShopProfileState extends State<ShopProfile> {
                   ),
                 ],
               ),
+              const SizedBox(height: 5),
+              Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.check,
+                        color: Colors.orange.shade900,
+                        size: 15,
+                      ),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data['serviceSpecialization'].join(', ') ??
+                                  'Specialization',
+                              style: const TextStyle(fontSize: 15),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              softWrap: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
-        ],
-      ),
-    ),
-  );
+        ),
+      );
 
   Widget shopInformation(Map<String, dynamic> data) {
     return Padding(
@@ -323,7 +371,8 @@ class _ShopProfileState extends State<ShopProfile> {
                   onTap: () {
                     _startConversation(context);
                   },
-                  child: Icon(Icons.message, color: Colors.orange.shade900, size: 25),
+                  child: Icon(Icons.message,
+                      color: Colors.orange.shade900, size: 25),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
@@ -340,41 +389,13 @@ class _ShopProfileState extends State<ShopProfile> {
             ),
           ),
           SizedBox(
-            width: 50,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const CallingScreen()),
-                    );
-                  },
-                  child: Icon(Icons.call, color: Colors.orange.shade900, size: 25),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    'Call',
-                    style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
             width: 120,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.access_time_filled, color: Colors.orange.shade900, size: 25),
+                Icon(Icons.access_time_filled,
+                    color: Colors.orange.shade900, size: 25),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0),
                   child: Text(
@@ -395,11 +416,25 @@ class _ShopProfileState extends State<ShopProfile> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.location_on, color: Colors.orange.shade900, size: 25),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => MapViewScreen(
+                          latitude: latitude,
+                          longitude: longitude,
+                          serviceProviderUid: widget.serviceProviderUid,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Icon(Icons.location_on, color: Colors.orange.shade900, size: 25),
+                ),
                 const Padding(
                   padding: EdgeInsets.only(top: 8.0),
                   child: Text(
-                    "Direction",
+                    "View in Map",
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w400,
@@ -419,7 +454,7 @@ class _ShopProfileState extends State<ShopProfile> {
     final serviceProviderId = widget.serviceProviderUid;
     Future<List<ServiceModel>> fetchServices() async {
       final servicesStream =
-      CategoriesService().fetchServices(serviceProviderId);
+          CategoriesService().fetchServices(serviceProviderId);
       final snapshot = await servicesStream.first;
       return snapshot;
     }
@@ -483,20 +518,22 @@ class _ShopProfileState extends State<ShopProfile> {
                                 clipBehavior: Clip.antiAlias,
                                 child: service.servicePicture.isNotEmpty
                                     ? Image.network(
-                                  service.servicePicture,
-                                  height: 100,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                )
+                                        service.servicePicture,
+                                        height: 100,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      )
                                     : const Placeholder(),
                               ),
                             ),
                             Expanded(
                               flex: 2,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15.0),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       service.name,
@@ -565,7 +602,6 @@ class _ShopProfileState extends State<ShopProfile> {
               ),
               SizedBox(
                 height: 150,
-
                 child: PageView.builder(
                   controller: PageController(viewportFraction: 0.85),
                   itemCount: feedbacks.length,
@@ -594,7 +630,8 @@ class _ShopProfileState extends State<ShopProfile> {
                                       radius: 16,
                                       backgroundColor: Colors.blueGrey[50],
                                       child: Text(
-                                        feedback.feedbackerName[0], // First letter of the feedbacker's name
+                                        feedback.feedbackerName[
+                                            0], // First letter of the feedbacker's name
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
@@ -628,11 +665,17 @@ class _ShopProfileState extends State<ShopProfile> {
                                       child: Text(
                                         feedback.comment,
                                         style: TextStyle(
-                                          fontSize: isExpanded ? 12 : 13, // Decrease font size if expanded
+                                          fontSize: isExpanded
+                                              ? 12
+                                              : 13, // Decrease font size if expanded
                                           color: Colors.black54,
                                         ),
-                                        overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                                        maxLines: isExpanded ? null : 2, // Show all lines if expanded
+                                        overflow: isExpanded
+                                            ? TextOverflow.visible
+                                            : TextOverflow.ellipsis,
+                                        maxLines: isExpanded
+                                            ? null
+                                            : 2, // Show all lines if expanded
                                         softWrap: true,
                                       ),
                                     ),
@@ -640,11 +683,14 @@ class _ShopProfileState extends State<ShopProfile> {
                                 ),
                                 const Spacer(),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Row(
                                       children: [
-                                         Icon(Icons.star, color: Colors.orange.shade900, size: 16),
+                                        Icon(Icons.star,
+                                            color: Colors.orange.shade900,
+                                            size: 16),
                                         const SizedBox(width: 5),
                                         Text(
                                           feedback.rating.toString(),
@@ -656,7 +702,8 @@ class _ShopProfileState extends State<ShopProfile> {
                                       ],
                                     ),
                                     Text(
-                                      _formatTimestamp(feedback.timestamp), // Function to format timestamp
+                                      _formatTimestamp(feedback
+                                          .timestamp), // Function to format timestamp
                                       style: const TextStyle(
                                         fontSize: 12,
                                         color: Colors.black45,
