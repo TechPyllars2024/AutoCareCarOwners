@@ -193,10 +193,14 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
                     alignment: Alignment.center,
                     children: [
                       // CircularProgressIndicator for loading
-                      const CircularProgressIndicator(),
+                       CircularProgressIndicator(
+                        valueColor:  AlwaysStoppedAnimation<Color>(
+                            Colors.orange.shade900),
+                      ),
                       // Image widget with loadingBuilder
                       Image.network(
                         profileImage,
+
                         fit: BoxFit.cover,
                         width: 200,
                         height: 200,
@@ -209,8 +213,8 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
                             // While loading, keep showing progress indicator
                             return Center(
                               child: CircularProgressIndicator(
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.orange),
+                                valueColor:  AlwaysStoppedAnimation<Color>(
+                                    Colors.orange.shade900),
                                 value: loadingProgress.expectedTotalBytes !=
                                         null
                                     ? loadingProgress.cumulativeBytesLoaded /
@@ -358,9 +362,9 @@ class _RoadSideAssistanceWidgetState extends State<RoadSideAssistanceWidget> {
           },
         ),
         if (_isLoading)
-          const Center(
+           Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
             ),
           ),
         if (_hasError)
