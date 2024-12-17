@@ -259,15 +259,19 @@ Diagnostic Input:
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text(
           "Diagnosis Analysis",
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black),
+          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black, fontSize: 20),
         ),
         backgroundColor: Colors.grey.shade100,
       ),
       body: Center(
+
+
         child: SingleChildScrollView(
+
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -281,9 +285,9 @@ Diagnostic Input:
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const CircularProgressIndicator(
+                           CircularProgressIndicator(
                             valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.orange),
+                                AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
                           ),
                           const SizedBox(height: 10),
                           Text(
@@ -299,41 +303,51 @@ Diagnostic Input:
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildSectionHeader("Possible Causes"),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         _buildContentCard(responseCauses!),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
                         _buildSectionHeader("Recommendations"),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         _buildContentCard(responseRecommendations!),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
                         _buildSectionHeader("Replacement of Parts"),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         _buildContentCard(responseParts!),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 30),
                         _buildSectionHeader("Suggested Available Services"),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
                         _buildContentCard(responseSuggestedServices),
                         const SizedBox(height: 10),
                         Center(
                           child: responseSuggestedServices !=
                                   "No applicable services available."
-                              ? ElevatedButton(
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => ShopsDirectory(
-                                            serviceName:
-                                                responseSuggestedServices),
+                              ? Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width * 0.9,
+                                  height: 50,
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) => ShopsDirectory(
+                                                serviceName:
+                                                    responseSuggestedServices),
+                                          ),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange.shade900,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
                                       ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.orange.shade900,
-                                  ),
-                                  child: const Text(
-                                      'Proceed to Available Services',
-                                      style: TextStyle(color: Colors.white)),
-                                )
+                                      child: const Text(
+                                          'Proceed to Available Services',
+                                          style: TextStyle(color: Colors.white)),
+                                    ),
+                                ),
+                              )
                               : Container(), // Or any other widget you might want to display when there are no applicable services.
                         ),
                       ],
@@ -350,7 +364,7 @@ Diagnostic Input:
     return Text(
       title,
       style: TextStyle(
-        fontSize: 22,
+        fontSize: 18,
         fontWeight: FontWeight.bold,
         color: Colors.orange.shade900,
       ),
@@ -366,7 +380,7 @@ Diagnostic Input:
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.shade300,
+            color: Colors.grey.shade600,
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -374,7 +388,7 @@ Diagnostic Input:
       ),
       child: Text(
         content,
-        style: const TextStyle(fontSize: 16, color: Colors.black),
+        style: const TextStyle(fontSize: 14, color: Colors.black),
         textAlign: TextAlign.justify,
       ),
     );
