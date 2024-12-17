@@ -59,63 +59,77 @@ class _DiagnosisState extends State<Diagnosis> {
 
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        title: Text('Summary',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 22,
-                color: Colors.orange.shade900)),
-        content: Container(
-          constraints: const BoxConstraints(maxHeight: 300.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: selectedChoices.entries.map((entry) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          "${entry.key}:",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+      builder: (_) => Theme(
+        data: Theme.of(context).copyWith(
+          dialogBackgroundColor: Colors.white,
+          // Change the dialog background color here
+        ),
+        child: AlertDialog(
+
+
+          title: Text('Summary',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.orange.shade900)),
+          content: Container(
+
+            constraints: const BoxConstraints(maxHeight: 400.0),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: selectedChoices.entries.map((entry) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 9.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            "${entry.key}:",
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        child: Text(entry.value),
-                      ),
-                    ],
+                        const SizedBox(width: 30,),
+                        Expanded(
+                          child: Text(entry.value, style: const TextStyle(fontSize: 11),
+                        ),
+                        )],
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey.shade500,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),),
+              ),
+              child: const Text('Close', style: TextStyle(color: Colors.white)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => OpenAIEntryScreen(
+                        summary: summary, carDetails: carDetails),
                   ),
                 );
-              }).toList(),
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange.shade900,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),),
+              ),
+              child: const Text('Analyse', style: TextStyle(color: Colors.white)),
             ),
-          ),
+          ],
         ),
-        actions: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange.shade900,
-            ),
-            child: const Text('Close', style: TextStyle(color: Colors.white)),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => OpenAIEntryScreen(
-                      summary: summary, carDetails: carDetails),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange.shade900,
-            ),
-            child: const Text('Analyse', style: TextStyle(color: Colors.white)),
-          ),
-        ],
       ),
     );
   }
@@ -240,150 +254,186 @@ class _DiagnosisState extends State<Diagnosis> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text('Diagnosis',
-            style: TextStyle(fontWeight: FontWeight.w900)),
+            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black, fontSize: 20)),
         backgroundColor: Colors.grey.shade100,
       ),
-      body: Column(
+      body: Stack(
+
         children: [
           if (_currentStep == 0)
             Column(
+
               children: [
                 CarDetailsWidget(
                   carDetailsData: fetchCarDetails(),
                   navigateToCarDetails: navigateToCarDetails,
                 ),
-                const SizedBox(height: 10),
+
+                Spacer(),
+
+
+
                 if (carDetails != null)
-                  Padding(
-                    padding: const EdgeInsets.only(right: 25.0),
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _currentStep = 1;
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange.shade900,
+                  Align(
+
+                    alignment: Alignment.center,
+
+                    child: Stack(
+                      children: [
+
+
+
+                        Center(
+
+                          child: Padding(
+
+                            padding: const EdgeInsets.all(20.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                setState(() {
+                                  _currentStep = 1;
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange.shade900,
+                                minimumSize: const Size(double.infinity, 48),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15), // Curved edges
+                                ),
+                              ),
+                              child: const Text('Proceed',
+                                  style: TextStyle(color: Colors.white)),
+                            ),
+                          ),
                         ),
-                        child: const Text('Proceed',
-                            style: TextStyle(color: Colors.white)),
-                      ),
+                      ],
                     ),
                   ),
               ],
             )
           else
-            Expanded(
-              child: Stepper(
-                currentStep: _currentStep - 1,
-                onStepTapped: (int index) {
-                  setState(() {
-                    if (index >= 0 && index < _currentQuestions.length) {
-                      _currentStep = index + 1;
+            Stepper(
+              currentStep: _currentStep - 1,
+              onStepTapped: (int index) {
+                setState(() {
+                  if (index >= 0 && index < _currentQuestions.length) {
+                    _currentStep = index + 1;
+                  }
+                });
+              },
+              onStepContinue: () {
+                setState(() {
+                  if (_currentStep < _currentQuestions.length) {
+                    // Proceed to the next step if available
+                    if (_isNextButtonEnabled) {
+                      _currentStep++;
                     }
-                  });
-                },
-                onStepContinue: () {
-                  setState(() {
-                    if (_currentStep < _currentQuestions.length) {
-                      // Proceed to the next step if available
-                      if (_isNextButtonEnabled) {
-                        _currentStep++;
-                      }
-                    } else {
-                      // All steps are completed, show the diagnosis summary
-                      _showDiagnosisSummary(context);
-                    }
-                  });
-                },
-                onStepCancel: _goBack,
-                controlsBuilder:
-                    (BuildContext context, ControlsDetails details) {
-                  return Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: details.onStepCancel,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange.shade900,
-                        ),
-                        child: const Text('Back',
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: _isNextButtonEnabled
-                            ? details.onStepContinue
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange.shade900,
-                        ),
-                        child: const Text('Next',
-                            style: TextStyle(color: Colors.white)),
-                      ),
-                    ],
-                  );
-                },
-                steps: _currentQuestions.isNotEmpty
-                    ? [
-                        for (var i = 0; i < _currentQuestions.length; i++)
-                          Step(
-                            title: Text(
-                                _currentQuestions[i]['title'] ?? 'No title'),
-                            content: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                for (var choice
-                                    in _currentQuestions[i]['choices'] ?? [])
-                                  if (choice is Map &&
-                                      choice.containsKey('choice'))
-                                    Column(
-                                      children: [
-                                        if (choice.containsKey('image_url'))
-                                          SizedBox(
-                                            width: 60.0,
-                                            height: 60.0,
-                                            child: Image.network(
-                                              choice['image_url'],
-                                              fit: BoxFit.contain,
-                                            ),
-                                          ),
-                                        RadioListTile<String>(
-                                          title: Text(choice['choice'] ??
-                                              'No name available'),
-                                          value: choice['choice'] ?? '',
-                                          groupValue: selectedChoices[
-                                              _currentQuestions[i]['title']],
-                                          onChanged: (value) {
-                                            _selectChoice(i, choice);
-                                          },
-                                          activeColor: Colors.orange.shade900,
-                                        ),
-                                      ],
-                                    )
-                                  else
-                                    RadioListTile<String>(
-                                      title: Text(choice is String
-                                          ? choice
-                                          : choice['choice'] ??
-                                              'No choice available'),
-                                      value: choice is String
-                                          ? choice
-                                          : choice['choice'] ?? '',
-                                      groupValue: selectedChoices[
-                                          _currentQuestions[i]['title']],
-                                      onChanged: (value) {
-                                        _selectChoice(i, choice);
-                                      },
-                                      activeColor: Colors.orange.shade900,
-                                    ),
-                              ],
+                  } else {
+                    // All steps are completed, show the diagnosis summary
+                    _showDiagnosisSummary(context);
+                  }
+                });
+              },
+              onStepCancel: _goBack,
+              controlsBuilder:
+                  (BuildContext context, ControlsDetails details) {
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+
+                        ElevatedButton(
+                          onPressed: details.onStepCancel,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange.shade900,
+                            minimumSize: Size(MediaQuery.of(context).size.width * 0.3, 40.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10), // Curved edges
                             ),
-                          )
-                      ]
-                    : [],
-              ),
+                          ),
+                          child: const Text('Back',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                        const SizedBox(width: 8),
+                        ElevatedButton(
+                          onPressed: _isNextButtonEnabled
+                              ? details.onStepContinue
+                              : null,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange.shade900,
+                            minimumSize: Size(MediaQuery.of(context).size.width * 0.3, 40.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10), // Curved edges
+                            ),
+                          ),
+                          child: const Text('Next',
+                              style: TextStyle(color: Colors.white)),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+              steps: _currentQuestions.isNotEmpty
+                  ? [
+                      for (var i = 0; i < _currentQuestions.length; i++)
+                        Step(
+                          title: Text(
+                              _currentQuestions[i]['title'] ?? 'No title'),
+                          content: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (var choice
+                                  in _currentQuestions[i]['choices'] ?? [])
+                                if (choice is Map &&
+                                    choice.containsKey('choice'))
+                                  Column(
+                                    children: [
+                                      if (choice.containsKey('image_url'))
+                                        SizedBox(
+                                          width: 60.0,
+                                          height: 60.0,
+                                          child: Image.network(
+                                            choice['image_url'],
+                                            fit: BoxFit.contain,
+                                          ),
+                                        ),
+                                      RadioListTile<String>(
+                                        title: Text(choice['choice'] ??
+                                            'No name available'),
+                                        value: choice['choice'] ?? '',
+                                        groupValue: selectedChoices[
+                                            _currentQuestions[i]['title']],
+                                        onChanged: (value) {
+                                          _selectChoice(i, choice);
+                                        },
+                                        activeColor: Colors.orange.shade900,
+                                      ),
+                                    ],
+                                  )
+                                else
+                                  RadioListTile<String>(
+                                    title: Text(choice is String
+                                        ? choice
+                                        : choice['choice'] ??
+                                            'No choice available'),
+                                    value: choice is String
+                                        ? choice
+                                        : choice['choice'] ?? '',
+                                    groupValue: selectedChoices[
+                                        _currentQuestions[i]['title']],
+                                    onChanged: (value) {
+                                      _selectChoice(i, choice);
+                                    },
+                                    activeColor: Colors.orange.shade900,
+                                  ),
+                            ],
+                          ),
+                        )
+                    ]
+                  : [],
             ),
         ],
       ),
