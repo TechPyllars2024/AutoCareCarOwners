@@ -64,9 +64,9 @@ class _DatePickerDisplayState extends State<DatePickerDisplay> {
       // If the current selected date is not allowed, set to the first allowed day
       DateTime adjustedDate = now;
       while (!widget.allowedDaysOfWeek.contains(DateFormat('EEEE').format(adjustedDate))) {
-        adjustedDate = adjustedDate.add(const Duration(days: 1)); // Move to next day
+        adjustedDate = adjustedDate.add(const Duration(days: 1));
       }
-      _selectedDate = adjustedDate; // Update to the first valid date
+      _selectedDate = adjustedDate;
     }
 
     DateTime? pickedDate = await showDatePicker(

@@ -54,8 +54,7 @@ class _ChecklistState extends State<Checklist> {
                 child: Obx(() => widget.controller.selectedOptionList.isEmpty
                     ? Text(
                         widget.hintText,
-                        style: TextStyle(
-                            color: Colors.grey[700], fontSize: 16), // Grey text
+                        style: TextStyle(color: Colors.grey[700], fontSize: 16),
                       )
                     : Wrap(
                         spacing: 8.0,
@@ -65,12 +64,10 @@ class _ChecklistState extends State<Checklist> {
                           return Chip(
                             label: Text(
                               option,
-                              style: const TextStyle(
-                                  color: Colors.white), // White text
+                              style: const TextStyle(color: Colors.white),
                             ),
-                            backgroundColor: Colors.grey[
-                                600], // Darker grey background for selected options
-                            deleteIconColor: Colors.white, // White delete icon
+                            backgroundColor: Colors.orange[900], // Orange color
+                            deleteIconColor: Colors.white,
                             onDeleted: () {
                               widget.controller.selectedOptionList
                                   .remove(option);
@@ -100,17 +97,16 @@ class _ChecklistState extends State<Checklist> {
         return AlertDialog(
           title: Text(
             'Select Services',
-            style: TextStyle(color: Colors.grey[800]), // Dark grey text
+            style: TextStyle(color: Colors.orange[900]),
           ),
-          backgroundColor: Colors.grey[200], // Very light grey background
+          backgroundColor: Colors.grey[200],
           content: SingleChildScrollView(
             child: ListBody(
               children: widget.options.map((option) {
                 return Obx(() => CheckboxListTile(
                       title: Text(
                         option,
-                        style: TextStyle(
-                            color: Colors.grey[800]), // Dark grey text
+                        style: TextStyle(color: Colors.grey[800]),
                       ),
                       value:
                           widget.controller.selectedOptionList.contains(option),
