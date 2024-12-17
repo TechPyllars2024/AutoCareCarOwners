@@ -105,7 +105,7 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
         title: Text(
           "Suggested Available Shops",
           style:
-              TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800]),
+              TextStyle(fontWeight: FontWeight.w900, color: Colors.grey[800], fontSize: 18.0),
         ),
       ),
       body: SafeArea(
@@ -329,9 +329,9 @@ class _ShopsDirectoryState extends State<ShopsDirectory> {
                   : const Center(child: Text('')),
             ),
             if (isLoading)
-              const Center(
+               Center(
                 child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)),
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade900)),
               ),
           ],
         ),
