@@ -65,15 +65,12 @@ class _DiagnosisState extends State<Diagnosis> {
           // Change the dialog background color here
         ),
         child: AlertDialog(
-
-
           title: Text('Summary',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
                   color: Colors.orange.shade900)),
           content: Container(
-
             constraints: const BoxConstraints(maxHeight: 400.0),
             child: SingleChildScrollView(
               child: Column(
@@ -86,14 +83,20 @@ class _DiagnosisState extends State<Diagnosis> {
                         Expanded(
                           child: Text(
                             "${entry.key}:",
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11),
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 11),
                           ),
                         ),
-                        const SizedBox(width: 30,),
-                        Expanded(
-                          child: Text(entry.value, style: const TextStyle(fontSize: 11),
+                        const SizedBox(
+                          width: 30,
                         ),
-                        )],
+                        Expanded(
+                          child: Text(
+                            entry.value,
+                            style: const TextStyle(fontSize: 11),
+                          ),
+                        )
+                      ],
                     ),
                   );
                 }).toList(),
@@ -108,7 +111,8 @@ class _DiagnosisState extends State<Diagnosis> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.grey.shade500,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
               child: const Text('Close', style: TextStyle(color: Colors.white)),
             ),
@@ -124,9 +128,11 @@ class _DiagnosisState extends State<Diagnosis> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.orange.shade900,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-              child: const Text('Analyse', style: TextStyle(color: Colors.white)),
+              child:
+                  const Text('Analyse', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -254,59 +260,53 @@ class _DiagnosisState extends State<Diagnosis> {
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Text('Diagnosis',
-            style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black, fontSize: 20)),
+            style: TextStyle(
+                fontWeight: FontWeight.w900,
+                color: Colors.black,
+                fontSize: 20)),
         backgroundColor: Colors.grey.shade100,
       ),
       body: Stack(
-
         children: [
           if (_currentStep == 0)
             Column(
-
               children: [
                 CarDetailsWidget(
                   carDetailsData: fetchCarDetails(),
                   navigateToCarDetails: navigateToCarDetails,
                 ),
-
-                Spacer(),
-
-
-
+                const Spacer(),
                 if (carDetails != null)
                   Align(
-
                     alignment: Alignment.center,
-
-                    child: Stack(
-                      children: [
-
-
-
-                        Center(
-
-                          child: Padding(
-
-                            padding: const EdgeInsets.all(20.0),
-                            child: ElevatedButton(
-                              onPressed: () {
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: ElevatedButton(
+                        onPressed: carDetails != null
+                            ? () {
                                 setState(() {
                                   _currentStep = 1;
                                 });
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange.shade900,
-                                minimumSize: const Size(double.infinity, 48),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15), // Curved edges
-                                ),
-                              ),
-                              child: const Text('Proceed',
-                                  style: TextStyle(color: Colors.white)),
-                            ),
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: carDetails != null
+                              ? Colors.orange.shade900
+                              : Colors.orange.shade300,
+                          minimumSize: const Size(double.infinity, 48),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                      ],
+                        child: Text(
+                          'Proceed',
+                          style: TextStyle(
+                            color: carDetails != null
+                                ? Colors.white
+                                : Colors.grey.shade200,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
               ],
@@ -335,22 +335,22 @@ class _DiagnosisState extends State<Diagnosis> {
                 });
               },
               onStepCancel: _goBack,
-              controlsBuilder:
-                  (BuildContext context, ControlsDetails details) {
+              controlsBuilder: (BuildContext context, ControlsDetails details) {
                 return Align(
                   alignment: Alignment.bottomCenter,
                   child: Center(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-
                         ElevatedButton(
                           onPressed: details.onStepCancel,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange.shade900,
-                            minimumSize: Size(MediaQuery.of(context).size.width * 0.3, 40.0),
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.3, 40.0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Curved edges
+                              borderRadius:
+                                  BorderRadius.circular(10), // Curved edges
                             ),
                           ),
                           child: const Text('Back',
@@ -363,9 +363,11 @@ class _DiagnosisState extends State<Diagnosis> {
                               : null,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.orange.shade900,
-                            minimumSize: Size(MediaQuery.of(context).size.width * 0.3, 40.0),
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width * 0.3, 40.0),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10), // Curved edges
+                              borderRadius:
+                                  BorderRadius.circular(10), // Curved edges
                             ),
                           ),
                           child: const Text('Next',
@@ -380,8 +382,8 @@ class _DiagnosisState extends State<Diagnosis> {
                   ? [
                       for (var i = 0; i < _currentQuestions.length; i++)
                         Step(
-                          title: Text(
-                              _currentQuestions[i]['title'] ?? 'No title'),
+                          title:
+                              Text(_currentQuestions[i]['title'] ?? 'No title'),
                           content: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
