@@ -261,19 +261,17 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
 
                       // Sign Up OR
-                      SizedBox(height: size.height * 0.03),
-                      const Or(),
+                      SizedBox(height: size.height * 0.2),
+                      // const Or(),
+                      //
+                      // // Sign Up with Google
+                      // SizedBox(height: size.height * 0.03),
+                      // GoogleButton(
+                      //   onTap: signInWithGoogle,
+                      //   hintText: 'Sign Up with Google',
+                      //   isGoogleLoading: isLoadingGoogle,
+                      // ),
 
-                      // Sign Up with Google
-                      SizedBox(height: size.height * 0.03),
-                      GoogleButton(
-                        onTap: signInWithGoogle,
-                        hintText: 'Sign Up with Google',
-                        isGoogleLoading: isLoadingGoogle,
-                      ),
-
-                      // Already have an account? Log In
-                      SizedBox(height: size.height * 0.05),
                       TextButton(
                         onPressed: () {
                           Navigator.push(

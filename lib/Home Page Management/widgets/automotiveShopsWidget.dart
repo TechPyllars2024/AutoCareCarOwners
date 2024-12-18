@@ -208,7 +208,10 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
                     alignment: Alignment.center,
                     children: [
                       // CircularProgressIndicator for loading
-                      const CircularProgressIndicator(),
+                       CircularProgressIndicator(
+                        valueColor:  AlwaysStoppedAnimation<Color>(
+                            Colors.orange.shade900),
+                      ),
                       // Image widget with loadingBuilder
                       Image.network(
                         profileImage,
@@ -224,8 +227,8 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
                             // While loading, keep showing progress indicator
                             return Center(
                               child: CircularProgressIndicator(
-                                valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.orange),
+                                valueColor:  AlwaysStoppedAnimation<Color>(
+                                    Colors.orange.shade900),
                                 value: loadingProgress.expectedTotalBytes !=
                                         null
                                     ? loadingProgress.cumulativeBytesLoaded /
@@ -368,9 +371,9 @@ class _AutomotiveShopsWidgetState extends State<AutomotiveShopsWidget> {
           },
         ),
         if (_isLoading)
-          const Center(
+           Center(
             child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
             ),
           ),
         if (_hasError)

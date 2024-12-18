@@ -22,7 +22,7 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(icon, color: Colors.orange.shade900, size: 20),
+        Icon(icon, color: Colors.orange.shade900, size: 14),
         const SizedBox(width: 8),
         Text(
           '$title:',
@@ -51,9 +51,9 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
           future: widget.carDetailsData,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
+              return Center(
                 child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
                 ),
               );
             } else if (snapshot.hasError) {
@@ -66,9 +66,12 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const Text(
-                      'No car details data found',
-                      style: TextStyle(fontSize: 16),
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'No car details data found',
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ),
                     const SizedBox(width: 16),
                     ElevatedButton.icon(
@@ -104,9 +107,10 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
                 carData.entries.first.value as Map<String, dynamic>;
 
             return SingleChildScrollView(
-              padding: const EdgeInsets.only(top: 45, left: 16, right: 16),
+              padding: const EdgeInsets.only(top: 10, left: 16, right: 16),
               child: Card(
-                elevation: 6,
+                color: Colors.grey.shade100,
+                elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
@@ -122,7 +126,7 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
                             'Car Details',
                             style: TextStyle(
                               color: Colors.black,
-                              fontSize: 22,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -135,11 +139,11 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
                                 vertical: 8.0,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
+                                borderRadius: BorderRadius.circular(15.0),
                               ),
                             ),
                             child: const Text(
-                              'Edit Details',
+                              'Edit ',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -149,6 +153,7 @@ class _CarDetailsWidgetState extends State<CarDetailsWidget> {
                           ),
                         ],
                       ),
+                      const SizedBox(height: 20),
                       const Divider(),
                       const SizedBox(height: 15),
                       _buildDetailRow(

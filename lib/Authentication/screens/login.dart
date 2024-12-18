@@ -213,20 +213,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
 
                       // Sign Up OR
-                      SizedBox(height: size.height * 0.03),
-                      const Or(),
+                      SizedBox(height: size.height * 0.2),
+                      // const Or(),
 
-                      // Sign Up with Google
-                      SizedBox(height: size.height * 0.03),
-                      GoogleButton(
-                        onTap: logInWithGoogleForCarOwners, // Google button is always enabled
-                        hintText: 'Log In with Google',
-                        isGoogleLoading: isLoadingGoogle,
-                      ),
-
-                      // Already have an account? Log In
-
-                      SizedBox(height: size.height * 0.05),
+                      // // Sign Up with Google
+                      // SizedBox(height: size.height * 0.03),
+                      // GoogleButton(
+                      //   onTap: logInWithGoogleForCarOwners, // Google button is always enabled
+                      //   hintText: 'Log In with Google',
+                      //   isGoogleLoading: isLoadingGoogle,
+                      // ),
 
                       Padding(
                         padding: const EdgeInsets.only(top: 8),
