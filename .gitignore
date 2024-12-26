@@ -10,6 +10,9 @@
 .svn/
 migrate_working_dir/
 
+# Environents
+.env
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -41,11 +44,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# Add these lines to .gitignore
-.env
-*.env
-.env.local
 
 # API KEY
 /lib/Home Page Management/widgets/api_key.dart
