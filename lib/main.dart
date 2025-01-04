@@ -10,7 +10,7 @@ import 'Authentication/screens/login.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await dotenv.load(fileName: ".env");
+ // await dotenv.load(fileName: ".env");
   FirebaseFirestore.instance.settings = const Settings(
       persistenceEnabled: true
   );
