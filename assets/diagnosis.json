@@ -7,36 +7,43 @@
           "choice": "My car is not starting",
           "sub_questions": [
             {
-              "title": "Are you able to turn the ignition key?",
+              "title": "What type of key do you have?",
               "choices": [
                 {
-                  "choice": "No, key does not turn",
+                  "choice": "Regular metal key",
                   "sub_questions": [
                     {
-                      "title": "What type of key do you have?",
+                      "title": "Are you able to turn the ignition key?",
                       "choices": [
-                        "Regular metal key",
-                        "Push button"
+                        {
+                          "choice": "No, key does not turn"
+
+                        },
+                        {
+                          "choice": "Yes, I am able to turn the key",
+                          "sub_questions": [
+                            {
+                              "title": "When you turn the key, do you hear the engine trying to start? (whining noise from engine)",
+                              "choices": [
+                                "Yes, I hear a noise from engine",
+                                "No, I don't hear a noise from engine"
+                              ]
+                            }
+                          ]
+                        }
                       ]
                     }
                   ]
                 },
                 {
-                  "choice": "Yes, I am able to turn the key",
-                  "sub_questions": [
-                    {
-                      "title": "When you turn the key, do you hear the engine trying to start? (whining noise from engine)",
-                      "choices": [
-                        "Yes, I hear a noise from engine",
-                        "No, I don't hear a noise from engine"
-                      ]
-                    }
-                  ]
+                  "choice": "Push button"
+
                 }
               ]
             }
           ]
-        },
+        }
+      ,
         {
           "choice": "My car's warning light is on",
           "sub_questions": [

@@ -132,6 +132,11 @@ Diagnostic Input:
 2. [Explain why this is a likely cause based on the car's details]
 3. [Provide your answer in a simple list, but without any numbers or bullets.]
 4. [Do not use any numbering or bullets in your response. Write everything in plain text or as a paragraph.]
+5. [Don't use special characters like ** or -- in your response.]
+
+
+
+
 
   ''';
   }
@@ -154,6 +159,7 @@ Diagnostic Input:
 - limit it to 30 words per recommendation.
 - do not put ** in the response
 - Remember that we are in the Philippines
+- your responses should have a 5 word title and ends with a colon (:)
 
 **Format Your Response as Follows:**
 1. [Actionable suggestion based on diagnosis summary and car details.]
@@ -259,174 +265,246 @@ Diagnostic Input:
     }
   }
 
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text(
-          "Diagnosis Analysis",
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black, fontSize: 20),
+        //backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          title: const Text(
+            "Diagnosis Analysis",
+            style: TextStyle(
+                fontWeight: FontWeight.w900, color: Colors.white, fontSize: 20),
+          ),
+          backgroundColor: Colors.orange.shade900,
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
-        backgroundColor: Colors.grey.shade100,
-      ),
-      body: Center(
-
-
-        child: SingleChildScrollView(
-
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              responseCauses == null ||
-                      responseRecommendations == null ||
-                      responseParts == null
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                           CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
+        body:
+        DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade900, Colors.orange.shade600],
+              // Customize colors as needed
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child:
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  responseCauses == null ||
+                          responseRecommendations == null ||
+                          responseParts == null
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.white),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Generating diagnosis analysis. Please wait...",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "Generating diagnosis analysis. Please wait...",
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey.shade600),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionHeader("Possible Causes"),
-                        const SizedBox(height: 5),
-                        _buildCauseCards(responseCauses!),
-                        const SizedBox(height: 30),
-                        _buildSectionHeader("Recommendations"),
-                        const SizedBox(height: 5),
-                        _buildContentCard(responseRecommendations!),
-                        const SizedBox(height: 30),
-                        _buildSectionHeader("Replacement of Parts"),
-                        const SizedBox(height: 5),
-                        _buildContentCard(responseParts!),
-                        const SizedBox(height: 30),
-                        _buildSectionHeader("Suggested Available Services"),
-                        const SizedBox(height: 5),
-                        _buildContentCard(responseSuggestedServices),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: responseSuggestedServices !=
-                                  "No applicable services available."
-                              ? Padding(
-                                padding: const EdgeInsets.only(top: 20.0),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.9,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => ShopsDirectory(
-                                                serviceName:
-                                                    responseSuggestedServices),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionHeader("Possible Causes", color: Colors.white),
+                            const SizedBox(height: 5),
+                            _buildCauseCards(responseCauses!),
+                            // const SizedBox(height: 30),
+                            // _buildSectionHeader("Recommendations"),
+                            // const SizedBox(height: 5),
+                            // _buildContentCard(responseRecommendations!),
+                            // const SizedBox(height: 30),
+                            // _buildSectionHeader("Replacement of Parts"),
+                            // const SizedBox(height: 5),
+                            // _buildContentCard(responseParts!),
+                            const SizedBox(height: 30),
+                            _buildSectionHeader("Suggested Available Services", color: Colors.white),
+                            const SizedBox(height: 5),
+                            _buildContentCard(responseSuggestedServices),
+                            const SizedBox(height: 10),
+                            Center(
+                              child: responseSuggestedServices !=
+                                      "No applicable services available."
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 20.0),
+                                      child: Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ShopsDirectory(
+                                                        serviceName:
+                                                            responseSuggestedServices),
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                Colors.orange.shade900,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.orange.shade900,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          child: const Text(
+                                              'Proceed to Available Services',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
                                         ),
                                       ),
-                                      child: const Text(
-                                          'Proceed to Available Services',
-                                          style: TextStyle(color: Colors.white)),
-                                    ),
-                                ),
-                              )
-                              : Container(), // Or any other widget you might want to display when there are no applicable services.
+                                    )
+                                  : Container(), // Or any other widget you might want to display when there are no applicable services.
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-            ],
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
 // Section Header
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(String title, {Color color = Colors.white}) {
     return Text(
       title,
       style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Colors.orange.shade900,
-      ),
-    );
-  }
-
-// Content Card
-  Widget _buildContentCard(String content) {
-
-    return Container(
-      padding: const EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade600,
-            blurRadius: 10,
-            offset: const Offset(0, 5),
+        color: color,
+        shadows: [
+          Shadow(
+            offset: Offset(1.0, 1.0), // Position of the shadow
+            blurRadius: 4.0, // Blur effect for the shadow
+            color: Colors.grey.shade900, // Shadow color
           ),
         ],
       ),
-      child: Text(
-        content,
-        style: const TextStyle(fontSize: 14, color: Colors.black),
-        textAlign: TextAlign.justify,
-      ),
     );
   }
 
+
+// Content Card
+  Widget _buildContentCard(String content) {
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        padding: const EdgeInsets.all(15.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade400,
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Text(
+          content,
+          style: const TextStyle(fontSize: 14, color: Colors.black),
+          textAlign: TextAlign.justify,
+        ),
+      ),
+    );
+  }
 
   Widget _buildCauseCards(String content) {
     List<String> causes = content.split('\n');
     return Column(
       children: causes.map((cause) {
-        return Container(
-          margin: const EdgeInsets.symmetric(vertical: 8.0),
-          padding: const EdgeInsets.all(15.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.shade600,
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+        // Split the cause into sentences
+        List<String> sentences = cause.split(':');
+
+        // Check if the cause has more than one sentence
+        String firstSentence = sentences.isNotEmpty ? sentences[0] : cause;
+        String remainingContent =
+            sentences.length > 1 ? sentences.sublist(1).join('.') : '';
+
+        bool isExpanded = false; // Track the expanded state for each cause
+
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded; // Toggle the expanded state
+                });
+              },
+              child: SizedBox(
+                width: double.infinity,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: isExpanded ? Colors.white : Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade400,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            firstSentence.trim(),
+                            style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.justify,
+                          ),
+                          Spacer(),
+                          Icon(
+                            isExpanded
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
+                            color: Colors.orange.shade900,
+                          ),
+                        ],
+                      ),
+                      if (isExpanded) ...[
+                        const SizedBox(height: 10),
+                        Text(
+                          remainingContent.trim(),
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
-          child: Text(
-            cause.trim(),
-            style: const TextStyle(fontSize: 14, color: Colors.black),
-            textAlign: TextAlign.justify,
-          ),
+            );
+          },
         );
       }).toList(),
     );

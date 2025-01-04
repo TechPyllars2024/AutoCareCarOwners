@@ -262,9 +262,10 @@ class _DiagnosisState extends State<Diagnosis> {
         title: const Text('Diagnosis',
             style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color: Colors.black,
+                color: Colors.white,
                 fontSize: 20)),
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Colors.orange.shade900,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Stack(
         children: [
@@ -438,14 +439,14 @@ class _DiagnosisState extends State<Diagnosis> {
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: TextField(
                                   decoration: InputDecoration(
-                                    labelStyle: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.bold),
+                                    labelStyle: const TextStyle(color: Colors.black, ),
 
                                     labelText: 'Others:',
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(color: Colors.grey.shade600, width: 2),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
-                                    border: OutlineInputBorder(),
+                                    border: const OutlineInputBorder(),
                                   ),
                                   onChanged: (value) {
                                     setState(() {
