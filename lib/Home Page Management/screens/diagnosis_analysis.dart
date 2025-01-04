@@ -125,11 +125,14 @@ Diagnostic Input:
 - limit it to 40 words per cause.
 - do not put ** in the response
 - Remember that we are in the Philippines
+- list all the possible causes up to 15
 
 **Format Your Response as Follows:**
 1. [Explain why this is a likely cause based on the car's details]
 2. [Explain why this is a likely cause based on the car's details]
-3. Additional Cause: [Include only if relevant based on the summary and car details]
+3. [Provide your answer in a simple list, but without any numbers or bullets.]
+4. [Do not use any numbering or bullets in your response. Write everything in plain text or as a paragraph.]
+
   ''';
   }
 
@@ -256,6 +259,11 @@ Diagnostic Input:
     }
   }
 
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -304,7 +312,7 @@ Diagnostic Input:
                       children: [
                         _buildSectionHeader("Possible Causes"),
                         const SizedBox(height: 5),
-                        _buildContentCard(responseCauses!),
+                        _buildCauseCards(responseCauses!),
                         const SizedBox(height: 30),
                         _buildSectionHeader("Recommendations"),
                         const SizedBox(height: 5),
@@ -373,6 +381,7 @@ Diagnostic Input:
 
 // Content Card
   Widget _buildContentCard(String content) {
+
     return Container(
       padding: const EdgeInsets.all(15.0),
       decoration: BoxDecoration(
@@ -391,6 +400,35 @@ Diagnostic Input:
         style: const TextStyle(fontSize: 14, color: Colors.black),
         textAlign: TextAlign.justify,
       ),
+    );
+  }
+
+
+  Widget _buildCauseCards(String content) {
+    List<String> causes = content.split('\n');
+    return Column(
+      children: causes.map((cause) {
+        return Container(
+          margin: const EdgeInsets.symmetric(vertical: 8.0),
+          padding: const EdgeInsets.all(15.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.shade600,
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Text(
+            cause.trim(),
+            style: const TextStyle(fontSize: 14, color: Colors.black),
+            textAlign: TextAlign.justify,
+          ),
+        );
+      }).toList(),
     );
   }
 }

@@ -1,34 +1,34 @@
 {
   "diagnosis": [
     {
-      "title": "WHAT IS YOUR CAR CONCERN?",
+      "title": "What is your car concern?",
       "choices": [
         {
-          "choice": "MY CAR IS NOT STARTING",
+          "choice": "My car is not starting",
           "sub_questions": [
             {
-              "title": "ARE YOU ABLE TO TURN THE IGNITION KEY?",
+              "title": "Are you able to turn the ignition key?",
               "choices": [
                 {
-                  "choice": "NO, KEY DOES NOT TURN",
+                  "choice": "No, key does not turn",
                   "sub_questions": [
                     {
-                      "title": "WHAT TYPE OF KEY DO YOU HAVE?",
+                      "title": "What type of key do you have?",
                       "choices": [
-                        "REGULAR METAL KEY",
-                        "PUSH BUTTON"
+                        "Regular metal key",
+                        "Push button"
                       ]
                     }
                   ]
                 },
                 {
-                  "choice": "YES, I AM ABLE TO TURN THE KEY",
+                  "choice": "Yes, I am able to turn the key",
                   "sub_questions": [
                     {
-                      "title": "WHEN YOU TURN THE KEY, DO YOU HEAR THE ENGINE TRYING TO START? (WHINING NOISE FROM ENGINE)",
+                      "title": "When you turn the key, do you hear the engine trying to start? (whining noise from engine)",
                       "choices": [
-                        "YES, I HEAR A NOISE FROM ENGINE",
-                        "NO, I DON'T HEAR A NOISE FROM ENGINE"
+                        "Yes, I hear a noise from engine",
+                        "No, I don't hear a noise from engine"
                       ]
                     }
                   ]
@@ -38,29 +38,29 @@
           ]
         },
         {
-          "choice": "MY CAR'S WARNING LIGHT IS ON",
+          "choice": "My car's warning light is on",
           "sub_questions": [
             {
-              "title": "Engine Management System (ECM or ECU) has found some faults in the vehicle",
+              "title": "Engine management system (ECM or ECU) has found some faults in the vehicle",
               "choices": [
                 {
-                  "choice": "Check Engine",
+                  "choice": "Check engine",
                   "image_url": "https://lezebre.lu/images/detailed/25/65097-sticker-voyant-moteur.png"
                 },
                 {
-                  "choice": "Low Oil Pressure",
+                  "choice": "Low oil pressure",
                   "image_url": "https://cdn1.iconfinder.com/data/icons/car-engine-dashboard-lights-outline-set-1/91/Car_Engine_-_Dashboard_Lights_59-512.png"
                 },
                 {
-                  "choice": "Brake Warning",
+                  "choice": "Brake warning",
                   "image_url": "https://approachschoolofmotoring.co.uk/wp/wp-content/uploads/2018/12/kisspng-car-parking-brake-computer-icons-dashboard-phone-icon-5b0fd127c4c349.729086101527763239806.png"
                 },
                 {
-                  "choice": "Change Engine Oil",
+                  "choice": "Change engine oil",
                   "image_url": "https://www.pngall.com/wp-content/uploads/15/Check-Engine-Light-PNG-Image.png"
                 },
                 {
-                  "choice": "Worn Brake Pad Warning",
+                  "choice": "Worn brake pad warning",
                   "image_url": "https://beckerservicecenter.com/wp-content/uploads/2024/01/brake-light.webp"
                 },
                 {
@@ -68,43 +68,43 @@
                   "image_url": "https://cdn-icons-png.flaticon.com/512/21/21182.png"
                 },
                 {
-                  "choice": "Anti-Lock Braking System",
+                  "choice": "Anti-lock braking system",
                   "image_url": "https://cdn4.iconfinder.com/data/icons/automotive-maintenance/100/auto_warning-abs-512.png"
                 },
                 {
-                  "choice": "Temperature or Coolant Level",
+                  "choice": "Temperature or coolant level",
                   "image_url": "https://static.thenounproject.com/png/490822-200.png"
                 },
                 {
-                  "choice": "Electronic Parking Brake",
+                  "choice": "Electronic parking brake",
                   "image_url": "https://cdn-icons-png.flaticon.com/512/3556/3556314.png"
                 },
                 {
-                  "choice": "Throttle Warning",
+                  "choice": "Throttle warning",
                   "image_url": "https://static.thenounproject.com/png/17637-200.png"
                 },
                 {
-                  "choice": "Traction Control Warning",
+                  "choice": "Traction control warning",
                   "image_url": "https://static-00.iconduck.com/assets.00/car-traction-control-icon-465x512-ie4qc0ou.png"
                 },
                 {
-                  "choice": "Stability Control",
+                  "choice": "Stability control",
                   "image_url": "https://static.thenounproject.com/png/828761-200.png"
                 },
                 {
-                  "choice": "Power Steering System",
+                  "choice": "Power steering system",
                   "image_url": "https://static.thenounproject.com/png/1353204-200.png"
                 },
                 {
-                  "choice": "Security Warning",
+                  "choice": "Security warning",
                   "image_url": "https://www.clipartmax.com/png/middle/31-317299_vehicle-security-icon-vehicle.png"
                 },
                 {
-                  "choice": "Tire Pressure Warning",
+                  "choice": "Tire pressure warning",
                   "image_url": "https://static.thenounproject.com/png/1353190-200.png"
                 },
                 {
-                  "choice": "Cruise Control",
+                  "choice": "Cruise control",
                   "image_url": "https://cdn1.iconfinder.com/data/icons/car-parts-and-accessories-volume-01/32/cruise-control-car-indicator-512.png"
                 }
               ]
@@ -112,39 +112,39 @@
           ]
         },
         {
-          "choice": "THERE ARE FLUIDS LEAKING FROM MY CAR",
+          "choice": "There are fluids leaking from my car",
           "sub_questions": [
             {
-              "title": "WHERE DO YOU SEE FLUID LEAKING?",
+              "title": "Where do you see fluid leaking?",
               "choices": [
                 {
-                  "choice": "INSIDE THE CAR (near the engine)",
+                  "choice": "Inside the car (near the engine)",
                   "sub_questions": [
                     {
-                      "title": "WHAT IS THE COLOR OF THE FLUID?",
+                      "title": "What is the color of the fluid?",
                       "choices": [
-                        "COLORLESS"
+                        "Colorless"
                       ]
                     }
                   ]
                 },
                 {
-                  "choice": "OUTSIDE THE CAR (under the car)",
+                  "choice": "Outside the car (under the car)",
                   "sub_questions": [
                     {
-                      "title": "WHAT IS THE COLOR OF THE FLUID?",
+                      "title": "What is the color of the fluid?",
                       "choices": [
-                        "COLORLESS",
-                        "BROWNISH (GOLDEN OR DARK BROWN)",
-                        "COLORLESS TO YELLOWISH",
-                        "LIGHT BROWN",
-                        "BLACK",
-                        "REDDISH BROWN",
-                        "BLUE",
-                        "RED",
-                        "PINK",
-                        "GREEN",
-                        "ORANGE"
+                        "Colorless",
+                        "Brownish (golden or dark brown)",
+                        "Colorless to yellowish",
+                        "Light brown",
+                        "Black",
+                        "Reddish brown",
+                        "Blue",
+                        "Red",
+                        "Pink",
+                        "Green",
+                        "Orange"
                       ]
                     }
                   ]
@@ -154,62 +154,62 @@
           ]
         },
         {
-          "choice": "MY CAR IS SHAKING/VIBRATING",
+          "choice": "My car is shaking/vibrating",
           "sub_questions": [
             {
-              "title": "DOES THIS HAPPEN WHEN YOU APPLY BRAKES?",
+              "title": "Does this happen when you apply brakes?",
               "choices": [
-                "YES, THIS ONLY HAPPENS WHEN I APPLY BRAKES",
-                "NO, THIS ONLY HAPPENS WHEN I DRIVE SLOW (5-20 MPH)",
-                "NO, THIS ONLY HAPPENS WHEN I DRIVE FAST (55-75 MPH)"
+                "Yes, this only happens when I apply brakes",
+                "No, this only happens when I drive slow (5-20 mph)",
+                "No, this only happens when I drive fast (55-75 mph)"
               ]
             }
           ]
         },
         {
-          "choice": "MY CAR'S BRAKES ARE SQUEAKING",
+          "choice": "My car's brakes are squeaking",
           "sub_questions": [
             {
-              "title": "WHEN WAS THE LAST TIME BRAKES WERE REPLACED?",
+              "title": "When was the last time brakes were replaced?",
               "choices": [
-                "WITHIN THE LAST MONTH",
-                "NOT RECENTLY/I DON’T KNOW"
+                "Within the last month",
+                "Not recently/I don’t know"
               ]
             }
           ]
         },
         {
-          "choice": "SMOKE OR STEAM IS COMING OUT OF MY CAR",
+          "choice": "Smoke or steam is coming out of my car",
           "sub_questions": [
             {
-              "title": "WHERE IS THE SMOKE COMING FROM?",
+              "title": "Where is the smoke coming from?",
               "choices": [
                 {
-                  "choice": "FRONT OF THE CAR (ENGINE)",
+                  "choice": "Front of the car (engine)",
                   "sub_questions": [
                     {
-                      "title": "WHAT IS THE COLOR OF THE SMOKE?",
+                      "title": "What is the color of the smoke?",
                       "choices": [
-                        "WHITE",
-                        "THICK WHITE",
-                        "BLUE OR BLUISH GRAY",
-                        "THICK WHITE OR GRAY",
-                        "BLACK"
+                        "White",
+                        "Thick white",
+                        "Blue or bluish gray",
+                        "Thick white or gray",
+                        "Black"
                       ]
                     }
                   ]
                 },
                 {
-                  "choice": "BACK OF THE CAR (EXHAUST)",
+                  "choice": "Back of the car (exhaust)",
                   "sub_questions": [
                     {
-                      "title": "WHAT IS THE COLOR OF THE SMOKE?",
+                      "title": "What is the color of the smoke?",
                       "choices": [
-                        "WHITE",
-                        "THICK WHITE",
-                        "BLUE OR BLUISH GRAY",
-                        "THICK WHITE OR GRAY",
-                        "BLACK"
+                        "White",
+                        "Thick white",
+                        "Blue or bluish gray",
+                        "Thick white or gray",
+                        "Black"
                       ]
                     }
                   ]
@@ -219,61 +219,61 @@
           ]
         },
         {
-          "choice": "MY CAR IS OVERHEATING",
+          "choice": "My car is overheating",
           "sub_questions": [
             {
-              "title": "WHEN DOES THIS HAPPEN?",
+              "title": "When does this happen?",
               "choices": [
-                "ALL THE TIME",
-                "ON VERY HOT DAYS",
-                "WHEN I DRIVE UPHILL"
+                "All the time",
+                "On very hot days",
+                "When I drive uphill"
               ]
             }
           ]
         },
         {
-          "choice": "MY CAR AIRCON IS NOT WORKING WELL",
+          "choice": "My car aircon is not working well",
           "sub_questions": [
             {
-              "title": "WHAT IS THE PROBLEM WITH YOUR HEATING AND AC SYSTEM?",
+              "title": "What is the problem with your heating and AC system?",
               "choices": [
-                "HEATER IS NOT WORKING AT ALL",
-                "IT’S NOT GETTING HOT ENOUGH",
-                "DEFROSTER IS NOT WORKING",
-                "AC IS NOT WORKING AT ALL",
-                "IT’S NOT GETTING COLD ENOUGH",
-                "FAN SPEEDS ARE NOT WORKING",
-                "AIR IS NOT COMING OUT OF THE RIGHT PLACE"
+                "Heater is not working at all",
+                "It’s not getting hot enough",
+                "Defroster is not working",
+                "AC is not working at all",
+                "It’s not getting cold enough",
+                "Fan speeds are not working",
+                "Air is not coming out of the right place"
               ]
             }
           ]
         },
         {
-          "choice": "MY WINDOWS ARE NOT MOVING",
+          "choice": "My windows are not moving",
           "sub_questions": [
             {
-              "title": "ARE ALL THE WINDOWS NOT MOVING?",
+              "title": "Are all the windows not moving?",
               "choices": [
                 {
-                  "choice": "YES, ALL THE WINDOWS ARE NOT MOVING",
+                  "choice": "Yes, all the windows are not moving",
                   "sub_questions": [
                     {
-                      "title": "WHEN YOU TRY TO CLOSE OR OPEN THE WINDOW, DO YOU HEAR A WHINING NOISE AS IF MOTOR WAS TRYING TO MOVE THE WINDOW?",
+                      "title": "When you try to close or open the window, do you hear a whining noise as if motor was trying to move the window?",
                       "choices": [
-                        "YES, I HEAR A NOISE",
-                        "NO, I DON'T HEAR ANY NOISE"
+                        "Yes, I hear a noise",
+                        "No, I don't hear any noise"
                       ]
                     }
                   ]
                 },
                 {
-                  "choice": "NO, ONLY SOME OF THE WINDOWS ARE NOT MOVING",
+                  "choice": "No, only some of the windows are not moving",
                   "sub_questions": [
                     {
-                      "title": "WHEN YOU TRY TO CLOSE OR OPEN THE WINDOW, DO YOU HEAR A WHINING NOISE AS IF MOTOR WAS TRYING TO MOVE THE WINDOW?",
+                      "title": "When you try to close or open the window, do you hear a whining noise as if motor was trying to move the window?",
                       "choices": [
-                        "YES, I HEAR A NOISE",
-                        "NO, I DON'T HEAR ANY NOISE"
+                        "Yes, I hear a noise",
+                        "No, I don't hear any noise"
                       ]
                     }
                   ]

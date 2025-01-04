@@ -431,6 +431,31 @@ class _DiagnosisState extends State<Diagnosis> {
                                     },
                                     activeColor: Colors.orange.shade900,
                                   ),
+                              if (_currentQuestionsStack.length == 1)
+                              const Divider(),
+                              if (_currentQuestionsStack.length == 1)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.bold),
+
+                                    labelText: 'Others:',
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey.shade600, width: 2),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedChoices[_currentQuestions[i]['title']] = value;
+                                      _isNextButtonEnabled = value.isNotEmpty;
+                                    });
+                                  },
+                                ),
+                              ),
+
                             ],
                           ),
                         )
