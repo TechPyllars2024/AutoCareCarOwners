@@ -137,198 +137,207 @@ class _CarOwnerCompleteProfileScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
         backgroundColor: Colors.grey.shade100,
-        title: const Text(
-          'Complete Your Profile',
-          style: TextStyle(fontWeight: FontWeight.w900),
-        ),
-        elevation: 0,
-        actions: const [],
-      ),
-      body: Stack(
-        children: [
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                GestureDetector(
-                  child: CircleAvatar(
-                    radius: 100,
-                    backgroundColor: Colors.white,
-                    backgroundImage: _image != null
-                        ? FileImage(_image!)
-                        : (profileImageController.text.isNotEmpty
-                            ? NetworkImage(profileImageController.text)
-                            : null),
-                    child: _image == null && profileImageController.text.isEmpty
-                        ? const Icon(Icons.person,
-                            size: 100, color: Colors.black)
-                        : null,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all(Colors.orange.shade900),
-                  ),
-                  onPressed: () => _pickImage(ImageSource.gallery),
-                  child: const Text('Add Photo',
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Enter First Name',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 5),
-                      TextField(
-                        controller: firstNameController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(
-                                color: Colors.orange
-                                    .shade900), // Border color when focused
-                          ),
-                          hintText: 'First Name',
-                          contentPadding: const EdgeInsets.all(10),
-                          errorText:
-                              firstNameErrorMessage, // Display name validation error
-                        ),
-                        inputFormatters: [
-                          CapitalizeEachWordFormatter(),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            firstNameErrorMessage = validateName(value);
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Enter Last Name',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      TextField(
-                        controller: lastNameController,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                            borderSide:
-                                BorderSide(color: Colors.orange.shade900),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(
-                                color: Colors.orange
-                                    .shade900), // Border color when focused
-                          ),
-                          hintText: 'Last Name',
-                          contentPadding: const EdgeInsets.all(10),
-                          errorText: lastNameErrorMessage,
-                        ),
-                        inputFormatters: [
-                          CapitalizeEachWordFormatter(),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            lastNameErrorMessage = validateName(value);
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Enter Phone Number',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
-                      ),
-                      TextField(
-                        controller: phoneNumberController,
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(15)),
-                            borderSide: BorderSide(color: Colors.orange),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15)),
-                            borderSide:
-                                BorderSide(color: Colors.orange.shade900),
-                          ),
-                          hintText: 'Phone Number',
-                          contentPadding: const EdgeInsets.all(10),
-                          errorText:
-                              phoneErrorMessage, // Display phone validation error
-                        ),
-                        keyboardType: TextInputType.phone,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(13),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            phoneErrorMessage = validatePhoneNumber(value);
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                WideButtons(
-                  onTap: _saveProfile,
-                  text: "Save",
-                ),
-                const SizedBox(height: 20),
-              ],
-            ),
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.grey.shade100,
+          title: const Text(
+            'Complete Your Profile',
+            style: TextStyle(fontWeight: FontWeight.w900),
           ),
-          if (_isLoading)
-            BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-                child: const Center(
-                  child: CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)
-                  ), // Show loading indicator
-                ),
+          elevation: 0,
+          actions: const [],
+        ),
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundColor: Colors.white,
+                      backgroundImage: _image != null
+                          ? FileImage(_image!)
+                          : (profileImageController.text.isNotEmpty
+                              ? NetworkImage(profileImageController.text)
+                              : null),
+                      child:
+                          _image == null && profileImageController.text.isEmpty
+                              ? const Icon(Icons.person,
+                                  size: 100, color: Colors.black)
+                              : null,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          WidgetStateProperty.all(Colors.orange.shade900),
+                    ),
+                    onPressed: () => _pickImage(ImageSource.gallery),
+                    child: const Text('Add Photo',
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold)),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Enter First Name',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 5),
+                        TextField(
+                          controller: firstNameController,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              borderSide: BorderSide(color: Colors.orange),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                              borderSide: BorderSide(
+                                  color: Colors.orange
+                                      .shade900), // Border color when focused
+                            ),
+                            hintText: 'First Name',
+                            contentPadding: const EdgeInsets.all(10),
+                            errorText:
+                                firstNameErrorMessage, // Display name validation error
+                          ),
+                          inputFormatters: [
+                            CapitalizeEachWordFormatter(),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              firstNameErrorMessage = validateName(value);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Enter Last Name',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        TextField(
+                          controller: lastNameController,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                              borderSide:
+                                  BorderSide(color: Colors.orange.shade900),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                              borderSide: BorderSide(
+                                  color: Colors.orange
+                                      .shade900), // Border color when focused
+                            ),
+                            hintText: 'Last Name',
+                            contentPadding: const EdgeInsets.all(10),
+                            errorText: lastNameErrorMessage,
+                          ),
+                          inputFormatters: [
+                            CapitalizeEachWordFormatter(),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              lastNameErrorMessage = validateName(value);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, right: 20, top: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Enter Phone Number',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
+                        TextField(
+                          controller: phoneNumberController,
+                          decoration: InputDecoration(
+                            border: const OutlineInputBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15)),
+                              borderSide: BorderSide(color: Colors.orange),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15)),
+                              borderSide:
+                                  BorderSide(color: Colors.orange.shade900),
+                            ),
+                            hintText: 'Phone Number',
+                            contentPadding: const EdgeInsets.all(10),
+                            errorText:
+                                phoneErrorMessage, // Display phone validation error
+                          ),
+                          keyboardType: TextInputType.phone,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(13),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              phoneErrorMessage = validatePhoneNumber(value);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  WideButtons(
+                    onTap: _saveProfile,
+                    text: "Save",
+                  ),
+                  const SizedBox(height: 20),
+                ],
               ),
             ),
-        ],
+            if (_isLoading)
+              BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                child: Container(
+                  color: Colors.black.withOpacity(0.5),
+                  child: const Center(
+                    child: CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Colors.orange)), // Show loading indicator
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

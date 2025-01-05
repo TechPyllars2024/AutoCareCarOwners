@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:autocare_carowners/Home%20Page%20Management/widgets/api_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
@@ -180,7 +179,7 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
                         // While loading, show a CircularProgressIndicator
                         return Center(
                           child: CircularProgressIndicator(
-                            valueColor:  AlwaysStoppedAnimation<Color>(
+                            valueColor: AlwaysStoppedAnimation<Color>(
                                 Colors.orange.shade900),
                             value: loadingProgress.expectedTotalBytes != null
                                 ? loadingProgress.cumulativeBytesLoaded /
@@ -400,7 +399,7 @@ class _GasolineShopsWidgetState extends State<GasolineShopsWidget> {
           },
         ),
         if (_isLoading)
-           Center(
+          Center(
             child: CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
             ),

@@ -8,7 +8,6 @@ class CarOwnerBookingsService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final Logger logger = Logger();
 
-  // Fetch bookings for the current car owner
   Future<List<BookingModel>> fetchBookings() async {
     try {
       User? currentUser = _auth.currentUser;
@@ -16,32 +15,42 @@ class CarOwnerBookingsService {
         throw Exception('User not logged in');
       }
 
-      // Log the current user UID
       logger.i('USERUID: ${currentUser.uid}');
 
-      // Fetch bookings where 'carOwnerUid' matches the current user's UID
       QuerySnapshot snapshot = await _firestore
           .collection('bookings')
           .where('carOwnerUid', isEqualTo: currentUser.uid)
           .get();
 
-      // Map the documents to BookingModel
-      List<BookingModel> bookings = snapshot.docs.map((doc) {
-        final data = doc.data() as Map<String, dynamic>?; // Safely cast
-        if (data == null) {
-          logger.w('Document data is null for doc ID: ${doc.id}');
-          return null;  // Handle the null case, if needed
-        }
-        return BookingModel.fromMap(data); // Safely map data
-      }).where((booking) => booking != null).toList()
-          .cast<BookingModel>(); // Ensure non-null list
+      List<BookingModel> bookings = snapshot.docs
+          .map((doc) {
+            final data = doc.data() as Map<String, dynamic>?; // Safely cast
+            if (data == null) {
+              logger.w('Document data is null for doc ID: ${doc.id}');
+              return null;
+            }
+            return BookingModel.fromMap(data);
+          })
+          .where((booking) => booking != null)
+          .toList()
+          .cast<BookingModel>();
 
-      // Log the fetched bookings
-      logger.i('Fetched ${bookings.length} booking requests for car owner: ${currentUser.uid}');
+      logger.i(
+          'Fetched ${bookings.length} booking requests for car owner: ${currentUser.uid}');
       return bookings;
     } catch (e) {
-      // Log any error encountered during the process
       logger.e('Error fetching bookings: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteBooking(String bookingId) async {
+    try {
+      final bookingRef = _firestore.collection('bookings').doc(bookingId);
+      await bookingRef.delete();
+      logger.i('Successfully deleted booking with ID: $bookingId');
+    } catch (e) {
+      logger.e('Error deleting booking: $e');
       rethrow;
     }
   }
