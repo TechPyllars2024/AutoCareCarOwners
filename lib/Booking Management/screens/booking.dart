@@ -8,7 +8,6 @@ import 'package:flutter_pannable_rating_bar/flutter_pannable_rating_bar.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/checklist.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/time_selection.dart';
 import 'package:autocare_carowners/Booking%20Management/widgets/date_selection.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
@@ -47,8 +46,6 @@ class _BookingState extends State<Booking> {
   late final int standardBookingsPerHour;
   Map<String, int> availableSlotsPerHour = {};
   Map<String, int> remainingSlots = {};
-  late final double latitude;
-  late final double longitude;
 
   @override
   void initState() {
@@ -66,7 +63,6 @@ class _BookingState extends State<Booking> {
     _fetchDaysOfTheWeek();
     _fetchNumberOfBookingsPerHour();
     fetchBookingsForDate(selectedDate);
-    getCurrentLocation();
   }
 
   Future<void> fetchTimeData() async {
@@ -165,8 +161,8 @@ class _BookingState extends State<Booking> {
   Future<Map<String, dynamic>> fetchDefaultCarDetails() async {
     try {
       // Fetch default car details instead of all car details
-      Map<String, dynamic> fetchedCarDetails = await BookingService()
-          .fetchDefaultCarDetails(user!.uid);
+      Map<String, dynamic> fetchedCarDetails =
+          await BookingService().fetchDefaultCarDetails(user!.uid);
 
       if (fetchedCarDetails.isEmpty) {
         logger.i('No default car found for this user.');
@@ -258,46 +254,6 @@ class _BookingState extends State<Booking> {
     setState(() {
       availableSlotsPerHour = fetchedBookings;
     });
-  }
-
-  Future<Position?> _getUserCurrentLocation() async {
-    try {
-      await Geolocator.requestPermission();
-      return await Geolocator.getCurrentPosition();
-    } catch (e) {
-      logger.i("Error getting location: $e");
-      return null;
-    }
-  }
-
-  Future<Map<String, double>?> getCurrentLocation() async {
-    try {
-      // Request location permission if not already granted
-      await Geolocator.requestPermission();
-
-      // Fetch the current location
-      Position? position = await _getUserCurrentLocation();
-
-      if (position != null) {
-        // Return the latitude and longitude as a map
-
-        setState(() {
-          latitude = position.latitude;
-          longitude = position.longitude;
-        });
-        return {
-          'latitude': position.latitude,
-          'longitude': position.longitude,
-        };
-      } else {
-        // If position is null, return null
-        return null;
-      }
-    } catch (e) {
-      // Log any error that occurs while fetching the location
-      logger.i("Error getting location: $e");
-      return null;
-    }
   }
 
   void navigateToCarDetails() async {
@@ -696,8 +652,7 @@ class _BookingState extends State<Booking> {
         children: [
           Row(
             children: [
-              Icon(icon,
-                  color: Colors.orange.shade900),
+              Icon(icon, color: Colors.orange.shade900),
               const SizedBox(width: 4), // Space between icon and label
               Text(
                 label,
@@ -738,7 +693,7 @@ class _BookingState extends State<Booking> {
 
           // Collecting information from the fetched car details
           String brand = carDetails['brand'] ?? '';
-          String  model = carDetails['model'] ?? '';
+          String model = carDetails['model'] ?? '';
           String year = carDetails['year']?.toString() ?? '';
           String fuelType = carDetails['fuelType'] ?? '';
           String color = carDetails['color'] ?? '';
@@ -831,8 +786,6 @@ class _BookingState extends State<Booking> {
                   totalPrice: totalPrice,
                   shopAddress: shopAddress,
                   shopName: shopName,
-                  latitude: latitude,
-                  longitude: longitude,
                 );
 
                 // Update the service provider's remainingSlots in Firestore
