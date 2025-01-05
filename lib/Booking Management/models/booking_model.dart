@@ -19,8 +19,6 @@ class BookingModel {
   String? shopName;
   String? shopAddress;
   bool isFeedbackSubmitted;
-  double? latitude;
-  double? longitude;
 
   BookingModel({
     required this.carOwnerUid,
@@ -43,8 +41,6 @@ class BookingModel {
     this.shopName,
     this.shopAddress,
     required this.isFeedbackSubmitted,
-    required this.latitude,
-    required this.longitude
   });
 
   // Converts a BookingModel instance to a Map for serialization
@@ -70,8 +66,6 @@ class BookingModel {
       'shopName': shopName,
       'shopAddress': shopAddress,
       'isFeedbackSubmitted': isFeedbackSubmitted,
-      'latitude': latitude,
-      'longitude': longitude
     };
   }
 
@@ -100,8 +94,6 @@ class BookingModel {
       shopAddress: map['shopAddress'] ?? '',
       shopName: map['shopName'] ?? '',
       isFeedbackSubmitted: map['isFeedbackSubmitted'] ?? false,
-      latitude: map['latitude'] ?? 0.0,
-      longitude: map['longitude'] ?? 0.0
     );
   }
 }
