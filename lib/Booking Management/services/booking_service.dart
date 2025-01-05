@@ -195,8 +195,7 @@ class BookingService {
       String serviceProviderUid) async {
     try {
       final doc = await firestore
-          .collection(
-              'automotiveShops_profile')
+          .collection('automotiveShops_profile')
           .doc(serviceProviderUid)
           .get();
 
@@ -228,8 +227,7 @@ class BookingService {
       String serviceProviderUid) async {
     try {
       final doc = await firestore
-          .collection(
-              'automotiveShops_profile')
+          .collection('automotiveShops_profile')
           .doc(serviceProviderUid)
           .get();
 
@@ -275,8 +273,6 @@ class BookingService {
     required double totalPrice,
     required String shopName,
     required String shopAddress,
-    required double latitude,
-    required double longitude,
   }) async {
     try {
       // Create a booking ID using Firestore's document ID generation
@@ -304,8 +300,6 @@ class BookingService {
         shopName: shopName,
         shopAddress: shopAddress,
         isFeedbackSubmitted: false,
-        latitude: latitude,
-        longitude: longitude,
       );
 
       // Store the booking in Firestore
@@ -327,8 +321,7 @@ class BookingService {
       String serviceProviderUid) async {
     try {
       final doc = await firestore
-          .collection(
-              'automotiveShops_profile')
+          .collection('automotiveShops_profile')
           .doc(serviceProviderUid)
           .get();
 
@@ -365,8 +358,7 @@ class BookingService {
 
     // Cast the data to Map<String, dynamic> before passing to fromMap
     return bookingSnapshot.docs.map((doc) {
-      final data = doc.data()
-          as Map<String, dynamic>?;
+      final data = doc.data() as Map<String, dynamic>?;
       if (data != null) {
         return BookingModel.fromMap(data);
       } else {
