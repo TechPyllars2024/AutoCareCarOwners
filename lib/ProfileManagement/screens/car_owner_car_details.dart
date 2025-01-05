@@ -398,6 +398,8 @@ class _CarDetailsState extends State<CarDetails> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Card(
+
+
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
                             color: car.isDefault
