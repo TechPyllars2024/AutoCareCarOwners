@@ -1,6 +1,6 @@
 import 'dart:async';
-
 import 'package:autocare_carowners/ProfileManagement/services/car_owner_bookings_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import '../../Booking Management/models/booking_model.dart';
@@ -49,9 +49,63 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
     }
   }
 
+  Future<void> cancelBooking(
+      String bookingId, String shopId, String date, String time) async {
+    try {
+      CarOwnerBookingsService bookingsService = CarOwnerBookingsService();
+
+      await bookingsService.deleteBooking(bookingId);
+
+      DocumentReference shopRef = FirebaseFirestore.instance
+          .collection('automotiveShops_profile')
+          .doc(shopId);
+
+      DocumentSnapshot snapshot = await shopRef.get();
+
+      if (snapshot.exists) {
+        Map<String, dynamic> shopData = snapshot.data() as Map<String, dynamic>;
+        Map<String, dynamic> remainingSlots = shopData['remainingSlots'] ?? {};
+
+        if (remainingSlots.containsKey(date) &&
+            remainingSlots[date] is Map<String, dynamic>) {
+          Map<String, dynamic> timeSlots = remainingSlots[date];
+
+          if (timeSlots.containsKey(time)) {
+            int currentSlots = timeSlots[time] as int;
+            timeSlots[time] = currentSlots + 1; // Increment remaining slots
+
+            await shopRef.update({
+              'remainingSlots': remainingSlots,
+            });
+          }
+        }
+
+        setState(() {
+          bookings.removeWhere((b) => b.bookingId == bookingId);
+        });
+
+        // Show a confirmation message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Booking Cancelled Successfully!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      // Handle errors, if any
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Failed to cancel booking'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   void dispose() {
-    _timer?.cancel(); // Cancel the timer when the widget is disposed
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -96,15 +150,13 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Icon(
-                              Icons
-                                  .php, // Use an appropriate icon (monetization_on is a money icon)
-                              color: Colors.blue, // Set the color of the icon
-                              size: 20, // Set the size of the icon
+                              Icons.php,
+                              color: Colors.blue,
+                              size: 20,
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              booking.totalPrice
-                                  .toString(), // Convert double to String
+                              booking.totalPrice.toString(),
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
@@ -117,10 +169,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            const SizedBox(
-                                width: 5), // Space between the icon and text
+                            const SizedBox(width: 5),
                             Text(
-                              booking.shopName!, // Display the full name
+                              booking.shopName!,
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
@@ -133,10 +184,9 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                               color: Colors.blue,
                               size: 20,
                             ),
-                            const SizedBox(
-                                width: 5), // Space between the icon and text
+                            const SizedBox(width: 5),
                             Text(
-                              booking.shopAddress!, // Display the full name
+                              booking.shopAddress!,
                               style: const TextStyle(fontSize: 14),
                             ),
                           ],
@@ -160,16 +210,14 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Icon(
-                              Icons
-                                  .local_gas_station, // Use an appropriate icon for fuel type
-                              color: Colors.blue, // Set the color of the icon
-                              size: 20, // Set the size of the icon
+                              Icons.local_gas_station,
+                              color: Colors.blue,
+                              size: 20,
                             ),
                             const SizedBox(width: 5),
                             Text(
                               booking.fuelType,
-                              style: const TextStyle(
-                                  fontSize: 14), // Set a suitable font size
+                              style: const TextStyle(fontSize: 14),
                             ),
                           ],
                         ),
@@ -177,17 +225,14 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             const Icon(
-                              Icons
-                                  .settings, // Use an appropriate icon for transmission
-                              color: Colors.blue, // Set the color of the icon
-                              size: 20, // Set the size of the icon
+                              Icons.settings,
+                              color: Colors.blue,
+                              size: 20,
                             ),
                             const SizedBox(width: 5),
                             Text(
-                              booking
-                                  .transmission, // Display the transmission type
-                              style: const TextStyle(
-                                  fontSize: 14), // Set a suitable font size
+                              booking.transmission,
+                              style: const TextStyle(fontSize: 14),
                             ),
                           ],
                         ),
@@ -197,8 +242,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                           text: TextSpan(
                             children: [
                               const TextSpan(
-                                text:
-                                    'Status: ', // Keep 'Status:' in default color
+                                text: 'Status: ',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -206,12 +250,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                 ),
                               ),
                               TextSpan(
-                                text: booking.status
-                                    .toUpperCase(), // Capitalized status
+                                text: booking.status.toUpperCase(),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.orange, // Set color to orange
+                                  color: Colors.orange,
                                 ),
                               ),
                             ],
@@ -239,32 +282,27 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
           'My Bookings',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.black, // Set a contrasting color for visibility
+            color: Colors.black,
           ),
         ),
-        elevation: 1, // Add a slight elevation for a material design effect
+        elevation: 1,
       ),
       body: isLoading
           ? const Center(
               child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)
-              ),
-            ) // Display loader when fetching data
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.orange)),
+            )
           : bookings.isEmpty
               ? const Center(
                   child: Text(
                     'No bookings available',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey), // Style for the empty state
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                 )
               : SingleChildScrollView(
-                  padding: const EdgeInsets.all(
-                      16.0), // Add padding for overall layout
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start, // Align text to start
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _buildOwnerBookingSection(
                         status: 'Pending',
@@ -274,7 +312,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                         emptyMessage: 'No pending bookings',
                         color: Colors.orange.shade200,
                       ),
-                      const SizedBox(height: 16), // Space between sections
+                      const SizedBox(height: 16),
                       _buildOwnerBookingSection(
                         status: 'Accepted',
                         bookings: bookings
@@ -283,7 +321,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                         emptyMessage: 'No accepted bookings',
                         color: Colors.blue.shade200,
                       ),
-                      const SizedBox(height: 16), // Space between sections
+                      const SizedBox(height: 16),
                       _buildOwnerBookingSection(
                         status: 'Done',
                         bookings: bookings
@@ -292,7 +330,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                         emptyMessage: 'No completed bookings',
                         color: Colors.green.shade200,
                       ),
-                      const SizedBox(height: 16), // Space between sections
+                      const SizedBox(height: 16),
                       _buildOwnerBookingSection(
                         status: 'Declined',
                         bookings: bookings
@@ -337,7 +375,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
             ),
           ),
 
-          const SizedBox(height: 12.0), // Spacing between header and content
+          const SizedBox(height: 12.0),
 
           // If there are no bookings, display a message
           bookings.isEmpty
@@ -353,8 +391,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                 )
               : ListView.builder(
                   shrinkWrap: true,
-                  physics:
-                      const NeverScrollableScrollPhysics(), // Disable scrolling since ListView is nested
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: bookings.length,
                   itemBuilder: (context, index) {
                     BookingModel booking = bookings[index];
@@ -377,14 +414,11 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Icon(
-                                  Icons
-                                      .calendar_today, // Calendar icon for booking date
+                                  Icons.calendar_today,
                                   color: Colors.blue,
                                   size: 20,
                                 ),
-                                const SizedBox(
-                                    width:
-                                        5), // Space between the icon and text
+                                const SizedBox(width: 5),
                                 Text(
                                   '${booking.bookingDate}, ${booking.bookingTime}',
                                   style: const TextStyle(fontSize: 14),
@@ -395,16 +429,13 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 const Icon(
-                                  Icons.php, // Money icon for total price
+                                  Icons.php,
                                   color: Colors.blue,
                                   size: 20,
                                 ),
-                                const SizedBox(
-                                    width:
-                                        5), // Space between the icon and text
+                                const SizedBox(width: 5),
                                 Text(
-                                  booking.totalPrice.toStringAsFixed(
-                                      2), // Show price with currency
+                                  booking.totalPrice.toStringAsFixed(2),
                                   style: const TextStyle(fontSize: 14),
                                 ),
                               ],
@@ -417,9 +448,7 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                   color: Colors.blue,
                                   size: 20,
                                 ),
-                                const SizedBox(
-                                    width:
-                                        5), // Space between the icon and text
+                                const SizedBox(width: 5),
                                 Text(
                                   booking.shopName!, // Display the full name
                                   style: const TextStyle(fontSize: 14),
@@ -448,18 +477,14 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                 ],
                               ),
                             ),
-                            const SizedBox(
-                                height: 8.0), // Spacing before the button
-                            // Align the button to the right side
+                            const SizedBox(height: 8.0),
                             if (booking.status == 'done' &&
-                                booking.isFeedbackSubmitted ==
-                                    false) // Check if status is 'done' and feedback not submitted
+                                booking.isFeedbackSubmitted == false)
                               Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     ElevatedButton(
                                       onPressed: () async {
-                                        // Navigate to Feedback Form Screen and await feedback submission
                                         await Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -489,6 +514,89 @@ class _MyBookingsScreenState extends State<MyBookingsScreen> {
                                       ),
                                     ),
                                   ]),
+                            if (booking.status == 'pending')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      // Show confirmation dialog
+                                      bool? confirm = await showDialog<bool>(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: const Text(
+                                                'Confirm Cancellation'),
+                                            content: const Text(
+                                              'Are you sure you want to cancel this booking?',
+                                            ),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(false); // Cancel
+                                                },
+                                                child: const Text(
+                                                  'No',
+                                                  style: TextStyle(
+                                                      color: Colors.black),
+                                                ),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context)
+                                                      .pop(true); // Confirm
+                                                },
+                                                child: const Text(
+                                                  'Yes',
+                                                  style: TextStyle(
+                                                      color: Colors.orange),
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      );
+
+                                      if (confirm == true) {
+                                        await cancelBooking(
+                                          booking.bookingId,
+                                          booking.serviceProviderUid,
+                                          booking.bookingDate,
+                                          booking.bookingTime,
+                                        );
+                                        setState(() {
+                                          bookings.removeWhere((b) =>
+                                              b.bookingId == booking.bookingId);
+                                        });
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                                'Booking Cancelled Successfully!'),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 5.0, horizontal: 8.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                      ),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    child: const Text(
+                                      'Cancel Booking',
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                ],
+                              ),
                           ],
                         ),
                         onTap: () {
