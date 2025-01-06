@@ -12,7 +12,7 @@ class ChatService {
   };
 
   Future<String?> request(String prompt, {
-    int maxOutputTokens = 500,
+    int maxOutputTokens = 750,
     double temperature = 0.7,
   }) async {
     try {
