@@ -439,15 +439,18 @@ class _DiagnosisState extends State<Diagnosis> {
                                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                                 child: TextField(
                                   decoration: InputDecoration(
-                                    labelStyle: const TextStyle(color: Colors.black, ),
-
-                                    labelText: 'Others:',
+                                    labelStyle: const TextStyle(color: Colors.black),
+                                    labelText: 'If Other, Please Specify Below:',
                                     focusedBorder: OutlineInputBorder(
                                       borderSide: BorderSide(color: Colors.grey.shade600, width: 2),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     border: const OutlineInputBorder(),
+                                    counterText: '',
                                   ),
+                                  maxLength: 200,
+                                  maxLines: null,
+                                  keyboardType: TextInputType.multiline,
                                   onChanged: (value) {
                                     setState(() {
                                       selectedChoices[_currentQuestions[i]['title']] = value;
