@@ -167,8 +167,8 @@
               "title": "Does this happen when you apply brakes?",
               "choices": [
                 "Yes, this only happens when I apply brakes",
-                "No, this only happens when I drive slow (5-20 mph)",
-                "No, this only happens when I drive fast (55-75 mph)"
+                "No, this only happens when I drive slow (5-20 km/h)",
+                "No, this only happens when I drive fast (55-75 km/h)"
               ]
             }
           ]
@@ -200,7 +200,7 @@
                         "White",
                         "Thick white",
                         "Blue or bluish gray",
-                        "Thick white or gray",
+                        "Gray",
                         "Black"
                       ]
                     }
@@ -215,7 +215,7 @@
                         "White",
                         "Thick white",
                         "Blue or bluish gray",
-                        "Thick white or gray",
+                        "Gray",
                         "Black"
                       ]
                     }
