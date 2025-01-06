@@ -16,8 +16,7 @@ class OpenAIEntryScreen extends StatefulWidget {
 
 class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
   String? responseCauses;
-  String? responseRecommendations;
-  String? responseParts;
+
   late List<Map<String, dynamic>>? serviceDetails;
   late List<String>? serviceNames = [];
   late List<String>? serviceDescriptions = [];
@@ -32,8 +31,6 @@ class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
     loadServiceNames().then((_) {
       Future.wait([
         analyzeDiagnosisCauses(),
-        analyzeDiagnosisParts(),
-        analyzeDiagnosisRecommendations(),
         analyzePossibleServices(),
       ]).whenComplete(() {
         setState(() {
@@ -94,10 +91,11 @@ Based on the Diagnosis Summary and the List of Available Services (considering s
 
 Diagnostic Input:
 - Diagnosis Summary: $summary
+- Possible Causes: $responseCauses
 - Available Services: $fetchedServiceDetails
 
 **Response Requirements:**
-- List up to 10 applicable services based on the diagnosis.
+- List up to 10 applicable services based on the diagnosis of possible causes.
 - Clearly state: "No applicable services available." if no services match the diagnosis.
 - Use only the provided services—do not create or include non-existent services.
 - Consider both the service names and their descriptions carefully.
@@ -116,79 +114,25 @@ Analyze the following diagnosis summary and provided car details to identify the
 
 Diagnostic Input:  
 - Summary: $summary  
-- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
+- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "${e.key}: ${e.value}").join('\n')}" : ""}  
 
-**Response Requirements:**
+Response Requirements:
 - Focus on causes that align directly with the car's make, model, year, fuel type, and transmission type.
 - Highlight specific patterns or issues commonly associated with the vehicle's details.
 - Keep the reasons concise yet informative, and avoid generalizations.
-- limit it to 40 words per cause.
-- do not put ** in the response
-- Remember that we are in the Philippines
-- list all the possible causes up to 15
+- Limit it to 40 words per cause.
+- Understand other language nuances and provide a culturally appropriate response.
+- Do not use special characters or formatting like **, --, or numbering in your response.
+- Remember that the car is used in the Philippines.
+- Prioritize the most likely causes based on the car's details and rank it from 1 onwards.
+- List all the possible causes up to 15 in plain text.
+- Be mindful of the fuelType and transmissionType when providing the causes.
+- If there is no possible cause and the $summary is random or you cannot understand, state: "No possible causes found."
 
-**Format Your Response as Follows:**
-1. [Explain why this is a likely cause based on the car's details]
-2. [Explain why this is a likely cause based on the car's details]
-3. [Provide your answer in a simple list, but without any numbers or bullets.]
-4. [Do not use any numbering or bullets in your response. Write everything in plain text or as a paragraph.]
-5. [Don't use special characters like ** or -- in your response.]
-
-
-
-
-
-  ''';
-  }
-
-  String formattedPromptRecommendations(String summary,
-      {Map<String, dynamic>? carDetails}) {
-    return '''
-You are an expert car mechanic at an auto repair shop. A customer has brought in their car for a diagnostic check. 
-Analyze the following diagnosis summary and provided car details to deliver tailored recommendations that directly address the likely issues. Ensure your suggestions are precise, actionable, and relevant to the specific vehicle.
-
-Diagnostic Input:  
-- Summary: $summary  
-- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
-
-**Response Requirements:**
-- Provide recommendations that address the most likely cause(s) of the problem, with a focus on the car’s specific make, model, year, fuel type, and transmission type.
-- Include actionable steps (e.g., "Inspect the air filter for blockages and clean/replace as needed").
-- If applicable, consider preventive maintenance tips to avoid future issues.
-- Avoid generic recommendations; tailor each suggestion to the car's unique details (e.g., "This model is prone to timing belt wear after 80,000 miles; check for wear and tear").
-- limit it to 30 words per recommendation.
-- do not put ** in the response
-- Remember that we are in the Philippines
-- your responses should have a 5 word title and ends with a colon (:)
-
-**Format Your Response as Follows:**
-1. [Actionable suggestion based on diagnosis summary and car details.]
-2. [Actionable suggestion or preventive advice.]
-  ''';
-  }
-
-  String formattedPromptParts(String summary,
-      {Map<String, dynamic>? carDetails}) {
-    return '''
-You are an expert car mechanic at an auto repair shop. A customer has brought in their car for a diagnostic check. 
-Analyze the following diagnosis summary and consider the provided car details. Identify any parts that need to be replaced, ensuring that your recommendations are precise, necessary, and relevant to the specific vehicle.
-
-Diagnostic Input:  
-- Summary: $summary  
-- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}
-
-**Response Requirements:**
-- Only recommend parts that are essential to resolving the diagnosed issue.
-- Explain why each part needs replacement based on the diagnosis summary and car details (e.g., "This model often experiences fuel pump wear after 100,000 miles; replacement is necessary to restore proper fuel pressure").
-- Consider the car's make, model, year, mileage, and any unique features (e.g., hybrid systems, turbochargers) when identifying parts.
-- Avoid suggesting unnecessary replacements.
-- do not put ** in the response
-- Remember that we are in the Philippines
-
-**Provide your response in the following format:**
-
-1. [Name of the part that requires replacement.]:
-   - [Why the part needs replacement and how it relates to the diagnosis.Limit it to 20 words per part.]
+Format Your Response as Follows:
+1. Explain why this is a likely cause based on the car's details and give a recommendation on how to fix it.
+2. Provide your answer in a simple list without any numbering or bullets.
+3. STRICTLY Do not use special characters like **, --, or any formatting other than plain text.
   ''';
   }
 
@@ -228,43 +172,6 @@ Diagnostic Input:
     }
   }
 
-  Future<void> analyzeDiagnosisRecommendations() async {
-    String prompt = formattedPromptRecommendations(
-      widget.summary,
-      carDetails: widget.carDetails,
-    );
-    try {
-      String? aiResponse = await ChatService().request(prompt);
-      setState(() {
-        responseRecommendations =
-            aiResponse ?? "No response received. Please try again.";
-      });
-    } catch (error) {
-      setState(() {
-        responseRecommendations =
-            "Failed to fetch AI analysis. Please check your connection and try again.";
-      });
-    }
-  }
-
-  Future<void> analyzeDiagnosisParts() async {
-    String prompt = formattedPromptParts(
-      widget.summary,
-      carDetails: widget.carDetails,
-    );
-    try {
-      String? aiResponse = await ChatService().request(prompt);
-      setState(() {
-        responseParts = aiResponse ?? "No response received. Please try again.";
-      });
-    } catch (error) {
-      setState(() {
-        responseParts =
-            "Failed to fetch AI analysis. Please check your connection and try again.";
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -278,35 +185,30 @@ Diagnostic Input:
           backgroundColor: Colors.orange.shade900,
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        body:
-        DecoratedBox(
+        body: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               colors: [Colors.orange.shade900, Colors.orange.shade600],
-              // Customize colors as needed
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
           ),
-          child:
-          Center(
+          child: Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  responseCauses == null ||
-                          responseRecommendations == null ||
-                          responseParts == null
+                  responseCauses == null
                       ? const Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircularProgressIndicator(
-                                valueColor: AlwaysStoppedAnimation<Color>(
-                                    Colors.white),
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
                               ),
                               SizedBox(height: 10),
                               Text(
@@ -321,19 +223,13 @@ Diagnostic Input:
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildSectionHeader("Possible Causes", color: Colors.white),
+                            _buildSectionHeader("Possible Causes",
+                                color: Colors.white),
                             const SizedBox(height: 5),
                             _buildCauseCards(responseCauses!),
-                            // const SizedBox(height: 30),
-                            // _buildSectionHeader("Recommendations"),
-                            // const SizedBox(height: 5),
-                            // _buildContentCard(responseRecommendations!),
-                            // const SizedBox(height: 30),
-                            // _buildSectionHeader("Replacement of Parts"),
-                            // const SizedBox(height: 5),
-                            // _buildContentCard(responseParts!),
                             const SizedBox(height: 30),
-                            _buildSectionHeader("Suggested Available Services", color: Colors.white),
+                            _buildSectionHeader("Suggested Available Services",
+                                color: Colors.white),
                             const SizedBox(height: 5),
                             _buildContentCard(responseSuggestedServices),
                             const SizedBox(height: 10),
@@ -342,7 +238,7 @@ Diagnostic Input:
                                       "No applicable services available."
                                   ? Padding(
                                       padding: const EdgeInsets.only(top: 20.0),
-                                      child: Container(
+                                      child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.9,
@@ -373,7 +269,7 @@ Diagnostic Input:
                                         ),
                                       ),
                                     )
-                                  : Container(), // Or any other widget you might want to display when there are no applicable services.
+                                  : Container(),
                             ),
                           ],
                         ),
@@ -394,7 +290,7 @@ Diagnostic Input:
         color: color,
         shadows: [
           Shadow(
-            offset: Offset(1.0, 1.0), // Position of the shadow
+            offset: const Offset(1.0, 1.0), // Position of the shadow
             blurRadius: 4.0, // Blur effect for the shadow
             color: Colors.grey.shade900, // Shadow color
           ),
@@ -402,7 +298,6 @@ Diagnostic Input:
       ),
     );
   }
-
 
 // Content Card
   Widget _buildContentCard(String content) {
@@ -431,19 +326,16 @@ Diagnostic Input:
   }
 
   Widget _buildCauseCards(String content) {
-    List<String> causes = content.split('\n');
+    List<String> causes = content.replaceAll('**', '').split('\n');
     return Column(
       children: causes.map((cause) {
         // Split the cause into sentences
         List<String> sentences = cause.split(':');
-
         // Check if the cause has more than one sentence
         String firstSentence = sentences.isNotEmpty ? sentences[0] : cause;
         String remainingContent =
             sentences.length > 1 ? sentences.sublist(1).join('.') : '';
-
-        bool isExpanded = false; // Track the expanded state for each cause
-
+        bool isExpanded = false;
         return StatefulBuilder(
           builder: (context, setState) {
             return GestureDetector(
@@ -473,15 +365,38 @@ Diagnostic Input:
                     children: [
                       Row(
                         children: [
-                          Text(
-                            firstSentence.trim(),
-                            style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.justify,
+                          GestureDetector(
+                            onTap: () {
+                              // Handle click event to show the full text
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(firstSentence.trim(), style: const TextStyle(fontSize: 16),),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Close', style: TextStyle(color: Colors.orange)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              firstSentence.length > 35
+                                  ? '${firstSentence.substring(0, 35)}...'
+                                  : firstSentence.trim(),
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.justify,
+                            ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Icon(
                             isExpanded
                                 ? Icons.keyboard_arrow_up
