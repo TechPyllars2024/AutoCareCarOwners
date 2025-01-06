@@ -301,7 +301,7 @@ class _CarDetailsState extends State<CarDetails> {
                     DropdownButtonFormField<String>(
                       value: fuelType,
                       decoration: const InputDecoration(labelText: 'Fuel Type'),
-                      items: ['Diesel', 'Gasoline']
+                      items: ['Diesel', 'Gasoline', 'Electric', 'Hybrid']
                           .map((fuel) => DropdownMenuItem(
                                 value: fuel,
                                 child: Text(fuel),
