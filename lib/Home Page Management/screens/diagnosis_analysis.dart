@@ -16,8 +16,7 @@ class OpenAIEntryScreen extends StatefulWidget {
 
 class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
   String? responseCauses;
-  String? responseRecommendations;
-  String? responseParts;
+
   late List<Map<String, dynamic>>? serviceDetails;
   late List<String>? serviceNames = [];
   late List<String>? serviceDescriptions = [];
@@ -32,8 +31,6 @@ class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
     loadServiceNames().then((_) {
       Future.wait([
         analyzeDiagnosisCauses(),
-        analyzeDiagnosisParts(),
-        analyzeDiagnosisRecommendations(),
         analyzePossibleServices(),
       ]).whenComplete(() {
         setState(() {
@@ -94,10 +91,11 @@ Based on the Diagnosis Summary and the List of Available Services (considering s
 
 Diagnostic Input:
 - Diagnosis Summary: $summary
+- Possible Causes: $responseCauses
 - Available Services: $fetchedServiceDetails
 
 **Response Requirements:**
-- List up to 10 applicable services based on the diagnosis.
+- List up to 10 applicable services based on the diagnosis of possible causes.
 - Clearly state: "No applicable services available." if no services match the diagnosis.
 - Use only the provided services—do not create or include non-existent services.
 - Consider both the service names and their descriptions carefully.
@@ -116,70 +114,25 @@ Analyze the following diagnosis summary and provided car details to identify the
 
 Diagnostic Input:  
 - Summary: $summary  
-- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
+- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "${e.key}: ${e.value}").join('\n')}" : ""}  
 
-**Response Requirements:**
+Response Requirements:
 - Focus on causes that align directly with the car's make, model, year, fuel type, and transmission type.
 - Highlight specific patterns or issues commonly associated with the vehicle's details.
 - Keep the reasons concise yet informative, and avoid generalizations.
-- limit it to 40 words per cause.
-- do not put ** in the response
-- Remember that we are in the Philippines
+- Limit it to 40 words per cause.
+- Understand other language nuances and provide a culturally appropriate response.
+- Do not use special characters or formatting like **, --, or numbering in your response.
+- Remember that the car is used in the Philippines.
+- Prioritize the most likely causes based on the car's details and rank it from 1 onwards.
+- List all the possible causes up to 15 in plain text.
+- Be mindful of the fuelType and transmissionType when providing the causes.
+- If there is no possible cause and the $summary is random or you cannot understand, state: "No possible causes found."
 
-**Format Your Response as Follows:**
-1. [Explain why this is a likely cause based on the car's details]
-2. [Explain why this is a likely cause based on the car's details]
-3. Additional Cause: [Include only if relevant based on the summary and car details]
-  ''';
-  }
-
-  String formattedPromptRecommendations(String summary,
-      {Map<String, dynamic>? carDetails}) {
-    return '''
-You are an expert car mechanic at an auto repair shop. A customer has brought in their car for a diagnostic check. 
-Analyze the following diagnosis summary and provided car details to deliver tailored recommendations that directly address the likely issues. Ensure your suggestions are precise, actionable, and relevant to the specific vehicle.
-
-Diagnostic Input:  
-- Summary: $summary  
-- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}  
-
-**Response Requirements:**
-- Provide recommendations that address the most likely cause(s) of the problem, with a focus on the car’s specific make, model, year, fuel type, and transmission type.
-- Include actionable steps (e.g., "Inspect the air filter for blockages and clean/replace as needed").
-- If applicable, consider preventive maintenance tips to avoid future issues.
-- Avoid generic recommendations; tailor each suggestion to the car's unique details (e.g., "This model is prone to timing belt wear after 80,000 miles; check for wear and tear").
-- limit it to 30 words per recommendation.
-- do not put ** in the response
-- Remember that we are in the Philippines
-
-**Format Your Response as Follows:**
-1. [Actionable suggestion based on diagnosis summary and car details.]
-2. [Actionable suggestion or preventive advice.]
-  ''';
-  }
-
-  String formattedPromptParts(String summary,
-      {Map<String, dynamic>? carDetails}) {
-    return '''
-You are an expert car mechanic at an auto repair shop. A customer has brought in their car for a diagnostic check. 
-Analyze the following diagnosis summary and consider the provided car details. Identify any parts that need to be replaced, ensuring that your recommendations are precise, necessary, and relevant to the specific vehicle.
-
-Diagnostic Input:  
-- Summary: $summary  
-- Car Details: ${carDetails != null ? "Car Details:\n${carDetails.entries.map((e) => "- ${e.key}: ${e.value}").join('\n')}" : ""}
-
-**Response Requirements:**
-- Only recommend parts that are essential to resolving the diagnosed issue.
-- Explain why each part needs replacement based on the diagnosis summary and car details (e.g., "This model often experiences fuel pump wear after 100,000 miles; replacement is necessary to restore proper fuel pressure").
-- Consider the car's make, model, year, mileage, and any unique features (e.g., hybrid systems, turbochargers) when identifying parts.
-- Avoid suggesting unnecessary replacements.
-- do not put ** in the response
-- Remember that we are in the Philippines
-
-**Provide your response in the following format:**
-
-1. [Name of the part that requires replacement.]:
-   - [Why the part needs replacement and how it relates to the diagnosis.Limit it to 20 words per part.]
+Format Your Response as Follows:
+1. Explain why this is a likely cause based on the car's details and give a recommendation on how to fix it.
+2. Provide your answer in a simple list without any numbering or bullets.
+3. STRICTLY Do not use special characters like **, --, or any formatting other than plain text.
   ''';
   }
 
@@ -219,178 +172,256 @@ Diagnostic Input:
     }
   }
 
-  Future<void> analyzeDiagnosisRecommendations() async {
-    String prompt = formattedPromptRecommendations(
-      widget.summary,
-      carDetails: widget.carDetails,
-    );
-    try {
-      String? aiResponse = await ChatService().request(prompt);
-      setState(() {
-        responseRecommendations =
-            aiResponse ?? "No response received. Please try again.";
-      });
-    } catch (error) {
-      setState(() {
-        responseRecommendations =
-            "Failed to fetch AI analysis. Please check your connection and try again.";
-      });
-    }
-  }
-
-  Future<void> analyzeDiagnosisParts() async {
-    String prompt = formattedPromptParts(
-      widget.summary,
-      carDetails: widget.carDetails,
-    );
-    try {
-      String? aiResponse = await ChatService().request(prompt);
-      setState(() {
-        responseParts = aiResponse ?? "No response received. Please try again.";
-      });
-    } catch (error) {
-      setState(() {
-        responseParts =
-            "Failed to fetch AI analysis. Please check your connection and try again.";
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: const Text(
-          "Diagnosis Analysis",
-          style: TextStyle(fontWeight: FontWeight.w900, color: Colors.black, fontSize: 20),
+        //backgroundColor: Colors.grey.shade100,
+        appBar: AppBar(
+          title: const Text(
+            "Diagnosis Analysis",
+            style: TextStyle(
+                fontWeight: FontWeight.w900, color: Colors.white, fontSize: 20),
+          ),
+          backgroundColor: Colors.orange.shade900,
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
-        backgroundColor: Colors.grey.shade100,
-      ),
-      body: Center(
-
-
-        child: SingleChildScrollView(
-
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              responseCauses == null ||
-                      responseRecommendations == null ||
-                      responseParts == null
-                  ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                           CircularProgressIndicator(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
+        body: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.orange.shade900, Colors.orange.shade600],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  responseCauses == null
+                      ? const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Generating diagnosis analysis. Please wait...",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "Generating diagnosis analysis. Please wait...",
-                            style: TextStyle(
-                                fontSize: 14, color: Colors.grey.shade600),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionHeader("Possible Causes"),
-                        const SizedBox(height: 5),
-                        _buildContentCard(responseCauses!),
-                        const SizedBox(height: 30),
-                        _buildSectionHeader("Recommendations"),
-                        const SizedBox(height: 5),
-                        _buildContentCard(responseRecommendations!),
-                        const SizedBox(height: 30),
-                        _buildSectionHeader("Replacement of Parts"),
-                        const SizedBox(height: 5),
-                        _buildContentCard(responseParts!),
-                        const SizedBox(height: 30),
-                        _buildSectionHeader("Suggested Available Services"),
-                        const SizedBox(height: 5),
-                        _buildContentCard(responseSuggestedServices),
-                        const SizedBox(height: 10),
-                        Center(
-                          child: responseSuggestedServices !=
-                                  "No applicable services available."
-                              ? Padding(
-                                padding: const EdgeInsets.only(top: 20.0),
-                                child: Container(
-                                  width: MediaQuery.of(context).size.width * 0.9,
-                                  height: 50,
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) => ShopsDirectory(
-                                                serviceName:
-                                                    responseSuggestedServices),
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildSectionHeader("Possible Causes",
+                                color: Colors.white),
+                            const SizedBox(height: 5),
+                            _buildCauseCards(responseCauses!),
+                            const SizedBox(height: 30),
+                            _buildSectionHeader("Suggested Available Services",
+                                color: Colors.white),
+                            const SizedBox(height: 5),
+                            _buildContentCard(responseSuggestedServices),
+                            const SizedBox(height: 10),
+                            Center(
+                              child: responseSuggestedServices !=
+                                      "No applicable services available."
+                                  ? Padding(
+                                      padding: const EdgeInsets.only(top: 20.0),
+                                      child: SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.9,
+                                        height: 50,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    ShopsDirectory(
+                                                        serviceName:
+                                                            responseSuggestedServices),
+                                              ),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor:
+                                                Colors.orange.shade900,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
                                           ),
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Colors.orange.shade900,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          child: const Text(
+                                              'Proceed to Available Services',
+                                              style: TextStyle(
+                                                  color: Colors.white)),
                                         ),
                                       ),
-                                      child: const Text(
-                                          'Proceed to Available Services',
-                                          style: TextStyle(color: Colors.white)),
-                                    ),
-                                ),
-                              )
-                              : Container(), // Or any other widget you might want to display when there are no applicable services.
+                                    )
+                                  : Container(),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-            ],
+                ],
+              ),
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 
 // Section Header
-  Widget _buildSectionHeader(String title) {
+  Widget _buildSectionHeader(String title, {Color color = Colors.white}) {
     return Text(
       title,
       style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
-        color: Colors.orange.shade900,
+        color: color,
+        shadows: [
+          Shadow(
+            offset: const Offset(1.0, 1.0), // Position of the shadow
+            blurRadius: 4.0, // Blur effect for the shadow
+            color: Colors.grey.shade900, // Shadow color
+          ),
+        ],
       ),
     );
   }
 
 // Content Card
   Widget _buildContentCard(String content) {
-    return Container(
-      padding: const EdgeInsets.all(15.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.shade600,
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        padding: const EdgeInsets.all(15.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade400,
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
+        ),
+        child: Text(
+          content,
+          style: const TextStyle(fontSize: 14, color: Colors.black),
+          textAlign: TextAlign.justify,
+        ),
       ),
-      child: Text(
-        content,
-        style: const TextStyle(fontSize: 14, color: Colors.black),
-        textAlign: TextAlign.justify,
-      ),
+    );
+  }
+
+  Widget _buildCauseCards(String content) {
+    List<String> causes = content.replaceAll('**', '').split('\n');
+    return Column(
+      children: causes.map((cause) {
+        // Split the cause into sentences
+        List<String> sentences = cause.split(':');
+        // Check if the cause has more than one sentence
+        String firstSentence = sentences.isNotEmpty ? sentences[0] : cause;
+        String remainingContent =
+            sentences.length > 1 ? sentences.sublist(1).join('.') : '';
+        bool isExpanded = false;
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return GestureDetector(
+              onTap: () {
+                setState(() {
+                  isExpanded = !isExpanded; // Toggle the expanded state
+                });
+              },
+              child: SizedBox(
+                width: double.infinity,
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  padding: const EdgeInsets.all(15.0),
+                  decoration: BoxDecoration(
+                    color: isExpanded ? Colors.white : Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.shade400,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // Handle click event to show the full text
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text(firstSentence.trim(), style: const TextStyle(fontSize: 16),),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text('Close', style: TextStyle(color: Colors.orange)),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Text(
+                              firstSentence.length > 35
+                                  ? '${firstSentence.substring(0, 35)}...'
+                                  : firstSentence.trim(),
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ),
+                          const Spacer(),
+                          Icon(
+                            isExpanded
+                                ? Icons.keyboard_arrow_up
+                                : Icons.keyboard_arrow_down,
+                            color: Colors.orange.shade900,
+                          ),
+                        ],
+                      ),
+                      if (isExpanded) ...[
+                        const SizedBox(height: 10),
+                        Text(
+                          remainingContent.trim(),
+                          style: const TextStyle(
+                              fontSize: 14, color: Colors.black),
+                          textAlign: TextAlign.justify,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      }).toList(),
     );
   }
 }

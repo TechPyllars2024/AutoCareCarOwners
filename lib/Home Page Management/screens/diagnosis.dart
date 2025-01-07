@@ -262,9 +262,10 @@ class _DiagnosisState extends State<Diagnosis> {
         title: const Text('Diagnosis',
             style: TextStyle(
                 fontWeight: FontWeight.w900,
-                color: Colors.black,
+                color: Colors.white,
                 fontSize: 20)),
-        backgroundColor: Colors.grey.shade100,
+        backgroundColor: Colors.orange.shade900,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Stack(
         children: [
@@ -431,6 +432,34 @@ class _DiagnosisState extends State<Diagnosis> {
                                     },
                                     activeColor: Colors.orange.shade900,
                                   ),
+                              if (_currentQuestionsStack.length == 1)
+                              const Divider(),
+                              if (_currentQuestionsStack.length == 1)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    labelStyle: const TextStyle(color: Colors.black),
+                                    labelText: 'If Other, Please Specify Below:',
+                                    focusedBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(color: Colors.grey.shade600, width: 2),
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    border: const OutlineInputBorder(),
+                                    counterText: '',
+                                  ),
+                                  maxLength: 200,
+                                  maxLines: null,
+                                  keyboardType: TextInputType.multiline,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedChoices[_currentQuestions[i]['title']] = value;
+                                      _isNextButtonEnabled = value.isNotEmpty;
+                                    });
+                                  },
+                                ),
+                              ),
+
                             ],
                           ),
                         )

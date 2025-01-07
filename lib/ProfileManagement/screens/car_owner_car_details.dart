@@ -301,7 +301,7 @@ class _CarDetailsState extends State<CarDetails> {
                     DropdownButtonFormField<String>(
                       value: fuelType,
                       decoration: const InputDecoration(labelText: 'Fuel Type'),
-                      items: ['Diesel', 'Gasoline']
+                      items: ['Diesel', 'Gasoline', 'Electric', 'Hybrid']
                           .map((fuel) => DropdownMenuItem(
                                 value: fuel,
                                 child: Text(fuel),
@@ -398,6 +398,8 @@ class _CarDetailsState extends State<CarDetails> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Card(
+
+
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
                             color: car.isDefault
