@@ -186,9 +186,9 @@ Format Your Response as Follows:
           iconTheme: const IconThemeData(color: Colors.white),
         ),
         body: DecoratedBox(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.orange.shade900, Colors.orange.shade600],
+              colors: [Colors.white, Colors.white],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             ),
@@ -197,24 +197,24 @@ Format Your Response as Follows:
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   responseCauses == null
-                      ? const Center(
+                      ?  Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircularProgressIndicator(
                                 valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                    AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 30),
                               Text(
                                 "Generating diagnosis analysis. Please wait...",
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.white),
+                                    fontSize: 14, color: Colors.orange.shade900),
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -224,12 +224,12 @@ Format Your Response as Follows:
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _buildSectionHeader("Possible Causes",
-                                color: Colors.white),
+                                color: Colors.black),
                             const SizedBox(height: 5),
                             _buildCauseCards(responseCauses!),
                             const SizedBox(height: 30),
                             _buildSectionHeader("Suggested Available Services",
-                                color: Colors.white),
+                                color: Colors.black),
                             const SizedBox(height: 5),
                             _buildContentCard(responseSuggestedServices),
                             const SizedBox(height: 10),
@@ -243,6 +243,7 @@ Format Your Response as Follows:
                                             MediaQuery.of(context).size.width *
                                                 0.9,
                                         height: 50,
+
                                         child: ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context).push(
@@ -281,20 +282,14 @@ Format Your Response as Follows:
   }
 
 // Section Header
-  Widget _buildSectionHeader(String title, {Color color = Colors.white}) {
+  Widget _buildSectionHeader(String title, {Color color = Colors.black}) {
     return Text(
       title,
       style: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.bold,
         color: color,
-        shadows: [
-          Shadow(
-            offset: const Offset(1.0, 1.0), // Position of the shadow
-            blurRadius: 4.0, // Blur effect for the shadow
-            color: Colors.grey.shade900, // Shadow color
-          ),
-        ],
+
       ),
     );
   }
@@ -304,9 +299,9 @@ Format Your Response as Follows:
     return SizedBox(
       width: double.infinity,
       child: Container(
-        padding: const EdgeInsets.all(15.0),
+        padding:  EdgeInsets.all(15.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.grey.shade100,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
@@ -325,103 +320,153 @@ Format Your Response as Follows:
     );
   }
 
+
   Widget _buildCauseCards(String content) {
     List<String> causes = content.replaceAll('**', '').split('\n');
-    return Column(
-      children: causes.map((cause) {
-        // Split the cause into sentences
-        List<String> sentences = cause.split(':');
-        // Check if the cause has more than one sentence
-        String firstSentence = sentences.isNotEmpty ? sentences[0] : cause;
-        String remainingContent =
-            sentences.length > 1 ? sentences.sublist(1).join('.') : '';
-        bool isExpanded = false;
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return GestureDetector(
-              onTap: () {
-                setState(() {
-                  isExpanded = !isExpanded; // Toggle the expanded state
-                });
-              },
-              child: SizedBox(
-                width: double.infinity,
-                child: Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8.0),
-                  padding: const EdgeInsets.all(15.0),
-                  decoration: BoxDecoration(
-                    color: isExpanded ? Colors.white : Colors.grey.shade100,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.shade400,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              // Handle click event to show the full text
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: Text(firstSentence.trim(), style: const TextStyle(fontSize: 16),),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
+    bool showAll = false;
+
+    return StatefulBuilder(
+      builder: (context, setState) {
+        // Determine the list of causes to display based on the state of `showAll`.
+        List<String> displayedCauses = showAll ? causes : causes.take(5).toList();
+
+        return Column(
+          children: [
+            ...displayedCauses.asMap().map((index, cause) {
+              // Split the cause into sentences.
+              List<String> sentences = cause.split(':');
+              String firstSentence = sentences.isNotEmpty ? sentences[0] : cause;
+              String remainingContent =
+              sentences.length > 1 ? sentences.sublist(1).join('.') : '';
+              bool isExpanded = false;
+
+              return MapEntry(
+                index,
+                StatefulBuilder(
+                  builder: (context, cardSetState) {
+                    return GestureDetector(
+                      onTap: () {
+                        cardSetState(() {
+                          isExpanded = !isExpanded; // Toggle the expanded state.
+                        });
+                      },
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          padding: const EdgeInsets.all(15.0),
+                          decoration: BoxDecoration(
+                            color: isExpanded ? Colors.white : Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                blurRadius: 5,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      // Handle click event to show the full text.
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            title: Text(
+                                              firstSentence.trim(),
+                                              style: const TextStyle(fontSize: 16),
+                                            ),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                },
+                                                child: const Text(
+                                                  'Close',
+                                                  style: TextStyle(color: Colors.orange),
+                                                ),
+                                              ),
+                                            ],
+                                          );
                                         },
-                                        child: const Text('Close', style: TextStyle(color: Colors.orange)),
+                                      );
+                                    },
+                                    child: Text(
+                                      firstSentence.length > 35
+                                          ? '${firstSentence.substring(0, 35)}...'
+                                          : firstSentence.trim(),
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: index < 5
+                                            ? Colors.orange.shade900 // Change to the desired color for the first five cards
+                                            : Colors.black,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            child: Text(
-                              firstSentence.length > 35
-                                  ? '${firstSentence.substring(0, 35)}...'
-                                  : firstSentence.trim(),
-                              style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.justify,
-                            ),
+                                      textAlign: TextAlign.justify,
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  Icon(
+                                    isExpanded
+                                        ? Icons.keyboard_arrow_up
+                                        : Icons.keyboard_arrow_down,
+                                    color: Colors.orange.shade900,
+                                  ),
+                                ],
+                              ),
+                              if (isExpanded) ...[
+                                const SizedBox(height: 10),
+                                Text(
+                                  remainingContent.trim(),
+                                  style: const TextStyle(
+                                      fontSize: 14, color: Colors.black),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ],
+                            ],
                           ),
-                          const Spacer(),
-                          Icon(
-                            isExpanded
-                                ? Icons.keyboard_arrow_up
-                                : Icons.keyboard_arrow_down,
-                            color: Colors.orange.shade900,
-                          ),
-                        ],
-                      ),
-                      if (isExpanded) ...[
-                        const SizedBox(height: 10),
-                        Text(
-                          remainingContent.trim(),
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.black),
-                          textAlign: TextAlign.justify,
                         ),
-                      ],
-                    ],
-                  ),
+                      ),
+                    );
+                  },
                 ),
+              );
+            }).values.toList(),
+            if (causes.length > 5) // Show "See More" or "Show Less" if needed.
+              Row(
+                children: [
+                  const Spacer(), // Push the text to the right.
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        showAll = !showAll; // Toggle the `showAll` state.
+                      });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Text(
+                        showAll ? 'Show Less' : 'See More',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.orange.shade900,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            );
-          },
+          ],
         );
-      }).toList(),
+      },
     );
   }
+
+
+
 }
