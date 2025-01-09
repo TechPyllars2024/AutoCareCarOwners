@@ -143,7 +143,6 @@ Response Requirements:
 - Include services from different providers if applicable.
 - Based on the $responseCauses, generalize the issues into one or more applicable Categories and SELECT ONLY from Categories and return it if there is no Available Services.
 
-
 Format Your Response as Follows:
 1. [Service Name ONLY]
   ''';
@@ -468,10 +467,10 @@ Format Your Response as Follows:
                                             ? Icons.crisis_alert_rounded
                                             : Icons.crisis_alert_rounded,
                                     color: index <= 4
-                                        ? Colors.red.shade900
+                                        ? Colors.red.shade500
                                         : index <= 9
-                                            ? Colors.yellow.shade900
-                                            : Colors.green.shade900,
+                                            ? Colors.yellow.shade700
+                                            : Colors.green.shade500,
                                     size: 20,
                                   ),
                                   const SizedBox(width: 8),
