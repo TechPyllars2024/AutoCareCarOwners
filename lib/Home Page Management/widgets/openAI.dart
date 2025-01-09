@@ -11,8 +11,9 @@ class ChatService {
     'x-goog-api-key': "AIzaSyDZau_OXuWr78iQMtNIAib_ognrPLPpE0A",
   };
 
-  Future<String?> request(String prompt, {
-    int maxOutputTokens = 750,
+  Future<String?> request(
+    String prompt, {
+    int maxOutputTokens = 1000,
     double temperature = 0.7,
   }) async {
     try {
