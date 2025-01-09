@@ -3,6 +3,7 @@ import 'package:autocare_carowners/Home%20Page%20Management/services/carDiagnosi
 import 'package:autocare_carowners/Home%20Page%20Management/widgets/openAI.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'noAvailableServices.dart';
 
 class OpenAIEntryScreen extends StatefulWidget {
   final String summary;
@@ -24,6 +25,7 @@ class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
   bool isLoading = true;
   late String responseSuggestedServices;
   final Logger logger = Logger();
+  late String processedResponseSuggestedServices;
 
   @override
   void initState() {
@@ -33,6 +35,7 @@ class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
         analyzeDiagnosisCauses(),
         analyzePossibleServices(),
       ]).whenComplete(() {
+        preprocessResponseAsync(responseSuggestedServices);
         setState(() {
           isLoading = false;
         });
@@ -43,6 +46,43 @@ class _OpenAIEntryScreenState extends State<OpenAIEntryScreen> {
         isLoading = false;
       });
     });
+  }
+
+  List<String> preprocessServiceNames(String services) {
+    // Split by numbers with dots, e.g., "1. Electrical Works"
+    List<String> splitServices = services.split(RegExp(r'\d+\.\s*'));
+    // Remove empty entries and trim each service name
+    return splitServices
+        .map((service) => service.trim())
+        .where((service) => service.isNotEmpty)
+        .toList();
+  }
+
+  Future<void> preprocessResponseAsync(String services) async {
+    // Simulate an async operation, if needed
+    await Future.delayed(const Duration(milliseconds: 10));
+
+    // Split by numbers with dots, e.g., "1. Electrical Works"
+    List<String> splitServices = services.split(RegExp(r'\d+\.\s*'));
+
+    // Remove empty entries and trim each service name
+    List<String> processedServices = splitServices
+        .map((service) => service.trim())
+        .where((service) => service.isNotEmpty)
+        .toList();
+
+    // Update the state
+    setState(() {
+      processedResponseSuggestedServices = processedServices.join(', ');
+    });
+  }
+
+  String capitalizeEachWord(String text) {
+    return text.split(' ').map((word) {
+      return word.isNotEmpty
+          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+          : '';
+    }).join(' ');
   }
 
   Future<void> loadServiceNames() async {
@@ -93,15 +133,18 @@ Diagnostic Input:
 - Diagnosis Summary: $summary
 - Possible Causes: $responseCauses
 - Available Services: $fetchedServiceDetails
+- Categories: 'Electrical Works', 'Mechanical Works', 'Air-conditioning Services', 'Paint and Body Works','Car Wash', 'Auto Detailing Services','Roadside Assistance Services', 'Installation of Accessories Services', and 'No applicable services available.'
 
-**Response Requirements:**
+Response Requirements:
 - List up to 10 applicable services based on the diagnosis of possible causes.
-- Clearly state: "No applicable services available." if no services match the diagnosis.
-- Use only the provided services—do not create or include non-existent services.
+- Provide the service names only.
+- Use only the PROVIDED services—do not create or include non-existent services.
 - Consider both the service names and their descriptions carefully.
 - Include services from different providers if applicable.
+- Based on the $responseCauses, generalize the issues into one or more applicable Categories and SELECT ONLY from Categories and return it if there is no Available Services.
 
-**Format Your Response as Follows:**
+
+Format Your Response as Follows:
 1. [Service Name ONLY]
   ''';
   }
@@ -124,7 +167,7 @@ Response Requirements:
 - Understand other language nuances and provide a culturally appropriate response.
 - Do not use special characters or formatting like **, --, or numbering in your response.
 - Remember that the car is used in the Philippines.
-- Prioritize the most likely causes based on the car's details and rank it from 1 onwards.
+- Prioritize the most likely causes based on the car's details and rank it from 1 onwards. Be sure of this!
 - List all the possible causes up to 15 in plain text.
 - Be mindful of the fuelType and transmissionType when providing the causes.
 - If there is no possible cause and the $summary is random or you cannot understand, state: "No possible causes found."
@@ -201,20 +244,21 @@ Format Your Response as Follows:
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   responseCauses == null
-                      ?  Center(
+                      ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircularProgressIndicator(
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.orange.shade900),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.orange.shade900),
                               ),
-                              SizedBox(height: 30),
+                              const SizedBox(height: 30),
                               Text(
                                 "Generating diagnosis analysis. Please wait...",
                                 style: TextStyle(
-                                    fontSize: 14, color: Colors.orange.shade900),
+                                    fontSize: 14,
+                                    color: Colors.orange.shade900),
                                 textAlign: TextAlign.center,
                               ),
                             ],
@@ -222,28 +266,39 @@ Format Your Response as Follows:
                         )
                       : Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             _buildSectionHeader("Possible Causes",
                                 color: Colors.black),
-                            const SizedBox(height: 5),
+                            const SizedBox(height: 10),
                             _buildCauseCards(responseCauses!),
                             const SizedBox(height: 30),
                             _buildSectionHeader("Suggested Available Services",
                                 color: Colors.black),
                             const SizedBox(height: 5),
                             _buildContentCard(responseSuggestedServices),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 40),
                             Center(
-                              child: responseSuggestedServices !=
-                                      "No applicable services available."
+                              child: preprocessServiceNames(
+                                          responseSuggestedServices)
+                                      .every((service) => ![
+                                            'Electrical Works',
+                                            'Mechanical Works',
+                                            'Air-conditioning Services',
+                                            'Paint and Body Works',
+                                            'Car Wash',
+                                            'Auto Detailing Services',
+                                            'Roadside Assistance Services',
+                                            'Installation of Accessories Services',
+                                            'No applicable services available.'
+                                          ].contains(service))
                                   ? Padding(
-                                      padding: const EdgeInsets.only(top: 20.0),
+                                      padding: const EdgeInsets.only(top: 40.0),
                                       child: SizedBox(
                                         width:
                                             MediaQuery.of(context).size.width *
                                                 0.9,
                                         height: 50,
-
                                         child: ElevatedButton(
                                           onPressed: () {
                                             Navigator.of(context).push(
@@ -270,7 +325,30 @@ Format Your Response as Follows:
                                         ),
                                       ),
                                     )
-                                  : Container(),
+                                  : ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                NoAvailableServices(
+                                              responseSuggestedServices:
+                                                  processedResponseSuggestedServices,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.orange.shade900,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                          'View Service Providers',
+                                          style:
+                                              TextStyle(color: Colors.white)),
+                                    ),
                             ),
                           ],
                         ),
@@ -289,7 +367,6 @@ Format Your Response as Follows:
         fontSize: 18,
         fontWeight: FontWeight.bold,
         color: color,
-
       ),
     );
   }
@@ -299,27 +376,35 @@ Format Your Response as Follows:
     return SizedBox(
       width: double.infinity,
       child: Container(
-        padding:  EdgeInsets.all(15.0),
+        padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 20.0),
         decoration: BoxDecoration(
-          color: Colors.grey.shade100,
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.shade400,
-              blurRadius: 10,
-              offset: const Offset(0, 5),
+              color: Colors.grey.shade300,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Text(
-          content,
-          style: const TextStyle(fontSize: 14, color: Colors.black),
-          textAlign: TextAlign.justify,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              capitalizeEachWord(content),
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.justify,
+            ),
+          ],
         ),
       ),
     );
   }
-
 
   Widget _buildCauseCards(String content) {
     List<String> causes = content.replaceAll('**', '').split('\n');
@@ -328,16 +413,18 @@ Format Your Response as Follows:
     return StatefulBuilder(
       builder: (context, setState) {
         // Determine the list of causes to display based on the state of `showAll`.
-        List<String> displayedCauses = showAll ? causes : causes.take(5).toList();
+        List<String> displayedCauses =
+            showAll ? causes : causes.take(5).toList();
 
         return Column(
           children: [
             ...displayedCauses.asMap().map((index, cause) {
               // Split the cause into sentences.
               List<String> sentences = cause.split(':');
-              String firstSentence = sentences.isNotEmpty ? sentences[0] : cause;
+              String firstSentence =
+                  sentences.isNotEmpty ? sentences[0] : cause;
               String remainingContent =
-              sentences.length > 1 ? sentences.sublist(1).join('.') : '';
+                  sentences.length > 1 ? sentences.sublist(1).join('.') : '';
               bool isExpanded = false;
 
               return MapEntry(
@@ -347,7 +434,7 @@ Format Your Response as Follows:
                     return GestureDetector(
                       onTap: () {
                         cardSetState(() {
-                          isExpanded = !isExpanded; // Toggle the expanded state.
+                          isExpanded = !isExpanded;
                         });
                       },
                       child: SizedBox(
@@ -356,7 +443,9 @@ Format Your Response as Follows:
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                            color: isExpanded ? Colors.white : Colors.grey.shade100,
+                            color: isExpanded
+                                ? Colors.white
+                                : Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
@@ -371,6 +460,22 @@ Format Your Response as Follows:
                             children: [
                               Row(
                                 children: [
+                                  // Icon indicating importance
+                                  Icon(
+                                    index <= 4
+                                        ? Icons.crisis_alert_rounded
+                                        : index <= 10
+                                            ? Icons.crisis_alert_rounded
+                                            : Icons.crisis_alert_rounded,
+                                    color: index <= 4
+                                        ? Colors.red.shade900
+                                        : index <= 9
+                                            ? Colors.yellow.shade900
+                                            : Colors.green.shade900,
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  // GestureDetector for clickable text
                                   GestureDetector(
                                     onTap: () {
                                       // Handle click event to show the full text.
@@ -380,16 +485,19 @@ Format Your Response as Follows:
                                           return AlertDialog(
                                             title: Text(
                                               firstSentence.trim(),
-                                              style: const TextStyle(fontSize: 16),
+                                              style:
+                                                  const TextStyle(fontSize: 16),
                                             ),
                                             actions: <Widget>[
                                               TextButton(
                                                 onPressed: () {
                                                   Navigator.of(context).pop();
                                                 },
-                                                child: const Text(
+                                                child: Text(
                                                   'Close',
-                                                  style: TextStyle(color: Colors.orange),
+                                                  style: TextStyle(
+                                                      color: Colors
+                                                          .orange.shade900),
                                                 ),
                                               ),
                                             ],
@@ -398,20 +506,23 @@ Format Your Response as Follows:
                                       );
                                     },
                                     child: Text(
-                                      firstSentence.length > 35
-                                          ? '${firstSentence.substring(0, 35)}...'
+                                      firstSentence.length > 30
+                                          ? '${firstSentence.substring(0, 30)}...'
                                           : firstSentence.trim(),
                                       style: TextStyle(
                                         fontSize: 14,
-                                        color: index < 5
-                                            ? Colors.orange.shade900 // Change to the desired color for the first five cards
-                                            : Colors.black,
+                                        color: index <= 4
+                                            ? Colors.black
+                                            : index <= 9
+                                                ? Colors.black
+                                                : Colors.black,
                                         fontWeight: FontWeight.bold,
                                       ),
                                       textAlign: TextAlign.justify,
                                     ),
                                   ),
                                   const Spacer(),
+                                  // Expand/Collapse icon (toggle state)
                                   Icon(
                                     isExpanded
                                         ? Icons.keyboard_arrow_up
@@ -437,11 +548,11 @@ Format Your Response as Follows:
                   },
                 ),
               );
-            }).values.toList(),
-            if (causes.length > 5) // Show "See More" or "Show Less" if needed.
+            }).values,
+            if (causes.length > 5)
               Row(
                 children: [
-                  const Spacer(), // Push the text to the right.
+                  const Spacer(),
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -466,7 +577,4 @@ Format Your Response as Follows:
       },
     );
   }
-
-
-
 }
